@@ -8,6 +8,9 @@
 #import "LoginViewController.h"
 
 @interface LoginViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UITextField *usernameField;
+@property (weak, nonatomic) IBOutlet UITextField *pwField;
 
 @end
 
@@ -16,6 +19,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+- (IBAction)loginButton:(id)sender {
+    [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+}
+- (IBAction)signUpButton:(id)sender {
+    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
 }
 
 /*
