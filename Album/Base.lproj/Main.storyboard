@@ -24,6 +24,36 @@
             </objects>
             <point key="canvasLocation" x="-25" y="102"/>
         </scene>
+        <!--Compose View Controller-->
+        <scene sceneID="axf-gX-6xb">
+            <objects>
+                <viewController id="5aD-Wf-izb" customClass="ComposeViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jEu-tw-YE2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="FeV-Nq-dzP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1wK-JN-qxf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1722" y="102"/>
+        </scene>
+        <!--Details View Controller-->
+        <scene sceneID="4hE-ic-eZN">
+            <objects>
+                <viewController id="ZfE-dK-8F4" customClass="DetailsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mDr-3p-BGh">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="PtM-A3-YHR"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4J4-ft-KRM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2735" y="102"/>
+        </scene>
         <!--Login View Controller-->
         <scene sceneID="lci-nG-mLw">
             <objects>
@@ -46,14 +76,17 @@
         <!--Sign Up View Controller-->
         <scene sceneID="0Ex-36-zih">
             <objects>
-                <viewController id="hIP-dE-LjB" customClass="SignUpViewController" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="hIP-dE-LjB" customClass="SignUpViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0La-P7-hSg">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="js3-0g-ffR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="zOH-1l-EyP"/>
+                    <connections>
+                        <segue destination="QQp-PX-TQI" kind="presentation" id="RgT-pP-9yS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kqz-bl-2aj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -132,12 +165,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdM-yP-dxz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2734.7826086956525" y="1749.7767857142856"/>
+            <point key="canvasLocation" x="2735" y="1750"/>
         </scene>
-        <!--View Controller-->
+        <!--Add Friend View Controller-->
         <scene sceneID="eKj-5g-VnX">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="uOR-8c-kZ9" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="uOR-8c-kZ9" customClass="AddFriendViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ttn-OC-ok0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -150,10 +183,10 @@
             </objects>
             <point key="canvasLocation" x="4936.231884057971" y="1749.7767857142856"/>
         </scene>
-        <!--View Controller-->
+        <!--Activities View Controller-->
         <scene sceneID="dFV-XB-SDK">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="y1K-Kj-4go" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="y1K-Kj-4go" customClass="ActivitiesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SAH-Wi-3JB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -326,10 +359,10 @@
             </objects>
             <point key="canvasLocation" x="3825" y="2524"/>
         </scene>
-        <!--View Controller-->
+        <!--Album View Controller-->
         <scene sceneID="48z-yi-tjO">
             <objects>
-                <viewController id="3cM-l0-y96" sceneMemberID="viewController">
+                <viewController id="3cM-l0-y96" customClass="AlbumViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XqF-OI-Nvv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -340,10 +373,10 @@
             </objects>
             <point key="canvasLocation" x="4087" y="970"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="Vj9-yK-wuF">
             <objects>
-                <viewController id="2gN-B2-4s0" sceneMemberID="viewController">
+                <viewController id="2gN-B2-4s0" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lBU-Ny-ZxC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -373,6 +406,9 @@
             <point key="canvasLocation" x="2735" y="3335"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="RgT-pP-9yS"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
