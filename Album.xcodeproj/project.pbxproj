@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2123CBFFA21CC447ECA20D64 /* Pods_AlbumTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
-		AF60C071287633920033DCB0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C070287633920033DCB0 /* ViewController.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
 		AF60C076287633930033DCB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF60C075287633930033DCB0 /* Assets.xcassets */; };
 		AF60C079287633930033DCB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C077287633930033DCB0 /* LaunchScreen.storyboard */; };
@@ -17,6 +17,10 @@
 		AF60C086287633930033DCB0 /* AlbumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C085287633930033DCB0 /* AlbumTests.m */; };
 		AF60C090287633930033DCB0 /* AlbumUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C08F287633930033DCB0 /* AlbumUITests.m */; };
 		AF60C092287633930033DCB0 /* AlbumUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C091287633930033DCB0 /* AlbumUITestsLaunchTests.m */; };
+		AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */; };
+		AF60C0BD287644540033DCB0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0BC287644540033DCB0 /* Keys.plist */; };
+		F6875DDD5538E1ABEAEEFC30 /* Pods_Album_AlbumUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */; };
+		FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A83E4637F5C8C843064B6D /* Pods_Album.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,13 +41,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		64AF1A580AB9D7C1EE0C378B /* Pods-AlbumTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlbumTests.debug.xcconfig"; path = "Target Support Files/Pods-AlbumTests/Pods-AlbumTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album_AlbumUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E32DA964E786B14919F8552 /* Pods-AlbumTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlbumTests.release.xcconfig"; path = "Target Support Files/Pods-AlbumTests/Pods-AlbumTests.release.xcconfig"; sourceTree = "<group>"; };
+		9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AlbumTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D193303E455A8D7EFACD78D /* Pods-Album-AlbumUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.debug.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		AF60C06C287633920033DCB0 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		AF60C06D287633920033DCB0 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		AF60C06F287633920033DCB0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		AF60C070287633920033DCB0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AF60C073287633920033DCB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AF60C075287633930033DCB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF60C078287633930033DCB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -54,6 +61,13 @@
 		AF60C08B287633930033DCB0 /* AlbumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlbumUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C08F287633930033DCB0 /* AlbumUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumUITests.m; sourceTree = "<group>"; };
 		AF60C091287633930033DCB0 /* AlbumUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumUITestsLaunchTests.m; sourceTree = "<group>"; };
+		AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoogleMapViewController.h; sourceTree = "<group>"; };
+		AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoogleMapViewController.m; sourceTree = "<group>"; };
+		AF60C0BC287644540033DCB0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.release.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.release.xcconfig"; sourceTree = "<group>"; };
+		E1A83E4637F5C8C843064B6D /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
+		EB98027A85A62447B477D5F3 /* Pods-Album.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.debug.xcconfig"; path = "Target Support Files/Pods-Album/Pods-Album.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2123CBFFA21CC447ECA20D64 /* Pods_AlbumTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,12 +91,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6875DDD5538E1ABEAEEFC30 /* Pods_Album_AlbumUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63AA1427AA49B90D43D54A2A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1A83E4637F5C8C843064B6D /* Pods_Album.framework */,
+				7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */,
+				9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6F4736B45832FA7009391950 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EB98027A85A62447B477D5F3 /* Pods-Album.debug.xcconfig */,
+				E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */,
+				9D193303E455A8D7EFACD78D /* Pods-Album-AlbumUITests.debug.xcconfig */,
+				B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */,
+				64AF1A580AB9D7C1EE0C378B /* Pods-AlbumTests.debug.xcconfig */,
+				8E32DA964E786B14919F8552 /* Pods-AlbumTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		AF60C05D287633920033DCB0 = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +128,8 @@
 				AF60C084287633930033DCB0 /* AlbumTests */,
 				AF60C08E287633930033DCB0 /* AlbumUITests */,
 				AF60C067287633920033DCB0 /* Products */,
+				6F4736B45832FA7009391950 /* Pods */,
+				63AA1427AA49B90D43D54A2A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,16 +146,17 @@
 		AF60C068287633920033DCB0 /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AF60C0B82876426D0033DCB0 /* Views */,
+				AF60C0B7287642560033DCB0 /* ViewControllers */,
 				AF60C069287633920033DCB0 /* AppDelegate.h */,
 				AF60C06A287633920033DCB0 /* AppDelegate.m */,
 				AF60C06C287633920033DCB0 /* SceneDelegate.h */,
 				AF60C06D287633920033DCB0 /* SceneDelegate.m */,
-				AF60C06F287633920033DCB0 /* ViewController.h */,
-				AF60C070287633920033DCB0 /* ViewController.m */,
 				AF60C072287633920033DCB0 /* Main.storyboard */,
 				AF60C075287633930033DCB0 /* Assets.xcassets */,
 				AF60C077287633930033DCB0 /* LaunchScreen.storyboard */,
 				AF60C07A287633930033DCB0 /* Info.plist */,
+				AF60C0BC287644540033DCB0 /* Keys.plist */,
 				AF60C07B287633930033DCB0 /* main.m */,
 			);
 			path = Album;
@@ -136,6 +179,22 @@
 			path = AlbumUITests;
 			sourceTree = "<group>";
 		};
+		AF60C0B7287642560033DCB0 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */,
+				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		AF60C0B82876426D0033DCB0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,9 +202,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AF60C095287633930033DCB0 /* Build configuration list for PBXNativeTarget "Album" */;
 			buildPhases = (
+				647C8DBCB517E171944E4BB8 /* [CP] Check Pods Manifest.lock */,
 				AF60C062287633920033DCB0 /* Sources */,
 				AF60C063287633920033DCB0 /* Frameworks */,
 				AF60C064287633920033DCB0 /* Resources */,
+				760FA09C1D0775A1F0041A6E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -160,6 +221,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AF60C098287633930033DCB0 /* Build configuration list for PBXNativeTarget "AlbumTests" */;
 			buildPhases = (
+				2F7B42BCAF83C8D4C1EF19AE /* [CP] Check Pods Manifest.lock */,
 				AF60C07D287633930033DCB0 /* Sources */,
 				AF60C07E287633930033DCB0 /* Frameworks */,
 				AF60C07F287633930033DCB0 /* Resources */,
@@ -178,9 +240,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AF60C09B287633930033DCB0 /* Build configuration list for PBXNativeTarget "AlbumUITests" */;
 			buildPhases = (
+				9C939582760908FE56220CD0 /* [CP] Check Pods Manifest.lock */,
 				AF60C087287633930033DCB0 /* Sources */,
 				AF60C088287633930033DCB0 /* Frameworks */,
 				AF60C089287633930033DCB0 /* Resources */,
+				CE8926D7D2ACD95B45E7F12A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -239,6 +303,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF60C0BD287644540033DCB0 /* Keys.plist in Resources */,
 				AF60C079287633930033DCB0 /* LaunchScreen.storyboard in Resources */,
 				AF60C076287633930033DCB0 /* Assets.xcassets in Resources */,
 				AF60C074287633920033DCB0 /* Main.storyboard in Resources */,
@@ -261,14 +326,117 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2F7B42BCAF83C8D4C1EF19AE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AlbumTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		647C8DBCB517E171944E4BB8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Album-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		760FA09C1D0775A1F0041A6E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Album/Pods-Album-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Album/Pods-Album-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Album/Pods-Album-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9C939582760908FE56220CD0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Album-AlbumUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CE8926D7D2ACD95B45E7F12A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AF60C062287633920033DCB0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF60C071287633920033DCB0 /* ViewController.m in Sources */,
 				AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */,
 				AF60C07C287633930033DCB0 /* main.m in Sources */,
+				AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */,
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +605,7 @@
 		};
 		AF60C096287633930033DCB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EB98027A85A62447B477D5F3 /* Pods-Album.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -464,6 +633,7 @@
 		};
 		AF60C097287633930033DCB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -491,6 +661,7 @@
 		};
 		AF60C099287633930033DCB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 64AF1A580AB9D7C1EE0C378B /* Pods-AlbumTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -509,6 +680,7 @@
 		};
 		AF60C09A287633930033DCB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8E32DA964E786B14919F8552 /* Pods-AlbumTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -527,6 +699,7 @@
 		};
 		AF60C09C287633930033DCB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9D193303E455A8D7EFACD78D /* Pods-Album-AlbumUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -543,6 +716,7 @@
 		};
 		AF60C09D287633930033DCB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
