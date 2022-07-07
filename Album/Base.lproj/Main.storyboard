@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-25" y="102"/>
         </scene>
-        <!--View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="lci-nG-mLw">
             <objects>
-                <viewController id="2k6-n2-V59" sceneMemberID="viewController">
+                <viewController id="2k6-n2-V59" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="k56-HF-dGR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -43,10 +43,10 @@
             </objects>
             <point key="canvasLocation" x="-330" y="940"/>
         </scene>
-        <!--View Controller-->
+        <!--Sign Up View Controller-->
         <scene sceneID="0Ex-36-zih">
             <objects>
-                <viewController id="hIP-dE-LjB" sceneMemberID="viewController">
+                <viewController id="hIP-dE-LjB" customClass="SignUpViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0La-P7-hSg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,10 +59,10 @@
             </objects>
             <point key="canvasLocation" x="-330" y="1750"/>
         </scene>
-        <!--View Controller-->
+        <!--Profile View Controller-->
         <scene sceneID="SaQ-FT-lFm">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="nEi-sX-Fx4" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="nEi-sX-Fx4" customClass="ProfileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YI2-2g-qk1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -97,9 +97,17 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="gGn-b3-xOP">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="FXH-gz-Bc6">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="TQ1-Ka-Mwt">
+                                <rect key="frame" x="20" y="5" width="92" height="34.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" id="fDq-iy-auR">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="U5E-Za-COf">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="U5E-Za-COf">
                                     <rect key="frame" x="302" y="5" width="92" height="34.5"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>
@@ -107,7 +115,7 @@
                                 </button>
                             </barButtonItem>
                             <barButtonItem style="plain" id="zj0-MS-od7">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Ipj-IL-beC">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Ipj-IL-beC">
                                     <rect key="frame" x="202" y="5" width="92" height="34.5"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>
@@ -119,6 +127,7 @@
                     <connections>
                         <segue destination="saq-zQ-LZ7" kind="presentation" modalPresentationStyle="fullScreen" id="c2c-FN-JIr"/>
                         <segue destination="gjJ-MT-Nep" kind="presentation" id="qyG-R4-l2G"/>
+                        <segue destination="bjJ-cL-3Df" kind="presentation" id="cCz-jx-Ccz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdM-yP-dxz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -157,17 +166,52 @@
             </objects>
             <point key="canvasLocation" x="4935" y="2524"/>
         </scene>
-        <!--View Controller-->
+        <!--Home View Controller-->
         <scene sceneID="9Td-c7-Cru">
             <objects>
-                <viewController id="eIU-cF-QCQ" sceneMemberID="viewController">
+                <viewController id="eIU-cF-QCQ" customClass="HomeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="M6X-R1-vfI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VCP-h5-naV">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <segue destination="2gN-B2-4s0" kind="embed" id="M6m-w4-WqX"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aSt-fk-JnR">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <segue destination="3cM-l0-y96" kind="embed" id="j1g-aB-4Oi"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="wJk-xD-aTO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="aqP-wT-cP6"/>
+                    <navigationItem key="navigationItem" id="aqP-wT-cP6">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Pv4-mi-j4U">
+                            <rect key="frame" x="141.5" y="6" width="131" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="First"/>
+                                <segment title="Second"/>
+                            </segments>
+                            <connections>
+                                <action selector="viewSwitchControl:" destination="eIU-cF-QCQ" eventType="valueChanged" id="83Z-Fs-Jr3"/>
+                            </connections>
+                        </segmentedControl>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="albumContainer" destination="VCP-h5-naV" id="Z9M-gR-Afa"/>
+                        <outlet property="albumViewContainer" destination="VCP-h5-naV" id="j3x-sU-fcr"/>
+                        <outlet property="mapContainer" destination="aSt-fk-JnR" id="XX0-RM-IE6"/>
+                        <outlet property="mapViewContainer" destination="aSt-fk-JnR" id="lOD-zS-6Gw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K1S-10-ii5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -248,6 +292,22 @@
             </objects>
             <point key="canvasLocation" x="3826" y="1750"/>
         </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="nwb-Z7-VhV">
+            <objects>
+                <viewController id="O0c-HY-hDX" customClass="SettingsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uFH-12-jzk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="1Dg-WR-Vcq"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="DsY-IQ-je9"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dTs-c7-C0g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3825" y="3335"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="0vo-PM-YbC">
             <objects>
@@ -265,6 +325,52 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RbD-4r-IRl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3825" y="2524"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="48z-yi-tjO">
+            <objects>
+                <viewController id="3cM-l0-y96" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XqF-OI-Nvv">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LqG-vy-KLw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4087" y="970"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Vj9-yK-wuF">
+            <objects>
+                <viewController id="2gN-B2-4s0" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lBU-Ny-ZxC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5j2-Oi-KAr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4088" y="243"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="s8v-dP-5KU">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="bjJ-cL-3Df" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="268-lC-Mys">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="O0c-HY-hDX" kind="relationship" relationship="rootViewController" id="lBL-Rd-ihE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="39f-eN-FXV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2735" y="3335"/>
         </scene>
     </scenes>
     <resources>
