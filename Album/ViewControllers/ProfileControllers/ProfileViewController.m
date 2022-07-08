@@ -35,7 +35,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 10;
+    return 0;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -44,7 +44,7 @@
 //    int numberOfCellsPerRow = 3;
 //    int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
 //    return CGSizeMake(dimensions, dimensions);
-    return NULL;
+    return CGSizeMake(3, 3);
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:

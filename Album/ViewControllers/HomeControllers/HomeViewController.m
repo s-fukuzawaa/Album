@@ -26,7 +26,7 @@
             self.mapViewContainer.alpha = 0.0;
             self.albumViewContainer.alpha = 1.0;
         }];
-    } else {
+    } else { // Album View case
         [UIView animateWithDuration:0.5 animations:^{
             self.mapViewContainer.alpha = 1.0;
             self.albumViewContainer.alpha = 0.0;

@@ -7,7 +7,8 @@
 
 #import "ActivitiesViewController.h"
 
-@interface ActivitiesViewController ()
+@interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate>
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -15,7 +16,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    // Assign tableview data source and delegate
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+}
+- (IBAction)backButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /*

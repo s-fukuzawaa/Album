@@ -8,6 +8,7 @@
 #import "FriendProfileViewController.h"
 
 @interface FriendProfileViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 
 @end
 
@@ -15,7 +16,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.friendMapContainer.alpha = 0.0;
+    self.friendsGridContainer.alpha = 1.0;
     // Do any additional setup after loading the view.
+}
+- (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
+    if(sender.selectedSegmentIndex == 0){
+        [UIView animateWithDuration:0.5 animations:^{
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 1.0;
+        }];
+    } else { // Album View case
+        [UIView animateWithDuration:0.5 animations:^{
+            self.friendMapContainer.alpha = 1.0;
+            self.friendsGridContainer.alpha = 0.0;
+        }];
+    }
+}
+- (IBAction)friendButton:(id)sender {
 }
 
 /*

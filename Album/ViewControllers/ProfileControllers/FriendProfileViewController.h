@@ -10,6 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FriendProfileViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIView *friendMapContainer;
+@property (weak, nonatomic) IBOutlet UIView *friendsGridContainer;
 
 @end
 
