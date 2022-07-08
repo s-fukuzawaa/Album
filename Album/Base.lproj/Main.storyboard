@@ -237,9 +237,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="gearshape" catalog="system"/>
+                                <connections>
+                                    <action selector="settingsButton:" destination="nEi-sX-Fx4" eventType="touchUpInside" id="6LQ-7X-Yhr"/>
+                                </connections>
                             </button>
                             <connections>
-                                <action selector="settingsButton:" destination="nEi-sX-Fx4" id="bwb-g0-UY4"/>
+                                <action selector="settingsButton:" destination="nEi-sX-Fx4" id="9ae-OA-hrH"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
@@ -249,6 +252,9 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system" title=""/>
+                                    <connections>
+                                        <action selector="addFriendButton:" destination="nEi-sX-Fx4" eventType="touchUpInside" id="kGV-O3-FBu"/>
+                                    </connections>
                                 </button>
                                 <connections>
                                     <action selector="addFriendButton:" destination="nEi-sX-Fx4" id="cFy-6W-v2Q"/>
@@ -788,6 +794,7 @@
                     <view key="view" contentMode="scaleToFill" id="NgE-ou-ek6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="445"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="R75-AB-QqY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                 </viewController>
@@ -802,6 +809,7 @@
                     <view key="view" contentMode="scaleToFill" id="paT-Fk-Ubi">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="oPZ-mX-8zT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                 </viewController>
@@ -811,7 +819,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="RgT-pP-9yS"/>
+        <segue reference="mVs-bh-VrD"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="98"/>

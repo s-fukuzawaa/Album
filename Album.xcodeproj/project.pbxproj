@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		2123CBFFA21CC447ECA20D64 /* Pods_AlbumTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */; };
+		AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1558272876702B00C3FD82 /* LoginViewController.m */; };
+		AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582A2876704000C3FD82 /* SignUpViewController.m */; };
+		AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582D287746F200C3FD82 /* HomeViewController.m */; };
+		AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583028774BC500C3FD82 /* ProfileViewController.m */; };
+		AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583328774C1900C3FD82 /* SettingsViewController.m */; };
+		AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583828774D4000C3FD82 /* ActivitiesViewController.m */; };
+		AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583B28774DF600C3FD82 /* AddFriendViewController.m */; };
+		AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583E28774F3300C3FD82 /* ComposeViewController.m */; };
+		AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584128774F4000C3FD82 /* DetailsViewController.m */; };
+		AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF155845287750CB00C3FD82 /* AlbumViewController.m */; };
+		AF155849287750D700C3FD82 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF155848287750D700C3FD82 /* MapViewController.m */; };
+		AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */; };
+		AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585128789C1B00C3FD82 /* ActivityCell.m */; };
+		AF15585528789D1500C3FD82 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585428789D1500C3FD82 /* FriendCell.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -19,6 +33,8 @@
 		AF60C092287633930033DCB0 /* AlbumUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C091287633930033DCB0 /* AlbumUITestsLaunchTests.m */; };
 		AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */; };
 		AF60C0BD287644540033DCB0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0BC287644540033DCB0 /* Keys.plist */; };
+		AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */; };
+		AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0C928764C520033DCB0 /* custom_pin.png */; };
 		F6875DDD5538E1ABEAEEFC30 /* Pods_Album_AlbumUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */; };
 		FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A83E4637F5C8C843064B6D /* Pods_Album.framework */; };
 /* End PBXBuildFile section */
@@ -46,6 +62,34 @@
 		8E32DA964E786B14919F8552 /* Pods-AlbumTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlbumTests.release.xcconfig"; path = "Target Support Files/Pods-AlbumTests/Pods-AlbumTests.release.xcconfig"; sourceTree = "<group>"; };
 		9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AlbumTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D193303E455A8D7EFACD78D /* Pods-Album-AlbumUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.debug.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		AF1558262876702B00C3FD82 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		AF1558272876702B00C3FD82 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		AF1558292876704000C3FD82 /* SignUpViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		AF15582A2876704000C3FD82 /* SignUpViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		AF15582C287746F200C3FD82 /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		AF15582D287746F200C3FD82 /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		AF15582F28774BC500C3FD82 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		AF15583028774BC500C3FD82 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		AF15583228774C1900C3FD82 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		AF15583328774C1900C3FD82 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		AF15583728774D4000C3FD82 /* ActivitiesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivitiesViewController.h; sourceTree = "<group>"; };
+		AF15583828774D4000C3FD82 /* ActivitiesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivitiesViewController.m; sourceTree = "<group>"; };
+		AF15583A28774DF600C3FD82 /* AddFriendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddFriendViewController.h; sourceTree = "<group>"; };
+		AF15583B28774DF600C3FD82 /* AddFriendViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddFriendViewController.m; sourceTree = "<group>"; };
+		AF15583D28774F3300C3FD82 /* ComposeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComposeViewController.h; sourceTree = "<group>"; };
+		AF15583E28774F3300C3FD82 /* ComposeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComposeViewController.m; sourceTree = "<group>"; };
+		AF15584028774F4000C3FD82 /* DetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		AF15584128774F4000C3FD82 /* DetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
+		AF155844287750CB00C3FD82 /* AlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
+		AF155845287750CB00C3FD82 /* AlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
+		AF155847287750D700C3FD82 /* MapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		AF155848287750D700C3FD82 /* MapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		AF15584A2877AA5700C3FD82 /* FriendProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
+		AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
+		AF15585028789C1B00C3FD82 /* ActivityCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityCell.h; sourceTree = "<group>"; };
+		AF15585128789C1B00C3FD82 /* ActivityCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivityCell.m; sourceTree = "<group>"; };
+		AF15585328789D1500C3FD82 /* FriendCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendCell.h; sourceTree = "<group>"; };
+		AF15585428789D1500C3FD82 /* FriendCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendCell.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -64,6 +108,9 @@
 		AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoogleMapViewController.h; sourceTree = "<group>"; };
 		AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoogleMapViewController.m; sourceTree = "<group>"; };
 		AF60C0BC287644540033DCB0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		AF60C0C628764B4C0033DCB0 /* LocationGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationGenerator.h; sourceTree = "<group>"; };
+		AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationGenerator.m; sourceTree = "<group>"; };
+		AF60C0C928764C520033DCB0 /* custom_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom_pin.png; path = "../../../Downloads/maps-platform-101-objc-master/starter/StarterApp/custom_pin.png"; sourceTree = "<group>"; };
 		B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.release.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E1A83E4637F5C8C843064B6D /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
@@ -121,6 +168,47 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		AF15583528774C4A00C3FD82 /* ProfileControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AF15582F28774BC500C3FD82 /* ProfileViewController.h */,
+				AF15583028774BC500C3FD82 /* ProfileViewController.m */,
+				AF15583228774C1900C3FD82 /* SettingsViewController.h */,
+				AF15583328774C1900C3FD82 /* SettingsViewController.m */,
+				AF15583728774D4000C3FD82 /* ActivitiesViewController.h */,
+				AF15583828774D4000C3FD82 /* ActivitiesViewController.m */,
+				AF15583A28774DF600C3FD82 /* AddFriendViewController.h */,
+				AF15583B28774DF600C3FD82 /* AddFriendViewController.m */,
+				AF15584A2877AA5700C3FD82 /* FriendProfileViewController.h */,
+				AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */,
+			);
+			path = ProfileControllers;
+			sourceTree = "<group>";
+		};
+		AF15583628774C6D00C3FD82 /* AuthenticationControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AF1558262876702B00C3FD82 /* LoginViewController.h */,
+				AF1558272876702B00C3FD82 /* LoginViewController.m */,
+				AF1558292876704000C3FD82 /* SignUpViewController.h */,
+				AF15582A2876704000C3FD82 /* SignUpViewController.m */,
+			);
+			path = AuthenticationControllers;
+			sourceTree = "<group>";
+		};
+		AF1558432877508600C3FD82 /* HomeControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AF15582C287746F200C3FD82 /* HomeViewController.h */,
+				AF15582D287746F200C3FD82 /* HomeViewController.m */,
+				AF155844287750CB00C3FD82 /* AlbumViewController.h */,
+				AF155845287750CB00C3FD82 /* AlbumViewController.m */,
+				AF155847287750D700C3FD82 /* MapViewController.h */,
+				AF155848287750D700C3FD82 /* MapViewController.m */,
+			);
+			path = HomeControllers;
+			sourceTree = "<group>";
+		};
 		AF60C05D287633920033DCB0 = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +234,7 @@
 		AF60C068287633920033DCB0 /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AF60C0C528764B0B0033DCB0 /* APIHelper */,
 				AF60C0B82876426D0033DCB0 /* Views */,
 				AF60C0B7287642560033DCB0 /* ViewControllers */,
 				AF60C069287633920033DCB0 /* AppDelegate.h */,
@@ -154,6 +243,7 @@
 				AF60C06D287633920033DCB0 /* SceneDelegate.m */,
 				AF60C072287633920033DCB0 /* Main.storyboard */,
 				AF60C075287633930033DCB0 /* Assets.xcassets */,
+				AF60C0C928764C520033DCB0 /* custom_pin.png */,
 				AF60C077287633930033DCB0 /* LaunchScreen.storyboard */,
 				AF60C07A287633930033DCB0 /* Info.plist */,
 				AF60C0BC287644540033DCB0 /* Keys.plist */,
@@ -182,8 +272,15 @@
 		AF60C0B7287642560033DCB0 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				AF1558432877508600C3FD82 /* HomeControllers */,
+				AF15583628774C6D00C3FD82 /* AuthenticationControllers */,
+				AF15583528774C4A00C3FD82 /* ProfileControllers */,
 				AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */,
 				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
+				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
+				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
+				AF15584028774F4000C3FD82 /* DetailsViewController.h */,
+				AF15584128774F4000C3FD82 /* DetailsViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -191,8 +288,21 @@
 		AF60C0B82876426D0033DCB0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AF15585028789C1B00C3FD82 /* ActivityCell.h */,
+				AF15585128789C1B00C3FD82 /* ActivityCell.m */,
+				AF15585328789D1500C3FD82 /* FriendCell.h */,
+				AF15585428789D1500C3FD82 /* FriendCell.m */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		AF60C0C528764B0B0033DCB0 /* APIHelper */ = {
+			isa = PBXGroup;
+			children = (
+				AF60C0C628764B4C0033DCB0 /* LocationGenerator.h */,
+				AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */,
+			);
+			path = APIHelper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,6 +415,7 @@
 			files = (
 				AF60C0BD287644540033DCB0 /* Keys.plist in Resources */,
 				AF60C079287633930033DCB0 /* LaunchScreen.storyboard in Resources */,
+				AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */,
 				AF60C076287633930033DCB0 /* Assets.xcassets in Resources */,
 				AF60C074287633920033DCB0 /* Main.storyboard in Resources */,
 			);
@@ -435,9 +546,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */,
+				AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */,
+				AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */,
 				AF60C07C287633930033DCB0 /* main.m in Sources */,
+				AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */,
+				AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */,
 				AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */,
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
+				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
+				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
+				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
+				AF155849287750D700C3FD82 /* MapViewController.m in Sources */,
+				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,
+				AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */,
+				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,
+				AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */,
+				AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */,
+				AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -77,7 +77,7 @@
         UINavigationController *navigationController = [segue destinationViewController];
         AddFriendViewController *addFriendController = (AddFriendViewController*)navigationController.topViewController;
 //        addFriendController.delegate = self; TODO: Add delegate later
-    }else if([segue.identifier isEqualToString:@"setttingsSegue"]) {
+    }else if([segue.identifier isEqualToString:@"settingsSegue"]) {
         UINavigationController *navigationController = [segue destinationViewController];
         SettingsViewController *settingsController = (SettingsViewController*)navigationController.topViewController;
 //        settingsController.delegate = self; TODO: Add delegate later
