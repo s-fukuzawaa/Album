@@ -10,8 +10,9 @@
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
 
-@interface ProfileViewController ()
+@interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 
 @end
 
@@ -19,7 +20,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    // Assign collection view delegate and dataSource
+    self.friendsCollectionView.dataSource = self;
+    self.friendsCollectionView.delegate = self;
 }
 - (IBAction)activitiesButton:(id)sender {
     [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
@@ -31,6 +34,33 @@
     [self performSegueWithIdentifier:@"settingsSegue" sender:nil];
 }
 
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 10;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+//    int totalwidth = self.gridView.bounds.size.width;
+//    int numberOfCellsPerRow = 3;
+//    int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
+//    return CGSizeMake(dimensions, dimensions);
+    return NULL;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    GridViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GridViewCell" forIndexPath:indexPath];
+//    PFFileObject *file = self.posts[indexPath.row][@"image"];
+//    [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+//        if (!error) {
+//            UIImage *image = [UIImage imageWithData:imageData];
+//            [cell.image setImage:image];
+//        }
+//    }];
+//    cell.post =self.posts[indexPath.row];
+//    return cell;
+    return NULL;
+}
 
 #pragma mark - Navigation
 

@@ -6,6 +6,7 @@
 //
 
 #import "LoginViewController.h"
+#import "SignUpViewController.h"
 
 @interface LoginViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -27,14 +28,19 @@
     [self performSegueWithIdentifier:@"signupSegue" sender:nil];
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqual:@"loginSegue"]){
+        UITabBarController *navigationController = [segue destinationViewController];
+    }else{
+        SignUpViewController *signupVC = [segue destinationViewController];
+    }
 }
-*/
+
 
 @end

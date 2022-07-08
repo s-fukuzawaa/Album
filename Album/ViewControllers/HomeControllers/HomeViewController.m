@@ -15,19 +15,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.mapViewContainer.alpha = 0.0;
+    self.albumViewContainer.alpha = 1.0;
     // Do any additional setup after loading the view.
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
     // Map View case
     if(sender.selectedSegmentIndex == 0){
         [UIView animateWithDuration:0.5 animations:^{
-            _mapViewContainer.alpha = 0.0;
-            _albumViewContainer.alpha = 1.0;
+            self.mapViewContainer.alpha = 0.0;
+            self.albumViewContainer.alpha = 1.0;
         }];
     } else {
         [UIView animateWithDuration:0.5 animations:^{
-            _mapViewContainer.alpha = 1.0;
-            _albumViewContainer.alpha = 0.0;
+            self.mapViewContainer.alpha = 1.0;
+            self.albumViewContainer.alpha = 0.0;
         }];
     }
 }
