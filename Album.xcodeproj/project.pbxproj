@@ -35,6 +35,9 @@
 		AF60C0BD287644540033DCB0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0BC287644540033DCB0 /* Keys.plist */; };
 		AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */; };
 		AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0C928764C520033DCB0 /* custom_pin.png */; };
+		AFCC30E3287C9B8900521733 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCC30E2287C9B8900521733 /* CoreLocation.framework */; };
+		AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCC30EC287CAA3400521733 /* InfoPOIView.m */; };
+		AFCC30EF287CCFF000521733 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFCC30EE287CCFF000521733 /* InfoWindow.xib */; };
 		F6875DDD5538E1ABEAEEFC30 /* Pods_Album_AlbumUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */; };
 		FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A83E4637F5C8C843064B6D /* Pods_Album.framework */; };
 /* End PBXBuildFile section */
@@ -111,6 +114,10 @@
 		AF60C0C628764B4C0033DCB0 /* LocationGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationGenerator.h; sourceTree = "<group>"; };
 		AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationGenerator.m; sourceTree = "<group>"; };
 		AF60C0C928764C520033DCB0 /* custom_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom_pin.png; path = "../../../Downloads/maps-platform-101-objc-master/starter/StarterApp/custom_pin.png"; sourceTree = "<group>"; };
+		AFCC30E2287C9B8900521733 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		AFCC30EB287CAA3400521733 /* InfoPOIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoPOIView.h; sourceTree = "<group>"; };
+		AFCC30EC287CAA3400521733 /* InfoPOIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoPOIView.m; sourceTree = "<group>"; };
+		AFCC30EE287CCFF000521733 /* InfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoWindow.xib; sourceTree = "<group>"; };
 		B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.release.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E1A83E4637F5C8C843064B6D /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFCC30E3287C9B8900521733 /* CoreLocation.framework in Frameworks */,
 				FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,6 +156,7 @@
 		63AA1427AA49B90D43D54A2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC30E2287C9B8900521733 /* CoreLocation.framework */,
 				E1A83E4637F5C8C843064B6D /* Pods_Album.framework */,
 				7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */,
 				9A8998396BA039E9A729A14E /* Pods_AlbumTests.framework */,
@@ -272,11 +281,10 @@
 		AF60C0B7287642560033DCB0 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC30E7287CA6F400521733 /* MapControllers */,
 				AF1558432877508600C3FD82 /* HomeControllers */,
 				AF15583628774C6D00C3FD82 /* AuthenticationControllers */,
 				AF15583528774C4A00C3FD82 /* ProfileControllers */,
-				AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */,
-				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
 				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
 				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
 				AF15584028774F4000C3FD82 /* DetailsViewController.h */,
@@ -292,6 +300,9 @@
 				AF15585128789C1B00C3FD82 /* ActivityCell.m */,
 				AF15585328789D1500C3FD82 /* FriendCell.h */,
 				AF15585428789D1500C3FD82 /* FriendCell.m */,
+				AFCC30EB287CAA3400521733 /* InfoPOIView.h */,
+				AFCC30EC287CAA3400521733 /* InfoPOIView.m */,
+				AFCC30EE287CCFF000521733 /* InfoWindow.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -303,6 +314,15 @@
 				AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */,
 			);
 			path = APIHelper;
+			sourceTree = "<group>";
+		};
+		AFCC30E7287CA6F400521733 /* MapControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */,
+				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
+			);
+			path = MapControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -418,6 +438,7 @@
 				AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */,
 				AF60C076287633930033DCB0 /* Assets.xcassets in Resources */,
 				AF60C074287633920033DCB0 /* Main.storyboard in Resources */,
+				AFCC30EF287CCFF000521733 /* InfoWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +577,7 @@
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
+				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
 				AF155849287750D700C3FD82 /* MapViewController.m in Sources */,
 				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,

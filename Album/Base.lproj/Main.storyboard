@@ -28,9 +28,9 @@
         <!--Compose View Controller-->
         <scene sceneID="axf-gX-6xb">
             <objects>
-                <viewController id="5aD-Wf-izb" customClass="ComposeViewController" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="5aD-Wf-izb" customClass="ComposeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jEu-tw-YE2">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="FeV-Nq-dzP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -38,7 +38,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1wK-JN-qxf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1722" y="102"/>
+            <point key="canvasLocation" x="5535" y="970"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="4hE-ic-eZN">
@@ -754,20 +754,23 @@
             </objects>
             <point key="canvasLocation" x="6292.753623188406" y="1749.7767857142856"/>
         </scene>
-        <!--Map View Controller-->
+        <!--Google Map View Controller-->
         <scene sceneID="Vj9-yK-wuF">
             <objects>
-                <viewController id="2gN-B2-4s0" customClass="MapViewController" sceneMemberID="viewController">
+                <viewController id="2gN-B2-4s0" customClass="GoogleMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lBU-Ny-ZxC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="gys-TZ-AL8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <connections>
+                        <segue destination="5aD-Wf-izb" kind="presentation" identifier="toCompose" id="AIN-u2-Ptu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5j2-Oi-KAr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4004" y="970"/>
+            <point key="canvasLocation" x="4002.898550724638" y="969.97767857142856"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="s8v-dP-5KU">
@@ -819,7 +822,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="mVs-bh-VrD"/>
+        <segue reference="RgT-pP-9yS"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="98"/>
