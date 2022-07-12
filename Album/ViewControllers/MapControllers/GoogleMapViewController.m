@@ -10,7 +10,7 @@
 #import "ComposeViewController.h"
 #import "InfoPOIView.h"
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate>
+@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate>
 @end
 
 @implementation GoogleMapViewController
@@ -80,6 +80,13 @@
 }
 
 - (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
+    int popupWidth = 200;
+    int contentWidth = 180;
+    int contentPad = 10;
+    int popupHeight = 140;
+    int popupBottomPadding = 16;
+    int popupContentHeight = popupHeight - popupBottomPadding;
+    int buttonHeight = 30;
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
@@ -87,7 +94,11 @@
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
-    [self performSegueWithIdentifier:@"toCompose" sender:self];
+    [self performSegueWithIdentifier:@"composeSegue" sender:self];
+}
+
+- (void)didPost {
+    [self performSegueWithIdentifier:@"composeSegue" sender:nil];
 }
 #pragma mark - Navigation
 
@@ -95,7 +106,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqual:@"toCompose"]){
+    if ([segue.identifier isEqual:@"composeSegue"]){
         ComposeViewController *composeVC = [segue destinationViewController];
     }
 }

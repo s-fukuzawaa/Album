@@ -27,7 +27,7 @@
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="filled" title="Post"/>
                     <connections>
-                        <action selector="postButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="7TB-ES-7wL"/>
+                        <action selector="postButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="H0O-oY-Xzf"/>
                     </connections>
                 </button>
             </subviews>

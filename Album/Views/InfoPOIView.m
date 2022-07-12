@@ -17,4 +17,7 @@
     // Drawing code
 }
 */
+- (IBAction)postButton:(id)sender {
+    [self.delegate didPost];
+}
 @end
