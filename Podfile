@@ -9,6 +9,7 @@ target 'Album' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   pod 'Parse'
+  pod 'Parse/UI'
   target 'AlbumTests' do
     inherit! :search_paths
     # Pods for testing

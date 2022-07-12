@@ -7,6 +7,7 @@
 
 #import "LoginViewController.h"
 #import "SignUpViewController.h"
+#import "Parse/Parse.h"
 
 @interface LoginViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -28,7 +29,9 @@
     [self performSegueWithIdentifier:@"signupSegue" sender:nil];
 }
 
-
+- (IBAction) tap:(id) sender{
+    [self.view endEditing:YES];
+}
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation

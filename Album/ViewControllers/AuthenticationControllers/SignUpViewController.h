@@ -9,8 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SignUpViewController : UIViewController
-
+@interface SignUpViewController : UIViewController<UIImagePickerControllerDelegate>
 @end
 
 NS_ASSUME_NONNULL_END

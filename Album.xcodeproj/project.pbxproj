@@ -243,6 +243,7 @@
 		AF60C068287633920033DCB0 /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC30F0287DCB6800521733 /* Models */,
 				AF60C0C528764B0B0033DCB0 /* APIHelper */,
 				AF60C0B82876426D0033DCB0 /* Views */,
 				AF60C0B7287642560033DCB0 /* ViewControllers */,
@@ -323,6 +324,13 @@
 				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
 			);
 			path = MapControllers;
+			sourceTree = "<group>";
+		};
+		AFCC30F0287DCB6800521733 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -10,7 +10,7 @@
 #import "ComposeViewController.h"
 #import "InfoPOIView.h"
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate>
+@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
 @end
 
 @implementation GoogleMapViewController
@@ -108,6 +108,7 @@
     // Pass the selected object to the new view controller.
     if ([segue.identifier isEqual:@"composeSegue"]){
         ComposeViewController *composeVC = [segue destinationViewController];
+        composeVC.delegate = self;
     }
 }
 @end
