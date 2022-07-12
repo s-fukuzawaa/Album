@@ -38,6 +38,8 @@
 		AFCC30E3287C9B8900521733 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCC30E2287C9B8900521733 /* CoreLocation.framework */; };
 		AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCC30EC287CAA3400521733 /* InfoPOIView.m */; };
 		AFCC30EF287CCFF000521733 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFCC30EE287CCFF000521733 /* InfoWindow.xib */; };
+		AFCC30F6287DD5CF00521733 /* Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCC30F5287DD5CF00521733 /* Pin.m */; };
+		AFCC30F9287DDB9200521733 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCC30F8287DDB9200521733 /* Image.m */; };
 		F6875DDD5538E1ABEAEEFC30 /* Pods_Album_AlbumUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB976AFC2FAE60638A7D3B0 /* Pods_Album_AlbumUITests.framework */; };
 		FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A83E4637F5C8C843064B6D /* Pods_Album.framework */; };
 /* End PBXBuildFile section */
@@ -118,6 +120,10 @@
 		AFCC30EB287CAA3400521733 /* InfoPOIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoPOIView.h; sourceTree = "<group>"; };
 		AFCC30EC287CAA3400521733 /* InfoPOIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoPOIView.m; sourceTree = "<group>"; };
 		AFCC30EE287CCFF000521733 /* InfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoWindow.xib; sourceTree = "<group>"; };
+		AFCC30F4287DD5CF00521733 /* Pin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pin.h; sourceTree = "<group>"; };
+		AFCC30F5287DD5CF00521733 /* Pin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Pin.m; sourceTree = "<group>"; };
+		AFCC30F7287DDB9200521733 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		AFCC30F8287DDB9200521733 /* Image.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
 		B6A5012DC2AC4793974C87D9 /* Pods-Album-AlbumUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album-AlbumUITests.release.xcconfig"; path = "Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E1A83E4637F5C8C843064B6D /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E28129D9F66B10F6E85D8248 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
@@ -329,6 +335,10 @@
 		AFCC30F0287DCB6800521733 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC30F4287DD5CF00521733 /* Pin.h */,
+				AFCC30F5287DD5CF00521733 /* Pin.m */,
+				AFCC30F7287DDB9200521733 /* Image.h */,
+				AFCC30F8287DDB9200521733 /* Image.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -610,6 +620,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFCC30F6287DD5CF00521733 /* Pin.m in Sources */,
 				AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */,
 				AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */,
 				AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */,
@@ -620,6 +631,7 @@
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AFCC30F9287DDB9200521733 /* Image.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
 				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,

@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ComposeViewController : UIViewController <UIImagePickerControllerDelegate>
 @property (nonatomic, weak) id<ComposeViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSString *placeName;
 @end
 
 NS_ASSUME_NONNULL_END

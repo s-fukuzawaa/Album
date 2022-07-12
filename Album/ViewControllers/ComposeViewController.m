@@ -8,6 +8,8 @@
 #import "ComposeViewController.h"
 
 @interface ComposeViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
+@property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 
 @end
 
@@ -16,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+- (IBAction)postButton:(id)sender {
 }
 
 /*
