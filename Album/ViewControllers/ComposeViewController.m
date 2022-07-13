@@ -7,6 +7,7 @@
 
 #import "ComposeViewController.h"
 #import <UITextView+Placeholder.h>
+#import <Photos/PHasset.h>
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
@@ -14,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+@property (weak, nonatomic) IBOutlet UIDatePicker *traveledDate;
 
 @end
 
@@ -35,7 +37,7 @@
     [self.pinImageView setUserInteractionEnabled:YES];
     
     // Set location label
-    self.locationLabel.text = self.placeName;
+    self.locationLabel.text = [self.locationLabel.text stringByAppendingString:self.placeName];
 }
 
 - (void) didTapImage:(UITapGestureRecognizer *)sender{
@@ -91,6 +93,10 @@
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
     originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
     [self.pinImageView setImage:originalImage];
+    // TODO: Get date and set it to date picker default
+    NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
+    
+
     // Dismiss UIImagePickerController to go back to your original view controller
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -122,6 +128,7 @@
     newPin[@"placeID"] = self.placeID;
     newPin[@"latitude"] = @(self.coordinate.latitude);
     newPin[@"longitude"] = @(self.coordinate.longitude);
+    newPin[@"traveledOn"] = self.traveledDate.date;
     [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
       if (error) {
           NSLog(@"Error posting: %@", error.localizedDescription);
