@@ -16,8 +16,8 @@
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
-@property (nonatomic, strong) NSDictionary *placeToPins;
-@property (nonatomic, strong) NSDictionary *pinImages;
+@property (nonatomic, strong) NSMutableDictionary *placeToPins;
+@property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @end
 
@@ -46,6 +46,8 @@
     self.formatter = [[NSDateFormatter alloc] init];
     [self.formatter setDateFormat:@"MMM dd, YYYY"];
     [self.formatter setDateStyle:NSDateFormatterMediumStyle];
+    self.placeToPins = [[NSMutableDictionary alloc] init];
+    self.pinImages = [[NSMutableDictionary alloc] init];
     
 }
 
@@ -53,6 +55,10 @@
     int i=0;
     while(i<self.markerArr.count) {
         Pin *pin=self.markerArr[i];
+//        if(!self.placeToPins[pin.placeName]){
+//            [self.placeToPins setValue:[[NSMutableArray alloc]init] forKeyPath:pin[@"placeName"]];
+//        }
+//        [self.placeToPins[pin[@"placeName"]] addObject:pin];
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         marker.title = pin.placeName;
@@ -141,22 +147,49 @@
 - (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
+    NSLog(@"%@", marker.title);
+    if(self.placeToPins[marker.title]) {
+        InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
+        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        // Set Image
+        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
+        
+        if(imagesFromPin && imagesFromPin.count > 0) {
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            [markerView.pinImageView setFile:imageFile];
+            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
+        }
+        // Set place name
+        [markerView.placeNameLabel setText:firstPin[@"placeName"]];
+        // Set date
+        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
+        [markerView.dateLabel setText:date];
+        return markerView;
+    }
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
     if(pinsFromCoord && pinsFromCoord.count > 0) {
         PFObject *firstPin = pinsFromCoord[0];
         int i=0;
         while(i<pinsFromCoord.count) {
             PFObject *pin = pinsFromCoord[i];
+            // Save pins
             if(!self.placeToPins[pin[@"placeName"]]){
-                [self.placeToPins setValue:[[NSMutableArray alloc]init] forKeyPath:pin[@"placeName"]];
+                [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:pin[@"placeName"]];
             }
             [self.placeToPins[pin[@"placeName"]] addObject:pin];
+            
+            NSArray* imagesFromPin = [self imagesFromPin:pin.objectId];
+            [self.pinImages setObject:imagesFromPin forKey:pin.objectId];
             i++;
         }
-        NSLog(@"%@",((PFObject *)pinsFromCoord[0]).objectId);
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
         // Set Image
-        NSArray* imagesFromPin = [self imagesFromPin:firstPin.objectId];
+        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
         
         if(imagesFromPin && imagesFromPin.count > 0) {
             PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
@@ -190,7 +223,12 @@
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
-    [self performSegueWithIdentifier:@"composeSegue" sender:self];
+    if(self.placeToPins[marker.title]){
+        [self performSegueWithIdentifier:@"detailsSegue" sender:self];
+    }else{
+        [self performSegueWithIdentifier:@"composeSegue" sender:self];
+    }
+    
 }
 
 - (void)didPost {

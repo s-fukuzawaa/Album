@@ -123,7 +123,7 @@
             <objects>
                 <viewController id="ZfE-dK-8F4" customClass="DetailsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mDr-3p-BGh">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="671"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="PtM-A3-YHR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -131,7 +131,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4J4-ft-KRM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2735" y="102"/>
+            <point key="canvasLocation" x="5439" y="258"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="lci-nG-mLw">
@@ -917,11 +917,12 @@
                     </view>
                     <connections>
                         <segue destination="5aD-Wf-izb" kind="presentation" identifier="composeSegue" id="AIN-u2-Ptu"/>
+                        <segue destination="ZfE-dK-8F4" kind="presentation" id="hzp-pY-0Dp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5j2-Oi-KAr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4002.898550724638" y="969.97767857142856"/>
+            <point key="canvasLocation" x="4159" y="940"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="s8v-dP-5KU">
