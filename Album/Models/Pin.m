@@ -8,13 +8,13 @@
 #import "Pin.h"
 
 @implementation Pin
-@dynamic userId;
 @dynamic createdAt;
 @dynamic captionText;
 @dynamic author;
 @dynamic likeCount;
+@dynamic placeName;
 
 + (nonnull NSString *)parseClassName {
-    return @"Post";
+    return @"Pin";
 }
 @end

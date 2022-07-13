@@ -6,6 +6,9 @@
 //
 
 #import "SettingsViewController.h"
+#import "LoginViewController.h"
+#import "Parse/Parse.h"
+#import "SceneDelegate.h"
 
 @interface SettingsViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -25,6 +28,15 @@
 }
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)logoutButton:(id)sender {
+    SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    myDelegate.window.rootViewController = loginViewController;
+    [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
+    }];
 }
 
 /*

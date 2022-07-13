@@ -30,7 +30,7 @@
 
 - (IBAction)signUpButton:(id)sender {
     [self registerUser];
-    [self performSegueWithIdentifier:@"signUpMapSegue" sender:self];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)didTap:(id)sender {

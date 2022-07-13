@@ -10,8 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Pin : PFObject <PFSubclassing>
-@property (nonatomic, strong) NSString *userId;
 @property (nonatomic, strong) NSString *captionText;
+@property (nonatomic, strong) NSString *placeName;
 @property (nonatomic, strong) NSNumber *likeCount;
 @property (nonatomic, strong) PFUser *author;
 @property (nonatomic, strong) NSDate *createdAt;

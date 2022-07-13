@@ -9,10 +9,13 @@
 #import "ActivitiesviewController.h"
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
+#import "Parse/Parse.h"
+#import "PFImageView.h"
+
 
 @interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
-@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
+@property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
 
 @end
 
@@ -23,6 +26,8 @@
     // Assign collection view delegate and dataSource
     self.friendsCollectionView.dataSource = self;
     self.friendsCollectionView.delegate = self;
+    // Load profile image
+    [self fetchProfile];
 }
 - (IBAction)activitiesButton:(id)sender {
     [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
@@ -60,6 +65,22 @@
 //    cell.post =self.posts[indexPath.row];
 //    return cell;
     return NULL;
+}
+
+- (void) fetchProfile {
+    PFUser *user = [PFUser currentUser];
+    if(user[@"profileImage"]){
+        PFFileObject *file = user[@"profileImage"];
+        [self.profileImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.profileImageView setImage:image];
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
+                self.profileImageView.layer.masksToBounds = YES;
+            }
+        }];
+    }
 }
 
 #pragma mark - Navigation

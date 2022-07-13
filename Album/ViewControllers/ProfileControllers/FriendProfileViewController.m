@@ -6,9 +6,10 @@
 //
 
 #import "FriendProfileViewController.h"
+#import <PFImageView.h>
 
 @interface FriendProfileViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *userImageView;
+@property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 
 @end
 
@@ -18,7 +19,9 @@
     [super viewDidLoad];
     self.friendMapContainer.alpha = 0.0;
     self.friendsGridContainer.alpha = 1.0;
-    // Do any additional setup after loading the view.
+    // Set user profile image view
+    [self fetchProfile];
+    
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
     if(sender.selectedSegmentIndex == 0){
@@ -33,6 +36,23 @@
         }];
     }
 }
+
+- (void) fetchProfile {
+    PFUser *user = self.user;
+    if(user[@"profileImage"]){
+        PFFileObject *file = user[@"profileImage"];
+        [self.userImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.userImageView setImage:image];
+                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height/2;
+                self.userImageView.layer.masksToBounds = YES;
+            }
+        }];
+    }
+}
+
 - (IBAction)friendButton:(id)sender {
 }
 

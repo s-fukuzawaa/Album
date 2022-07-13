@@ -21,7 +21,8 @@
     
     Image *newImage = [Image new];
     newImage.imageFile = [self getPFFileFromImage:image];
-    newImage.userId = [PFUser currentUser][@"objectId"];
+    PFUser *currentUser = [PFUser currentUser];
+    newImage.userId = currentUser.objectId;
     newImage.pinId = pinId;
     [newImage saveInBackgroundWithBlock: completion];
 }

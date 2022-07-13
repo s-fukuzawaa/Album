@@ -98,7 +98,7 @@
 }
 
 - (void)didPost {
-    [self performSegueWithIdentifier:@"composeSegue" sender:nil];
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
 
@@ -108,6 +108,7 @@
     // Pass the selected object to the new view controller.
     if ([segue.identifier isEqual:@"composeSegue"]){
         ComposeViewController *composeVC = [segue destinationViewController];
+        composeVC.placeName = self.infoMarker.title;
         composeVC.delegate = self;
     }
 }
