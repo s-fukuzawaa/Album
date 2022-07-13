@@ -8,6 +8,7 @@
 #import "GoogleMapViewController.h"
 #import "LocationGenerator.h"
 #import "ComposeViewController.h"
+#import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
 #import "Parse/Parse.h"
@@ -224,7 +225,7 @@
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     if(self.placeToPins[marker.title]){
-        [self performSegueWithIdentifier:@"detailsSegue" sender:self];
+        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
     }else{
         [self performSegueWithIdentifier:@"composeSegue" sender:self];
     }
@@ -252,6 +253,23 @@
         composeVC.coordinate = self.infoMarker.position;
         composeVC.placeID = self.infoMarker.snippet;
         composeVC.delegate = self;
+    }else if([segue.identifier isEqual:@"detailsSegue"]){
+        DetailsViewController *detailsVC = [segue destinationViewController];
+        GMSMarker *marker=sender;
+        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        // Set Image
+        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
+        if(imagesFromPin && imagesFromPin.count > 0) {
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            detailsVC.pinImage = imageFile;
+        }
+        // Set place name
+        detailsVC.placeName = firstPin[@"placeName"];
+        // Set date
+        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
+        detailsVC.date = date;
+        // Set caption
+        detailsVC.caption = firstPin[@"captionText"];
     }
 }
 @end
