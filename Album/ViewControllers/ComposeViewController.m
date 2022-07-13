@@ -119,6 +119,9 @@
     newPin.captionText = self.captionTextView.text;
     newPin.likeCount = @(0);
     newPin[@"placeName"] = self.placeName;
+    newPin[@"placeID"] = self.placeID;
+    newPin[@"latitude"] = @(self.coordinate.latitude);
+    newPin[@"longitude"] = @(self.coordinate.longitude);
     [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
       if (error) {
           NSLog(@"Error posting: %@", error.localizedDescription);

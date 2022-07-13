@@ -28,9 +28,9 @@
         <!--Compose View Controller-->
         <scene sceneID="axf-gX-6xb">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="5aD-Wf-izb" customClass="ComposeViewController" sceneMemberID="viewController">
+                <viewController id="5aD-Wf-izb" customClass="ComposeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jEu-tw-YE2">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="671"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="e8T-mS-PcZ">
@@ -40,7 +40,7 @@
                                 </constraints>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rMv-yH-VtJ">
-                                <rect key="frame" x="72" y="375" width="270" height="230"/>
+                                <rect key="frame" x="72" y="321" width="270" height="230"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="230" id="E9c-SX-ISM"/>
@@ -49,18 +49,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <navigationBar contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="2ue-yz-2Ij">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                <items>
-                                    <navigationItem title="Compose" id="05R-u5-p14">
-                                        <barButtonItem key="leftBarButtonItem" image="xmark" catalog="system" id="78J-FI-kvA">
-                                            <connections>
-                                                <action selector="crossButton:" destination="5aD-Wf-izb" id="Jhz-et-z2K"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rEV-xF-PgP">
                                 <rect key="frame" x="186" y="91.5" width="42" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -68,7 +56,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4UW-rh-nFa">
-                                <rect key="frame" x="159" y="646" width="96" height="31"/>
+                                <rect key="frame" x="159" y="592" width="96" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="PXa-5M-kv5"/>
                                 </constraints>
@@ -86,20 +74,15 @@
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="centerX" secondItem="rEV-xF-PgP" secondAttribute="centerX" id="1aF-r8-4xp"/>
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="leading" secondItem="FeV-Nq-dzP" secondAttribute="leading" constant="159" id="7UX-p5-ocr"/>
                             <constraint firstItem="e8T-mS-PcZ" firstAttribute="centerX" secondItem="rMv-yH-VtJ" secondAttribute="centerX" id="8S0-Ns-P4S"/>
-                            <constraint firstItem="4UW-rh-nFa" firstAttribute="centerX" secondItem="2ue-yz-2Ij" secondAttribute="centerX" id="8oJ-or-55s"/>
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="top" secondItem="rMv-yH-VtJ" secondAttribute="bottom" constant="41" id="97x-YO-hh2"/>
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="centerX" secondItem="rMv-yH-VtJ" secondAttribute="centerX" id="A3h-VK-MUe"/>
                             <constraint firstItem="e8T-mS-PcZ" firstAttribute="top" secondItem="jEu-tw-YE2" secondAttribute="top" constant="147" id="E8v-Ld-avM"/>
                             <constraint firstItem="e8T-mS-PcZ" firstAttribute="leading" secondItem="FeV-Nq-dzP" secondAttribute="leading" constant="19.5" id="Kne-4f-JkF"/>
-                            <constraint firstItem="2ue-yz-2Ij" firstAttribute="leading" secondItem="jEu-tw-YE2" secondAttribute="leading" id="LNT-zc-Rsd"/>
                             <constraint firstItem="FeV-Nq-dzP" firstAttribute="bottom" secondItem="4UW-rh-nFa" secondAttribute="bottom" constant="48" id="WLG-4t-Mht"/>
-                            <constraint firstItem="2ue-yz-2Ij" firstAttribute="centerX" secondItem="rMv-yH-VtJ" secondAttribute="centerX" id="Ygo-0r-yDO"/>
-                            <constraint firstItem="e8T-mS-PcZ" firstAttribute="centerX" secondItem="2ue-yz-2Ij" secondAttribute="centerX" id="ZSF-PD-BFl"/>
                             <constraint firstItem="rMv-yH-VtJ" firstAttribute="leading" secondItem="FeV-Nq-dzP" secondAttribute="leading" constant="72" id="fUx-83-m2h"/>
                             <constraint firstItem="e8T-mS-PcZ" firstAttribute="top" secondItem="rEV-xF-PgP" secondAttribute="bottom" constant="35" id="hJb-m5-bEf"/>
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="centerX" secondItem="jEu-tw-YE2" secondAttribute="centerX" id="rti-bz-BRV"/>
                             <constraint firstItem="4UW-rh-nFa" firstAttribute="centerX" secondItem="e8T-mS-PcZ" secondAttribute="centerX" id="uQx-8h-T3T"/>
-                            <constraint firstItem="2ue-yz-2Ij" firstAttribute="bottom" secondItem="FeV-Nq-dzP" secondAttribute="top" id="vPl-fr-khO"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="zpg-3U-JWU" appends="YES" id="kk6-KX-Lx2"/>
@@ -985,7 +968,6 @@
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="suit.heart" catalog="system" width="128" height="109"/>
-        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

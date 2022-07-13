@@ -13,6 +13,9 @@
 @dynamic author;
 @dynamic likeCount;
 @dynamic placeName;
+@dynamic placeID;
+@dynamic longitude;
+@dynamic latitude;
 
 + (nonnull NSString *)parseClassName {
     return @"Pin";

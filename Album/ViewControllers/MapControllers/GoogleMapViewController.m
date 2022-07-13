@@ -9,8 +9,12 @@
 #import "LocationGenerator.h"
 #import "ComposeViewController.h"
 #import "InfoPOIView.h"
+#import "Parse/Parse.h"
+#import "Pin.h"
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
+@property (nonatomic, strong) NSMutableArray *markerArr;
+@property (nonatommic, strong) NSArray *fetchedPins;
 @end
 
 @implementation GoogleMapViewController
@@ -31,11 +35,64 @@
     //one degree of latitude is approximately 111 kilometers (69 miles) at all times.
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+    [self fetchMarkers];
     self.view = self.mapView;
     self.mapView.myLocationEnabled = true;
     self.mapView.delegate = self;
     
 }
+
+- (void) loadMarkers {
+    int i=0;
+    while(i<self.markerArr.count) {
+        Pin *pin=self.markerArr[i];
+        GMSMarker *marker = [[GMSMarker alloc] init];
+        marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
+        marker.title = pin.placeName;
+        marker.snippet = pin.placeID;
+        marker.map = self.mapView;
+        i++;
+    }
+    self.view = self.mapView;
+    self.mapView.myLocationEnabled = true;
+    self.mapView.delegate = self;
+}
+
+- (void) fetchMarkers {
+    // construct query
+    PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+    [query whereKey:@"author" equalTo:[PFUser currentUser]];
+    // fetch data asynchronously
+    [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
+}
+
+- (void) fetchPins: (CLLocationCoordinate2D) coordinate {
+    // Fetch pins with specific coordinate
+    PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+    [query whereKey:@"author" equalTo:[PFUser currentUser]];
+    [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
+    [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
+    // fetch data asynchronously
+    [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.fetchedPins = pins;
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -54,6 +111,7 @@
     self.circ = [GMSCircle circleWithPosition:marker.position radius:800];
     self.circ.fillColor = [UIColor colorWithRed: 0.67 green: 0.67 blue: 0.67 alpha: 0.5];
     self.circ.map = self.mapView;
+    
     return NO;
 }
 
@@ -80,13 +138,6 @@
 }
 
 - (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
-    int popupWidth = 200;
-    int contentWidth = 180;
-    int contentPad = 10;
-    int popupHeight = 140;
-    int popupBottomPadding = 16;
-    int popupContentHeight = popupHeight - popupBottomPadding;
-    int buttonHeight = 30;
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
@@ -98,6 +149,12 @@
 }
 
 - (void)didPost {
+    
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = CLLocationCoordinate2DMake(self.infoMarker.position.latitude, self.infoMarker.position.longitude);
+    marker.title = self.infoMarker.title;
+    marker.snippet = self.infoMarker.snippet;
+    marker.map = self.mapView;
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
@@ -109,6 +166,8 @@
     if ([segue.identifier isEqual:@"composeSegue"]){
         ComposeViewController *composeVC = [segue destinationViewController];
         composeVC.placeName = self.infoMarker.title;
+        composeVC.coordinate = self.infoMarker.position;
+        composeVC.placeID = self.infoMarker.snippet;
         composeVC.delegate = self;
     }
 }
