@@ -48,6 +48,15 @@
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError * error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Error signing up! Please try again."
+                                                                    preferredStyle:(UIAlertControllerStyleAlert)];
+            // create an OK action
+            UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:nil];
+            // add the OK action to the alert controller
+            [alert addAction:uploadAction];
+            [self presentViewController:alert animated:YES completion:nil];
         } else {
             NSLog(@"User registered successfully");
             
