@@ -53,7 +53,12 @@
     }
 }
 
+- (void) fetchFriendStatus {
+    
+}
+
 - (IBAction)friendButton:(id)sender {
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

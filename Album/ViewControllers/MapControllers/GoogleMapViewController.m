@@ -269,7 +269,7 @@
         NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
         detailsVC.date = date;
         // Set caption
-        detailsVC.caption = firstPin[@"captionText"];
+        detailsVC.caption = [@"Caption: " stringByAppendingString:firstPin[@"captionText"]];
     }
 }
 @end

@@ -40,6 +40,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="jOG-DS-qYm" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="24" id="5RC-N3-RKi"/>
                 <constraint firstItem="AOp-gA-Iac" firstAttribute="top" secondItem="jOG-DS-qYm" secondAttribute="bottom" constant="20" id="Cwm-4b-aeE"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="G7e-S8-r0e" secondAttribute="bottom" constant="20" id="Idn-ON-QGF"/>
                 <constraint firstItem="AOp-gA-Iac" firstAttribute="centerX" secondItem="jOG-DS-qYm" secondAttribute="centerX" id="J4b-WA-F2j"/>
