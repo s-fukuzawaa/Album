@@ -8,5 +8,11 @@
 #import "Friendship.h"
 
 @implementation Friendship
+@dynamic requesterId;
+@dynamic recipientId;
+@dynamic hasFriended;
 
++ (nonnull NSString *)parseClassName {
+    return @"Friendship";
+}
 @end

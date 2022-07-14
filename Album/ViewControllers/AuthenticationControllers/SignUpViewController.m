@@ -60,7 +60,7 @@
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
-        // Create a cancel action
+        // Take photo action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction * _Nonnull action) {
@@ -70,9 +70,9 @@
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // Add the cancel action to the alertController
+        // Add the take photo action to the alertController
         [alert addAction:photoAction];
-        // Create an OK action
+        // Create an upload from library action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction * _Nonnull action) {
@@ -82,13 +82,13 @@
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // Add the OK action to the alert controller
+        // Add the upload from library action to the alert controller
         [alert addAction:uploadAction];
         //Cancel
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                          style:UIAlertActionStyleDefault
                                                        handler: nil];
-        // Add the OK action to the alert controller
+        // Add the cancel action to the alert controller
         [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     } else {

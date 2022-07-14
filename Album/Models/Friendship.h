@@ -9,8 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Friendship : PFObject
-
+@interface Friendship : PFObject<PFSubclassing>
+@property (nonatomic, strong) NSString *requesterId;
+@property (nonatomic, strong) NSString *recipientId;
+@property (nonatomic, strong) NSNumber *hasFriended;
 @end
 
 NS_ASSUME_NONNULL_END

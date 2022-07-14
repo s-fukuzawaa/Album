@@ -24,6 +24,7 @@
 		AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */; };
 		AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585128789C1B00C3FD82 /* ActivityCell.m */; };
 		AF15585528789D1500C3FD82 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585428789D1500C3FD82 /* FriendCell.m */; };
+		AF1FE7E0288082C100C5E0A5 /* Friendship.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7DF288082C100C5E0A5 /* Friendship.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -100,6 +101,8 @@
 		AF15585128789C1B00C3FD82 /* ActivityCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivityCell.m; sourceTree = "<group>"; };
 		AF15585328789D1500C3FD82 /* FriendCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendCell.h; sourceTree = "<group>"; };
 		AF15585428789D1500C3FD82 /* FriendCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendCell.m; sourceTree = "<group>"; };
+		AF1FE7DE288082C100C5E0A5 /* Friendship.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Friendship.h; sourceTree = "<group>"; };
+		AF1FE7DF288082C100C5E0A5 /* Friendship.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Friendship.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -348,6 +351,8 @@
 				AFCC30F5287DD5CF00521733 /* Pin.m */,
 				AFCC30F7287DDB9200521733 /* Image.h */,
 				AFCC30F8287DDB9200521733 /* Image.m */,
+				AF1FE7DE288082C100C5E0A5 /* Friendship.h */,
+				AF1FE7DF288082C100C5E0A5 /* Friendship.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -638,6 +643,7 @@
 				AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */,
 				AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */,
 				AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */,
+				AF1FE7E0288082C100C5E0A5 /* Friendship.m in Sources */,
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,

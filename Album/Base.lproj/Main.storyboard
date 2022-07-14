@@ -927,13 +927,13 @@
                                     <segue destination="Wk6-GE-gYZ" kind="embed" id="9uL-R6-ZQy"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRt-NQ-wLN">
-                                <rect key="frame" x="131" y="295" width="152" height="31"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
+                                <rect key="frame" x="130" y="310" width="154" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Friend"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Friend"/>
                                 <connections>
-                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="Wb6-ml-ze8"/>
+                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="GiJ-DT-hGq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -942,6 +942,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Friend Profile" id="waZ-sw-m0h"/>
                     <connections>
+                        <outlet property="friendButton" destination="9cN-q4-ZWy" id="9b9-fI-hSC"/>
                         <outlet property="friendMapContainer" destination="oqS-7G-ghx" id="Xhz-Lg-xkQ"/>
                         <outlet property="friendsGridContainer" destination="4hh-dS-94o" id="mfS-ox-fDb"/>
                         <outlet property="userImageView" destination="VyU-ZC-55u" id="rHr-RS-wsy"/>
