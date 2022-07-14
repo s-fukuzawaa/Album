@@ -9,7 +9,7 @@
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
-@interface SignUpViewController ()
+@interface SignUpViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
@@ -21,7 +21,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     // Tap profile to change configuration
     UITapGestureRecognizer *profileTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
@@ -29,6 +28,7 @@
 }
 
 - (IBAction)signUpButton:(id)sender {
+    // Sign up user to Parse backend
     [self registerUser];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -37,33 +37,28 @@
     [self.view endEditing:YES];
 }
 - (void)registerUser {
-    // initialize a user object
+    // Initialize a user object
     PFUser *newUser = [PFUser user];
-    
-    // set user properties
+    // Set user properties
     newUser.username = self.usernameField.text;
     newUser.email = self.emailField.text;
     newUser.password = self.pwField.text;
     newUser[@"profileImage"] = self.profileImageView.file;
-    
-    // call sign up function on the object
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError * error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
         } else {
             NSLog(@"User registered successfully");
-            
-            // manually segue to logged in view
         }
     }];
 }
 
 - (void) didTapUserProfile:(UITapGestureRecognizer *)sender{
-    // The Xcode simulator does not support taking pictures, so let's first check that the camera is indeed supported on the device before trying to present it.
+    
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
-        // create a cancel action
+        // Create a cancel action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction * _Nonnull action) {
@@ -73,26 +68,25 @@
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // add the cancel action to the alertController
+        // Add the cancel action to the alertController
         [alert addAction:photoAction];
-        // create an OK action
+        // Create an OK action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction * _Nonnull action) {
-            // handle response here.
             UIImagePickerController *imagePickerVC = [UIImagePickerController new];
             imagePickerVC.delegate = self;
             imagePickerVC.allowsEditing = YES;
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // add the OK action to the alert controller
+        // Add the OK action to the alert controller
         [alert addAction:uploadAction];
-        //cancel
+        // Cancel
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                          style:UIAlertActionStyleDefault
                                                        handler: nil];
-        // add the OK action to the alert controller
+        // Add the OK action to the alert controller
         [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     }
@@ -118,18 +112,15 @@
 }
 
 - (PFFileObject *)getPFFileFromImage: (UIImage * _Nullable)image {
- 
-    // check if image is not nil
+    // Check if image is not nil
     if (!image) {
         return nil;
     }
-    
     NSData *imageData = UIImagePNGRepresentation(image);
-    // get image data and check if that is not nil
+    // Get image data and check if that is not nil
     if (!imageData) {
         return nil;
     }
-    
     return [PFFileObject fileObjectWithName:@"image.png" data:imageData];
 }
 
@@ -144,13 +135,13 @@
     return newImage;
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

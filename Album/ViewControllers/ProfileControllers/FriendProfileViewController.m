@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Initial view to friend map view
     self.friendMapContainer.alpha = 0.0;
     self.friendsGridContainer.alpha = 1.0;
     // Set user profile image view
@@ -24,6 +25,7 @@
     
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
+    // Switch from map or album
     if(sender.selectedSegmentIndex == 0){
         [UIView animateWithDuration:0.5 animations:^{
             self.friendMapContainer.alpha = 0.0;
@@ -59,9 +61,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 0;
 }
-
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     return NULL;

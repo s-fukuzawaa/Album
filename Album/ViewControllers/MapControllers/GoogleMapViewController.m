@@ -14,27 +14,28 @@
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
-@property (nonatommic, strong) NSArray *fetchedPins;
+@property (nonatomic, strong) NSArray *fetchedPins;
 @end
 
 @implementation GoogleMapViewController
 
 - (void)loadView {
     [super loadView];
-    //Set the inital map view position
+    //Set up location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
     kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
+    // Ask for location permission
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         [self.locationManager requestWhenInUseAuthorization];
         [self.locationManager startUpdatingLocation];
     }
-    
+    //Set the inital map view position
     CLLocation *curPos = self.locationManager.location;
-    //one degree of latitude is approximately 111 kilometers (69 miles) at all times.
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+    // Get pins for this user
     [self fetchMarkers];
     self.view = self.mapView;
     self.mapView.myLocationEnabled = true;
@@ -43,7 +44,7 @@
 }
 
 - (void) loadMarkers {
-    int i=0;
+    int i = 0;
     while(i<self.markerArr.count) {
         Pin *pin=self.markerArr[i];
         GMSMarker *marker = [[GMSMarker alloc] init];
@@ -53,21 +54,19 @@
         marker.map = self.mapView;
         i++;
     }
-    self.view = self.mapView;
-    self.mapView.myLocationEnabled = true;
-    self.mapView.delegate = self;
 }
 
 - (void) fetchMarkers {
-    // construct query
+    // Query pins written by current user
     PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
     [query whereKey:@"author" equalTo:[PFUser currentUser]];
-    // fetch data asynchronously
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
+            // Save resulting pins
             self.markerArr = (NSMutableArray *)pins;
+            // Add markers to map
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);
@@ -81,11 +80,11 @@
     [query whereKey:@"author" equalTo:[PFUser currentUser]];
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
     [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
-    // fetch data asynchronously
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
+            // Store results
             self.fetchedPins = pins;
         } else {
             NSLog(@"%@", error.localizedDescription);
@@ -98,6 +97,7 @@
     
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
+    // Add marker to current location
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
     marker.map = self.mapView;
 }
@@ -115,41 +115,40 @@
     return NO;
 }
 
-
-
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
     GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
     marker.map = self.mapView;
 }
 
 - (void)mapView:(GMSMapView *)mapView
-    didTapPOIWithPlaceID:(NSString *)placeID
-                    name:(NSString *)name
-                location:(CLLocationCoordinate2D)location {
-  self.infoMarker = [GMSMarker markerWithPosition:location];
-  self.infoMarker.snippet = placeID;
-  self.infoMarker.title = name;
-  self.infoMarker.opacity = 0;
-  CGPoint pos = self.infoMarker.infoWindowAnchor;
-  pos.y = 1;
-  self.infoMarker.infoWindowAnchor = pos;
-  self.infoMarker.map = mapView;
-  mapView.selectedMarker = self.infoMarker;
+didTapPOIWithPlaceID:(NSString *)placeID
+           name:(NSString *)name
+       location:(CLLocationCoordinate2D)location {
+    self.infoMarker = [GMSMarker markerWithPosition:location];
+    self.infoMarker.snippet = placeID;
+    self.infoMarker.title = name;
+    self.infoMarker.opacity = 0;
+    CGPoint pos = self.infoMarker.infoWindowAnchor;
+    pos.y = 1;
+    self.infoMarker.infoWindowAnchor = pos;
+    self.infoMarker.map = mapView;
+    mapView.selectedMarker = self.infoMarker;
 }
 
 - (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
+    // Set up customized information window
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
 }
 
-- (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
-{
+- (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker {
+    // Lead to compose view when tap info window
     [self performSegueWithIdentifier:@"composeSegue" sender:self];
 }
 
 - (void)didPost {
-    
+    // Add marker to the location we just composed Pin
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = CLLocationCoordinate2DMake(self.infoMarker.position.latitude, self.infoMarker.position.longitude);
     marker.title = self.infoMarker.title;

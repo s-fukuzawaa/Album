@@ -24,9 +24,9 @@
     
 }
 - (IBAction)searchButton:(id)sender {
+    // Search user by username
     PFQuery *query = [PFUser query];
     [query whereKey:@"username" equalTo:self.searchFriendField.text];
-    // fetch data asynchronously
     [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
         if (users != nil) {
             self.friendsArr = (NSMutableArray*)users;
@@ -59,8 +59,6 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(FriendCell *)sender];
     FriendProfileViewController *friendProfVC = [segue destinationViewController];
     friendProfVC.user = self.friendsArr[indexPath.row];

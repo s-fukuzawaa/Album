@@ -10,7 +10,7 @@
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
-@interface ComposeViewController () <UITextViewDelegate>
+@interface ComposeViewController () <UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -114,6 +114,7 @@
 }
 
 - (IBAction)postButton:(id)sender {
+    // Post new Pin
     Pin *newPin = [Pin new];
     newPin.author = [PFUser currentUser];
     newPin.captionText = self.captionTextView.text;
@@ -123,35 +124,35 @@
     newPin[@"latitude"] = @(self.coordinate.latitude);
     newPin[@"longitude"] = @(self.coordinate.longitude);
     [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-      if (error) {
-          NSLog(@"Error posting: %@", error.localizedDescription);
-      } else {
-          NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
-          [Image postImage:self.pinImageView.image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
-              if(error){
-                  NSLog(@"Error saving image: %@", error.localizedDescription);
-              }
-              else{
-                  NSLog(@"Successfully saved image");
-                  [self.delegate didPost];
-              }
-          } ];
-      }
+        if (error) {
+            NSLog(@"Error posting: %@", error.localizedDescription);
+        } else {
+            NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
+            [Image postImage:self.pinImageView.image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
+                if(error){
+                    NSLog(@"Error saving image: %@", error.localizedDescription);
+                }
+                else{
+                    NSLog(@"Successfully saved image");
+                    [self.delegate didPost];
+                }
+            } ];
+        }
     }];
-    
+    // Return to map view
     [self returnMap];
 }
 - (IBAction) tapped:(id) sender{
     [self.view endEditing:YES];
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
