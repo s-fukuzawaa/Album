@@ -16,66 +16,53 @@
 @implementation FriendProfileViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    self.friendMapContainer.alpha = 0.0;
-    self.friendsGridContainer.alpha = 1.0;
-    // Set user profile image view
-    [self fetchProfile];
-    
+	[super viewDidLoad];
+	self.friendMapContainer.alpha = 0.0;
+	self.friendsGridContainer.alpha = 1.0;
+	// Set user profile image view
+	[self fetchProfile];
+
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
-    if(sender.selectedSegmentIndex == 0){
-        [UIView animateWithDuration:0.5 animations:^{
-            self.friendMapContainer.alpha = 0.0;
-            self.friendsGridContainer.alpha = 1.0;
-        }];
-    } else { // Album View case
-        [UIView animateWithDuration:0.5 animations:^{
-            self.friendMapContainer.alpha = 1.0;
-            self.friendsGridContainer.alpha = 0.0;
-        }];
-    }
+	if(sender.selectedSegmentIndex == 0) {
+		[UIView animateWithDuration:0.5 animations:^{
+		         self.friendMapContainer.alpha = 0.0;
+		         self.friendsGridContainer.alpha = 1.0;
+		 }];
+	} else { // Album View case
+		[UIView animateWithDuration:0.5 animations:^{
+		         self.friendMapContainer.alpha = 1.0;
+		         self.friendsGridContainer.alpha = 0.0;
+		 }];
+	}
 }
 
 - (void) fetchProfile {
-    PFUser *user = self.user;
-    if(user[@"profileImage"]){
-        PFFileObject *file = user[@"profileImage"];
-        [self.userImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.userImageView setImage:image];
-                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height/2;
-                self.userImageView.layer.masksToBounds = YES;
-            }
-        }];
-    }
+	PFUser *user = self.user;
+	if(user[@"profileImage"]) {
+		PFFileObject *file = user[@"profileImage"];
+		[self.userImageView setFile:file];
+		[file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+		         if (!error) {
+				 UIImage *image = [UIImage imageWithData:imageData];
+				 [self.userImageView setImage:image];
+				 self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height/2;
+				 self.userImageView.layer.masksToBounds = YES;
+			 }
+		 }];
+	}
 }
 
-- (void) fetchFriendStatus {
-    
-}
 
 - (IBAction)friendButton:(id)sender {
-    
+
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NULL;
+	return NULL;
 }
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 @end

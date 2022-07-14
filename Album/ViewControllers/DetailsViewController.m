@@ -18,33 +18,23 @@
 @implementation DetailsViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    // Set location
-    self.placeNameLabel.text = self.placeName;
-    // Set date
-    self.dateLabel.text = self.date;
-    // Set caption
-    self.captionTextView.text = self.caption;
-    // Set image
-    [self.pinImageView setFile:self.pinImage];
-    [self.pinImage getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-        if (!error) {
-            UIImage *image = [UIImage imageWithData:imageData];
-            [self.pinImageView setImage:image];
-        }
-    }];
-    
-}
+	[super viewDidLoad];
+	// Do any additional setup after loading the view.
+	// Set location
+	self.placeNameLabel.text = self.placeName;
+	// Set date
+	self.dateLabel.text = self.date;
+	// Set caption
+	self.captionTextView.text = self.caption;
+	// Set image
+	[self.pinImageView setFile:self.pinImage];
+	[self.pinImage getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+	         if (!error) {
+			 UIImage *image = [UIImage imageWithData:imageData];
+			 [self.pinImageView setImage:image];
+		 }
+	 }];
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+}
 
 @end
