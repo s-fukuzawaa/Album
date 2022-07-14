@@ -17,7 +17,7 @@ static int const NOT_FRIEND = 0;
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
 @property (nonatomic) int friendStatus;
-@property (weak, nonatomic) PFObject *friendship;
+@property (weak, nonatomic) Friendship *friendship;
 @end
 
 @implementation FriendProfileViewController
@@ -64,29 +64,19 @@ static int const NOT_FRIEND = 0;
 
 - (void) updateButton {
 	if(self.friendStatus == FRIENDED) {
-//        self.friendButton.tintColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
-//        self.friendButton.titleLabel.text = @"Friended";
-//        self.friendButton.titleLabel.textColor = [UIColor whiteColor];
-		[self.friendButton setTintColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
-		[self.friendButton.titleLabel setText : @"Friended"];
-		[self.friendButton.titleLabel setTextColor: [UIColor whiteColor]];
+		[self.friendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
+        [self.friendButton setTintColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
 	}else if(self.friendStatus == PENDING) {
-//        self.friendButton.tintColor = [UIColor whiteColor];
-//        self.friendButton.titleLabel.text = @"Pending";
-//        self.friendButton.titleLabel.textColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
-		[self.friendButton setTintColor: [UIColor whiteColor]];
-		[self.friendButton.titleLabel setText : @"Pending"];
-		[self.friendButton.titleLabel setTextColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+        [self.friendButton setTintColor:[UIColor whiteColor]];
+		[self.friendButton setTitle:@"Pending" forState:UIControlStateNormal];
+		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
 	}else{
-//        self.friendButton.titleLabel.text = @"Request Friend?";
-//        self.friendButton.tintColor = [UIColor whiteColor];
-//        self.friendButton.titleLabel.textColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
-		[self.friendButton setTintColor: [UIColor whiteColor]];
-		[self.friendButton.titleLabel setText : @"Request Friend?"];
-		[self.friendButton.titleLabel setTextColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+		[self.friendButton setTintColor:[UIColor whiteColor]];
+		[self.friendButton setTitle:@"Request Friend?" forState:UIControlStateNormal];
+        [self.friendButton setTitleColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
 
 	}
-//    [self.friendButton setNeedsLayout];
 }
 
 - (int) fetchFriendStatus {
@@ -101,8 +91,8 @@ static int const NOT_FRIEND = 0;
 	NSArray *friendships = [query findObjects];
 
 	if(friendships==nil||friendships.count==0) {
+        [self updateFriendship];
 		return NOT_FRIEND;
-//        [self addFriendship];
 	}else{
 		self.friendship=friendships[0];
 		if(self.friendship[@"hasFriended"]) {
@@ -114,23 +104,36 @@ static int const NOT_FRIEND = 0;
 }
 
 - (void) updateFriendship {
-	Friendship *newFriendship = (Friendship *)self.friendship;
-	if(newFriendship == NULL) {
-		newFriendship = [Friendship new];
-	}
 	PFUser *currentUser = [PFUser currentUser];
-	newFriendship.requesterId = currentUser.objectId;
-	newFriendship.recipientId = self.user.objectId;
-	newFriendship.hasFriended = @(self.friendStatus);
-	[newFriendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    if(self.friendship == NULL) {
+        Friendship *friendship = [Friendship new];
+        friendship.requesterId = currentUser.objectId;
+        friendship.recipientId = self.user.objectId;
+        friendship.hasFriended = @(self.friendStatus);
+        [friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                 if (error) {
+                 NSLog(@"Error posting: %@", error.localizedDescription);
+             } else {
+                 NSLog(@"Friendship saved successfully! Status:%d", self.friendStatus);
+
+             }
+         }];
+        self.friendship = friendship;
+        return;
+    }
+	self.friendship.requesterId = currentUser.objectId;
+    self.friendship.recipientId = self.user.objectId;
+    self.friendship.hasFriended = @(self.friendStatus);
+	[self.friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
 	         if (error) {
 			 NSLog(@"Error posting: %@", error.localizedDescription);
 		 } else {
-			 NSLog(@"Friendship saved successfully! Object Id:%@", newFriendship.objectId);
+			 NSLog(@"Friendship saved successfully! Status:%d", self.friendStatus);
 
 		 }
 	 }];
 }
+
 
 
 - (IBAction)friendButton:(id)sender {
