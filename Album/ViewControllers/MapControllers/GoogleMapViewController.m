@@ -124,18 +124,18 @@
 }
 
 - (void)mapView:(GMSMapView *)mapView
-    didTapPOIWithPlaceID:(NSString *)placeID
-                    name:(NSString *)name
-                location:(CLLocationCoordinate2D)location {
-  self.infoMarker = [GMSMarker markerWithPosition:location];
-  self.infoMarker.snippet = placeID;
-  self.infoMarker.title = name;
-  self.infoMarker.opacity = 0;
-  CGPoint pos = self.infoMarker.infoWindowAnchor;
-  pos.y = 1;
-  self.infoMarker.infoWindowAnchor = pos;
-  self.infoMarker.map = mapView;
-  mapView.selectedMarker = self.infoMarker;
+didTapPOIWithPlaceID:(NSString *)placeID
+           name:(NSString *)name
+       location:(CLLocationCoordinate2D)location {
+    self.infoMarker = [GMSMarker markerWithPosition:location];
+    self.infoMarker.snippet = placeID;
+    self.infoMarker.title = name;
+    self.infoMarker.opacity = 0;
+    CGPoint pos = self.infoMarker.infoWindowAnchor;
+    pos.y = 1;
+    self.infoMarker.infoWindowAnchor = pos;
+    self.infoMarker.map = mapView;
+    mapView.selectedMarker = self.infoMarker;
 }
 
 - (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {

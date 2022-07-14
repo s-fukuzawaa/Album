@@ -11,7 +11,7 @@
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
-@interface ComposeViewController () <UITextViewDelegate>
+@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -41,11 +41,10 @@
 }
 
 - (void) didTapImage:(UITapGestureRecognizer *)sender{
-    // The Xcode simulator does not support taking pictures, so let's first check that the camera is indeed supported on the device before trying to present it.
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
-        // create a cancel action
+        // Create a cancel action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction * _Nonnull action) {
@@ -55,26 +54,25 @@
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // add the cancel action to the alertController
+        // Add the cancel action to the alertController
         [alert addAction:photoAction];
-        // create an OK action
+        // Create an OK action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction * _Nonnull action) {
-            // handle response here.
             UIImagePickerController *imagePickerVC = [UIImagePickerController new];
             imagePickerVC.delegate = self;
             imagePickerVC.allowsEditing = YES;
             imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:imagePickerVC animated:YES completion:nil];
         }];
-        // add the OK action to the alert controller
+        // Add the OK action to the alert controller
         [alert addAction:uploadAction];
-        //cancel
+        //Cancel
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                          style:UIAlertActionStyleDefault
                                                        handler: nil];
-        // add the OK action to the alert controller
+        // Add the OK action to the alert controller
         [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     }
@@ -95,8 +93,6 @@
     [self.pinImageView setImage:originalImage];
     // TODO: Get date and set it to date picker default
     NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
-    
-
     // Dismiss UIImagePickerController to go back to your original view controller
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -130,20 +126,20 @@
     newPin[@"longitude"] = @(self.coordinate.longitude);
     newPin[@"traveledOn"] = self.traveledDate.date;
     [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-      if (error) {
-          NSLog(@"Error posting: %@", error.localizedDescription);
-      } else {
-          NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
-          [Image postImage:self.pinImageView.image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
-              if(error){
-                  NSLog(@"Error saving image: %@", error.localizedDescription);
-              }
-              else{
-                  NSLog(@"Successfully saved image");
-                  [self.delegate didPost];
-              }
-          } ];
-      }
+        if (error) {
+            NSLog(@"Error posting: %@", error.localizedDescription);
+        } else {
+            NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
+            [Image postImage:self.pinImageView.image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
+                if(error){
+                    NSLog(@"Error saving image: %@", error.localizedDescription);
+                }
+                else{
+                    NSLog(@"Successfully saved image");
+                    [self.delegate didPost];
+                }
+            } ];
+        }
     }];
     
     [self returnMap];
@@ -152,13 +148,13 @@
     [self.view endEditing:YES];
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
