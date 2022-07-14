@@ -21,7 +21,6 @@
 		AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583E28774F3300C3FD82 /* ComposeViewController.m */; };
 		AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584128774F4000C3FD82 /* DetailsViewController.m */; };
 		AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF155845287750CB00C3FD82 /* AlbumViewController.m */; };
-		AF155849287750D700C3FD82 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF155848287750D700C3FD82 /* MapViewController.m */; };
 		AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */; };
 		AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585128789C1B00C3FD82 /* ActivityCell.m */; };
 		AF15585528789D1500C3FD82 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585428789D1500C3FD82 /* FriendCell.m */; };
@@ -95,8 +94,6 @@
 		AF15584128774F4000C3FD82 /* DetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		AF155844287750CB00C3FD82 /* AlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
 		AF155845287750CB00C3FD82 /* AlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
-		AF155847287750D700C3FD82 /* MapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
-		AF155848287750D700C3FD82 /* MapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		AF15584A2877AA5700C3FD82 /* FriendProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
 		AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
 		AF15585028789C1B00C3FD82 /* ActivityCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityCell.h; sourceTree = "<group>"; };
@@ -229,8 +226,6 @@
 				AF15582D287746F200C3FD82 /* HomeViewController.m */,
 				AF155844287750CB00C3FD82 /* AlbumViewController.h */,
 				AF155845287750CB00C3FD82 /* AlbumViewController.m */,
-				AF155847287750D700C3FD82 /* MapViewController.h */,
-				AF155848287750D700C3FD82 /* MapViewController.m */,
 			);
 			path = HomeControllers;
 			sourceTree = "<group>";
@@ -651,7 +646,6 @@
 				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,
 				AF0D2D69287F43B8000A3870 /* InfoMarkerView.m in Sources */,
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
-				AF155849287750D700C3FD82 /* MapViewController.m in Sources */,
 				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,
 				AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */,
 				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,
