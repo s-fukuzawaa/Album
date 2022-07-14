@@ -147,16 +147,14 @@ didTapPOIWithPlaceID:(NSString *)placeID
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [markerView.pinImageView setImage:image];
-                }
-            }];
-        }
+        PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+        [markerView.pinImageView setFile:imageFile];
+        [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [markerView.pinImageView setImage:image];
+            }
+        }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
