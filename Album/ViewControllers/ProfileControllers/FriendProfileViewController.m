@@ -10,9 +10,9 @@
 #import <PFImageView.h>
 #import <Parse/Parse.h>
 static int const REJECT = 3;
-static int const PENDING = @(1);
-static NSNumber* const FRIENDED = @(2);
-static NSNumber* const NOT_FRIEND = @(0);
+static int const PENDING = 1;
+static int const FRIENDED = 2;
+static int const NOT_FRIEND = 0;
 
 @interface FriendProfileViewController ()
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
@@ -65,16 +65,16 @@ static NSNumber* const NOT_FRIEND = @(0);
 }
 
 - (void) updateButton {
-    if(self.request != NULL && [self.requestStatus intValue]== [PENDING intValue]) {
+    if(self.request != NULL && [self.requestStatus intValue]== PENDING) {
         [self.friendButton setTintColor:[UIColor whiteColor]];
         [self.friendButton setTitle:@"Received Request" forState:UIControlStateNormal];
         [self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
     }
-	else if(self.friendStatus == FRIENDED) {
+	else if([self.friendStatus intValue] == FRIENDED) {
 		[self.friendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
         [self.friendButton setTintColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
-	}else if(self.friendStatus == PENDING) {
+	}else if([self.friendStatus intValue] == PENDING) {
         [self.friendButton setTintColor:[UIColor whiteColor]];
 		[self.friendButton setTitle:@"Pending" forState:UIControlStateNormal];
 		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
@@ -135,7 +135,7 @@ static NSNumber* const NOT_FRIEND = @(0);
         Friendship *friendship = [Friendship new];
         friendship.requesterId = currentUser.objectId;
         friendship.recipientId = self.user.objectId;
-        friendship.hasFriended = NOT_FRIEND;
+        friendship.hasFriended = @(NOT_FRIEND);
         [friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                  if (error) {
                  NSLog(@"Error posting: %@", error.localizedDescription);
@@ -145,7 +145,7 @@ static NSNumber* const NOT_FRIEND = @(0);
              }
          }];
         self.friendship=friendship;
-        self.friendStatus = NOT_FRIEND;
+        self.friendStatus = @(NOT_FRIEND);
         return;
     }
     self.friendship.hasFriended = self.friendStatus;
@@ -182,17 +182,17 @@ static NSNumber* const NOT_FRIEND = @(0);
     
     // Current user request to be friends
     // Request: Update friendStatus = PENDING
-    if(self.friendStatus == PENDING) {
+    if([self.friendStatus intValue] == PENDING) {
         return;
-    }else if(self.requestStatus!=NULL && PENDING) {
+    }else if(self.requestStatus!=NULL && [self.requestStatus intValue]==PENDING) {
         [self requestAlert];
         [self updateRequest];
-    }else if(self.friendStatus == FRIENDED) {
-        self.requestStatus = NOT_FRIEND;
-        self.friendStatus = NOT_FRIEND;
+    }else if([self.friendStatus intValue] == FRIENDED) {
+        self.requestStatus = @(NOT_FRIEND);
+        self.friendStatus = @(NOT_FRIEND);
         [self updateRequest];
-    }else if(self.friendStatus == NOT_FRIEND) {
-        self.friendStatus = PENDING;
+    }else if([self.friendStatus intValue] == NOT_FRIEND) {
+        self.friendStatus = @(PENDING);
     }
 	[self updateFriendship];
 	[self updateButton];
@@ -205,16 +205,22 @@ static NSNumber* const NOT_FRIEND = @(0);
     UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
                                                           style:UIAlertActionStyleCancel
                                                         handler:^(UIAlertAction * _Nonnull action) {
-        self.requestStatus = FRIENDED;
-        self.friendStatus = FRIENDED;
+        self.requestStatus = @(FRIENDED);
+        self.friendStatus = @(FRIENDED);
+        [self updateFriendship];
+        [self updateRequest];
+        [self updateButton];
     }];
     [alert addAction:acceptAction];
     // Create a reject action
     UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * _Nonnull action) {
-        self.requestStatus = NOT_FRIEND;
-        self.friendStatus = NOT_FRIEND;
+        self.requestStatus = @(NOT_FRIEND);
+        self.friendStatus = @(NOT_FRIEND);
+        [self updateFriendship];
+        [self updateRequest];
+        [self updateButton];
     }];
     // add the OK action to the alert controller
     [alert addAction:rejectAction];
