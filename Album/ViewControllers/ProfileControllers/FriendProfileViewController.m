@@ -9,7 +9,7 @@
 #import "Friendship.h"
 #import <PFImageView.h>
 #import <Parse/Parse.h>
-static int const REJECT = 3;
+// Constants to manage friendship status
 static int const PENDING = 1;
 static int const FRIENDED = 2;
 static int const NOT_FRIEND = 0;
@@ -17,10 +17,10 @@ static int const NOT_FRIEND = 0;
 @interface FriendProfileViewController ()
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
-@property (nonatomic) NSNumber *friendStatus;
-@property (nonatomic) NSNumber *requestStatus;
-@property (strong, nonatomic) Friendship *friendship;
-@property (strong, nonatomic) Friendship *request;
+@property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
+@property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
+@property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
+@property (strong, nonatomic) Friendship *request; // Friendship where requester = tapped user
 @end
 
 @implementation FriendProfileViewController
@@ -31,7 +31,9 @@ static int const NOT_FRIEND = 0;
 	self.friendsGridContainer.alpha = 1.0;
 	// Set user profile image view
 	[self fetchProfile];
-    [self fetchRequestStatus];
+	// Set request statuses
+	[self fetchRequestStatus];
+	// Set friend statuses
 	[self fetchFriendStatus];
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
@@ -65,24 +67,23 @@ static int const NOT_FRIEND = 0;
 }
 
 - (void) updateButton {
-    if(self.request != NULL && [self.requestStatus intValue]== PENDING) {
-        [self.friendButton setTintColor:[UIColor whiteColor]];
-        [self.friendButton setTitle:@"Received Request" forState:UIControlStateNormal];
-        [self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
-    }
+	if(self.request != NULL && [self.requestStatus intValue]== PENDING) {
+		[self.friendButton setTintColor:[UIColor whiteColor]];
+		[self.friendButton setTitle:@"Received Request" forState:UIControlStateNormal];
+		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
+	}
 	else if([self.friendStatus intValue] == FRIENDED) {
 		[self.friendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
-        [self.friendButton setTintColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+		[self.friendButton setTintColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
 	}else if([self.friendStatus intValue] == PENDING) {
-        [self.friendButton setTintColor:[UIColor whiteColor]];
+		[self.friendButton setTintColor:[UIColor whiteColor]];
 		[self.friendButton setTitle:@"Pending" forState:UIControlStateNormal];
 		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
 	}else{
 		[self.friendButton setTintColor:[UIColor whiteColor]];
 		[self.friendButton setTitle:@"Request Friend?" forState:UIControlStateNormal];
-        [self.friendButton setTitleColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
-
+		[self.friendButton setTitleColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
 	}
 }
 
@@ -92,145 +93,161 @@ static int const NOT_FRIEND = 0;
 	PFUser *currentUser = [PFUser currentUser];
 	[query whereKey:@"requestId" equalTo:currentUser.objectId];
 	[query whereKey:@"recipientId" equalTo:self.user.objectId];
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable friendships, NSError * _Nullable error) {
-        if (friendships != nil) {
-            // do something with the array of object returned by the call
-            if(friendships.count == 0) {
-                [self updateFriendship];
-            }else{
-                self.friendship = friendships[0];
-                self.friendStatus = self.friendship.hasFriended;
-                [self updateButton];
-            }
-            
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
+	[query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable friendships, NSError * _Nullable error) {
+	         if (friendships != nil) {
+			 // Check if friendships exist between tapped user and current user
+			 if(friendships.count == 0) {
+				 // If not, add friendship
+				 [self updateFriendship];
+			 }else{
+				 // Otherwise, store
+				 self.friendship = friendships[0];
+				 self.friendStatus = self.friendship.hasFriended;
+				 // Update button UI
+				 [self updateButton];
+			 }
+
+		 } else {
+			 NSLog(@"%@", error.localizedDescription);
+		 }
+	 }];
 }
 
 - (void) fetchRequestStatus {
-    // Query to find markers that belong to current user
-    PFQuery *query = [PFQuery queryWithClassName:@"Friendship"];
-    PFUser *currentUser = [PFUser currentUser];
-    [query whereKey:@"recipientId" equalTo:currentUser.objectId];
-    [query whereKey:@"requesterId" equalTo:self.user.objectId];
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable requests, NSError * _Nullable error) {
-        if (requests != nil) {
-            // do something with the array of object returned by the call
-            if(requests.count != 0) {
-                self.request = requests[0];
-                self.requestStatus = self.request.hasFriended;
-                [self updateButton];
-            }
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
+	// Query to find markers that belong to current user
+	PFQuery *query = [PFQuery queryWithClassName:@"Friendship"];
+	PFUser *currentUser = [PFUser currentUser];
+	[query whereKey:@"recipientId" equalTo:currentUser.objectId];
+	[query whereKey:@"requesterId" equalTo:self.user.objectId];
+	[query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable requests, NSError * _Nullable error) {
+	         if (requests != nil) {
+			 // Check if friend requests made to current user from tapped user
+			 if(requests.count != 0) {
+				 // Store properties
+				 self.request = requests[0];
+				 self.requestStatus = self.request.hasFriended;
+				 // UPdate button UI
+				 [self updateButton];
+			 }
+		 } else {
+			 NSLog(@"%@", error.localizedDescription);
+		 }
+	 }];
 }
 
 - (void) updateFriendship {
-    if(self.friendship == NULL) {
-        PFUser *currentUser = [PFUser currentUser];
-        Friendship *friendship = [Friendship new];
-        friendship.requesterId = currentUser.objectId;
-        friendship.recipientId = self.user.objectId;
-        friendship.hasFriended = @(NOT_FRIEND);
-        [friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                 if (error) {
-                 NSLog(@"Error posting: %@", error.localizedDescription);
-             } else {
-                 NSLog(@"Friendship saved successfully! Status:%@", self.friendStatus);
+	// If friendship doesn't exist
+	if(self.friendship == NULL) {
+		// Add friendship to data base
+		PFUser *currentUser = [PFUser currentUser];
+		Friendship *friendship = [Friendship new];
+		friendship.requesterId = currentUser.objectId;
+		friendship.recipientId = self.user.objectId;
+		friendship.hasFriended = @(NOT_FRIEND);
+		[friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+		         if (error) {
+				 NSLog(@"Error posting: %@", error.localizedDescription);
+			 } else {
+				 NSLog(@"Friendship saved successfully! Status:%@", self.friendStatus);
 
-             }
-         }];
-        self.friendship=friendship;
-        self.friendStatus = @(NOT_FRIEND);
-        return;
-    }
-    self.friendship.hasFriended = self.friendStatus;
-    [self.friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-        if(error){
-            NSLog(@"Error posting: %@", error.localizedDescription);
-        }
-        else{
-            NSLog(@"Successfully saved friendship!");
-        }
-    }];
+			 }
+		 }];
+		// Store properties
+		self.friendship=friendship;
+		self.friendStatus = @(NOT_FRIEND);
+		return;
+	}
+	// Otherwise, update friendship status in the database
+	self.friendship.hasFriended = self.friendStatus;
+	[self.friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+	         if(error) {
+			 NSLog(@"Error posting: %@", error.localizedDescription);
+		 }
+	         else{
+			 NSLog(@"Successfully saved friendship!");
+		 }
+	 }];
 }
 
 - (void) updateRequest {
-    if(self.request != NULL) {
-        self.request.hasFriended = self.requestStatus;
-        [self.request saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                 if (error) {
-                 NSLog(@"Error posting: %@", error.localizedDescription);
-             } else {
-                 NSLog(@"Request saved successfully! Status:%@", self.requestStatus);
+	// If there's request from tapped user
+	if(self.request != NULL) {
+		// Update friendship in the backend
+		self.request.hasFriended = self.requestStatus;
+		[self.request saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+		         if (error) {
+				 NSLog(@"Error posting: %@", error.localizedDescription);
+			 } else {
+				 NSLog(@"Request saved successfully! Status:%@", self.requestStatus);
 
-             }
-         }];
-        return;
-    }
+			 }
+		 }];
+		return;
+	}
 }
 
 - (IBAction)friendButton:(id)sender {
-    // Current user being requested to be friends
-    // Present accept or reject follow request
-    // Accept: Update friendStatus = FRIENDED. Update requestStatus = FRIENDED, give friended button ui
-    // Reject: Update friendStatus = UNFRIENDED. Update requestStatus = UNFRIENDED, give UNFRIEND button ui
-    
-    // Current user request to be friends
-    // Request: Update friendStatus = PENDING
-    if([self.friendStatus intValue] == PENDING) {
-        return;
-    }else if(self.requestStatus!=NULL && [self.requestStatus intValue]==PENDING) {
-        [self requestAlert];
-        [self updateRequest];
-    }else if([self.friendStatus intValue] == FRIENDED) {
-        self.requestStatus = @(NOT_FRIEND);
-        self.friendStatus = @(NOT_FRIEND);
-        [self updateRequest];
-    }else if([self.friendStatus intValue] == NOT_FRIEND) {
-        self.friendStatus = @(PENDING);
-    }
+	if([self.friendStatus intValue] == PENDING) {
+		// If pending friendStatus, no action
+		return;
+	}else if(self.requestStatus!=NULL && [self.requestStatus intValue]==PENDING) {
+		// If there's pending incoming friendrequest, alert to accept or reject
+		[self requestAlert];
+		// Update database for request side
+		[self updateRequest];
+	}else if([self.friendStatus intValue] == FRIENDED) {
+		// If they are already friends, but tapped the button, unfriend
+		self.requestStatus = @(NOT_FRIEND);
+		self.friendStatus = @(NOT_FRIEND);
+		// Update database for request side
+		[self updateRequest];
+	}else if([self.friendStatus intValue] == NOT_FRIEND) {
+		// If current user requests to be friends with the tapped user
+		self.friendStatus = @(PENDING);
+	}
+	// Update databased for current user's side
 	[self updateFriendship];
+	// Update button UI
 	[self updateButton];
 }
 
 - (void) requestAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"FRIEND REQUEST" message:@"Choose"
-                                                            preferredStyle:(UIAlertControllerStyleAlert)];
-    // Create a accept action
-    UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-        self.requestStatus = @(FRIENDED);
-        self.friendStatus = @(FRIENDED);
-        [self updateFriendship];
-        [self updateRequest];
-        [self updateButton];
-    }];
-    [alert addAction:acceptAction];
-    // Create a reject action
-    UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction * _Nonnull action) {
-        self.requestStatus = @(NOT_FRIEND);
-        self.friendStatus = @(NOT_FRIEND);
-        [self updateFriendship];
-        [self updateRequest];
-        [self updateButton];
-    }];
-    // add the OK action to the alert controller
-    [alert addAction:rejectAction];
-    //cancel
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler: nil];
-    // add the OK action to the alert controller
-    [alert addAction:cancel];
-    [self presentViewController:alert animated:YES completion:nil];
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"FRIEND REQUEST" message:@"Choose"
+	                            preferredStyle:(UIAlertControllerStyleAlert)];
+	// Create a accept action
+	UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
+	                               style:UIAlertActionStyleCancel
+	                               handler:^(UIAlertAction * _Nonnull action) {
+	                                       // Update statuses
+	                                       self.requestStatus = @(FRIENDED);
+	                                       self.friendStatus = @(FRIENDED);
+	                                       // Update database
+	                                       [self updateFriendship];
+	                                       [self updateRequest];
+	                                       // Update button UI
+	                                       [self updateButton];
+				       }];
+	[alert addAction:acceptAction];
+	// Create a reject action
+	UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
+	                               style:UIAlertActionStyleDefault
+	                               handler:^(UIAlertAction * _Nonnull action) {
+	                                       // Update statuses
+	                                       self.requestStatus = @(NOT_FRIEND);
+	                                       self.friendStatus = @(NOT_FRIEND);
+	                                       // Update database
+	                                       [self updateFriendship];
+	                                       [self updateRequest];
+	                                       // Update button UI
+	                                       [self updateButton];
+				       }];
+	[alert addAction:rejectAction];
+	// Cancel action
+	UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+	                         style:UIAlertActionStyleDefault
+	                         handler: nil];
+	[alert addAction:cancel];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

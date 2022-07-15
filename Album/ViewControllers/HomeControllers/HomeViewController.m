@@ -15,9 +15,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Initial view with map
     self.mapViewContainer.alpha = 0.0;
     self.albumViewContainer.alpha = 1.0;
-    // Do any additional setup after loading the view.
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
     // Map View case
@@ -33,15 +33,4 @@
         }];
     }
 }
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 @end

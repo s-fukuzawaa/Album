@@ -29,8 +29,8 @@
     NSString *clientKey = [dict objectForKey: @"client_key"];
     ParseClientConfiguration *config = [ParseClientConfiguration  configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
 
-            configuration.applicationId = appId; // <- UPDATE
-            configuration.clientKey = clientKey; // <- UPDATE
+            configuration.applicationId = appId;
+            configuration.clientKey = clientKey;
             configuration.server = @"https://parseapi.back4app.com";
         }];
 

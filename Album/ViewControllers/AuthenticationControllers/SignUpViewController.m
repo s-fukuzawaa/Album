@@ -44,23 +44,38 @@
 	newUser.email = self.emailField.text;
 	newUser.password = self.pwField.text;
 	newUser[@"profileImage"] = self.profileImageView.file;
+	// Check for empty fields
+	if([self.usernameField.text isEqual:@""]|| [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Empty Fields" message:@"Username or Password or Email is empty!"
+		                            preferredStyle:(UIAlertControllerStyleAlert)];
+		// Create a cancel action
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+		                               style:UIAlertActionStyleCancel
+		                               handler:nil];
+		[alert addAction:cancelAction];
+
+		// Create an OK action
+		UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+		                           style:UIAlertActionStyleDefault
+		                           handler:nil];
+		[alert addAction:okAction];
+		[self presentViewController:alert animated:YES completion:nil];
+		return;
+	}
 	// Call sign up function on the object
 	[newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError * error) {
 	         if (error != nil) {
 			 NSLog(@"Error: %@", error.localizedDescription);
 			 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Error signing up! Please try again."
 			                             preferredStyle:(UIAlertControllerStyleAlert)];
-			 // create an OK action
+			 // Create an OK action
 			 UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"OK"
 			                                style:UIAlertActionStyleDefault
 			                                handler:nil];
-			 // add the OK action to the alert controller
 			 [alert addAction:uploadAction];
 			 [self presentViewController:alert animated:YES completion:nil];
 		 } else {
 			 NSLog(@"User registered successfully");
-
-			 // manually segue to logged in view
 		 }
 	 }];
 }
