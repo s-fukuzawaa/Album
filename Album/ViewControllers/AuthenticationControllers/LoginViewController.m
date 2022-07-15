@@ -25,7 +25,7 @@
 - (IBAction)loginButton:(id)sender {
     NSString *username = self.usernameField.text;
     NSString *password = self.pwField.text;
-    // Alert when either username or password field is empty
+    // Alert for empty fields
     if([self.usernameField.text isEqual:@""]|| [self.pwField.text isEqual:@""]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Empty Fields" message:@"Username or Password is empty!"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
@@ -41,18 +41,18 @@
                                                            style:UIAlertActionStyleDefault
                                                          handler:nil];
         // add the OK action to the alert controller
-        [alert addAction:okAction];
+        [alert addAction:okAction];        
         [self presentViewController:alert animated:YES completion:nil];
     }
-    // Attempt to login
+    // Ask Parse to login
     [PFUser logInWithUsernameInBackground:username password:password block:^(PFUser * user, NSError *  error) {
         if (error != nil) {
             NSLog(@"User log in failed: %@", error.localizedDescription);
-            // Present authentication error alert message
+            // Present auth error alert
             [self authError];
         } else {
             NSLog(@"User logged in successfully");
-            // Segue to main view
+            // Segue to main home view
             [self performSegueWithIdentifier:@"loginSegue" sender:nil];
         }
     }];

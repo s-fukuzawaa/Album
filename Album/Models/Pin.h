@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber *likeCount;
 @property (nonatomic, strong) PFUser *author;
 @property (nonatomic, strong) NSDate *createdAt;
+@property (nonatomic, strong) NSDate *traveledOn;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,14 +1,13 @@
 //
-//  InfoPOIView.m
+//  InfoMarkerView.m
 //  Album
 //
-//  Created by Airei Fukuzawa on 7/11/22.
+//  Created by Airei Fukuzawa on 7/13/22.
 //
 
-#import "InfoPOIView.h"
-#import "ComposeViewController.h"
+#import "InfoMarkerView.h"
 
-@implementation InfoPOIView
+@implementation InfoMarkerView
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -17,4 +16,5 @@
     // Drawing code
 }
 */
+
 @end

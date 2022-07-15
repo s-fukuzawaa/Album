@@ -16,6 +16,8 @@
 @dynamic placeID;
 @dynamic longitude;
 @dynamic latitude;
+@dynamic traveledOn;
+
 
 + (nonnull NSString *)parseClassName {
     return @"Pin";
