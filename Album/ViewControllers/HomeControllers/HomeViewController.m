@@ -14,23 +14,23 @@
 @implementation HomeViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    // Initial view with map
-    self.mapViewContainer.alpha = 0.0;
-    self.albumViewContainer.alpha = 1.0;
+	[super viewDidLoad];
+	// Initial view with map
+	self.mapViewContainer.alpha = 0.0;
+	self.albumViewContainer.alpha = 1.0;
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
-    // Map View case
-    if(sender.selectedSegmentIndex == 0){
-        [UIView animateWithDuration:0.5 animations:^{
-            self.mapViewContainer.alpha = 0.0;
-            self.albumViewContainer.alpha = 1.0;
-        }];
-    } else { // Album View case
-        [UIView animateWithDuration:0.5 animations:^{
-            self.mapViewContainer.alpha = 1.0;
-            self.albumViewContainer.alpha = 0.0;
-        }];
-    }
+	// Map View case
+	if(sender.selectedSegmentIndex == 0) {
+		[UIView animateWithDuration:0.5 animations:^{
+		         self.mapViewContainer.alpha = 0.0;
+		         self.albumViewContainer.alpha = 1.0;
+		 }];
+	} else { // Album View case
+		[UIView animateWithDuration:0.5 animations:^{
+		         self.mapViewContainer.alpha = 1.0;
+		         self.albumViewContainer.alpha = 0.0;
+		 }];
+	}
 }
 @end

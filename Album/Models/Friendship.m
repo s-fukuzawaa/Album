@@ -6,7 +6,7 @@
 //
 
 #import "Friendship.h"
-
+#import "AlbumConstants.h"
 @implementation Friendship
 @dynamic objectId;
 @dynamic requesterId;
@@ -14,6 +14,6 @@
 @dynamic hasFriended;
 
 + (nonnull NSString *)parseClassName {
-    return @"Friendship";
+    return classNameFriendship;
 }
 @end

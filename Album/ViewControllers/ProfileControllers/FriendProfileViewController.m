@@ -7,12 +7,9 @@
 
 #import "FriendProfileViewController.h"
 #import "Friendship.h"
+#import "AlbumConstants.h"
 #import <PFImageView.h>
 #import <Parse/Parse.h>
-// Constants to manage friendship status
-static int const PENDING = 1;
-static int const FRIENDED = 2;
-static int const NOT_FRIEND = 0;
 
 @interface FriendProfileViewController ()
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
@@ -89,7 +86,7 @@ static int const NOT_FRIEND = 0;
 
 - (void) fetchFriendStatus {
 	// Query to fetch friend status
-	PFQuery *query = [PFQuery queryWithClassName:@"Friendship"];
+	PFQuery *query = [PFQuery queryWithClassName:classNameFriendship];
 	PFUser *currentUser = [PFUser currentUser];
 	[query whereKey:@"requesterId" equalTo:currentUser.objectId];
 	[query whereKey:@"recipientId" equalTo:self.user.objectId];
@@ -115,7 +112,7 @@ static int const NOT_FRIEND = 0;
 
 - (void) fetchRequestStatus {
 	// Query to find markers that belong to current user
-	PFQuery *query = [PFQuery queryWithClassName:@"Friendship"];
+	PFQuery *query = [PFQuery queryWithClassName:classNameFriendship];
 	PFUser *currentUser = [PFUser currentUser];
 	[query whereKey:@"recipientId" equalTo:currentUser.objectId];
 	[query whereKey:@"requesterId" equalTo:self.user.objectId];
@@ -195,7 +192,6 @@ static int const NOT_FRIEND = 0;
 		[self requestAlert];
 		// Update database for request side
 		[self updateRequest];
-        [self.delegate didPost];
 	}else if([self.friendStatus intValue] == FRIENDED) {
 		// If they are already friends, but tapped the button, unfriend
 		self.requestStatus = @(NOT_FRIEND);
@@ -225,9 +221,7 @@ static int const NOT_FRIEND = 0;
 	                                       // Update database
 	                                       [self updateFriendship];
 	                                       [self updateRequest];
-	                                       // Update button UI
 	                                       [self updateButton];
-//        [self.delegate didPost];
 				       }];
 	[alert addAction:acceptAction];
 	// Create a reject action
@@ -240,9 +234,8 @@ static int const NOT_FRIEND = 0;
 	                                       // Update database
 	                                       [self updateFriendship];
 	                                       [self updateRequest];
-	                                       // Update button UI
 	                                       [self updateButton];
-//        [self.delegate didPost];
+
 				       }];
 	[alert addAction:rejectAction];
 	// Cancel action

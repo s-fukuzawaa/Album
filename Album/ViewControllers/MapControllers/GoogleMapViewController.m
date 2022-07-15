@@ -11,6 +11,7 @@
 #import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
 #import "Pin.h"
@@ -70,7 +71,7 @@
 
 - (void) fetchMarkers {
 	// Query to find markers that belong to current user
-	PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+	PFQuery *query = [PFQuery queryWithClassName:classNamePin];
 	[query whereKey:@"author" equalTo:[PFUser currentUser]];
 	[query includeKey: @"objectId"];
 	[query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
@@ -87,7 +88,7 @@
 
 - (NSArray *) fetchPinsFromCoord: (CLLocationCoordinate2D) coordinate {
 	// Fetch pins with specific coordinate
-	PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+	PFQuery *query = [PFQuery queryWithClassName:classNamePin];
 	[query whereKey:@"author" equalTo:[PFUser currentUser]];
 	[query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
 	[query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
@@ -208,7 +209,7 @@
 
 - (NSArray*) imagesFromPin: (NSString*) pinId {
 	// Fetch images related to specific pin
-	PFQuery *query = [PFQuery queryWithClassName:@"Image"];
+	PFQuery *query = [PFQuery queryWithClassName:classNameImage];
 	[query whereKey:@"pinId" equalTo:pinId];
 	return [query findObjects];
 }
