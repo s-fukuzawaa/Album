@@ -41,8 +41,7 @@
                                                            style:UIAlertActionStyleDefault
                                                          handler:nil];
         // add the OK action to the alert controller
-        [alert addAction:okAction];
-        
+        [alert addAction:okAction];        
         [self presentViewController:alert animated:YES completion:nil];
     }
     // Ask Parse to login

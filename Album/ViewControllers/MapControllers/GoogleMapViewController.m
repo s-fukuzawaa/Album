@@ -116,8 +116,6 @@
 	return NO;
 }
 
-
-
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
 	GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
 	marker.map = self.mapView;
@@ -232,6 +230,7 @@
 	marker.snippet = self.infoMarker.snippet;
 	marker.map = self.mapView;
 	[self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+
 }
 #pragma mark - Navigation
 

@@ -38,5 +38,4 @@
 	[PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
 	 }];
 }
-
 @end
