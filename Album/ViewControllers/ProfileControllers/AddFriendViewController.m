@@ -25,6 +25,8 @@
 }
 - (IBAction)searchButton:(id)sender {
     PFQuery *query = [PFUser query];
+    PFUser *currentUser = [PFUser currentUser];
+    [query whereKey:@"username" notEqualTo:currentUser.username];
     [query whereKey:@"username" equalTo:self.searchFriendField.text];
     [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
         if (users != nil) {

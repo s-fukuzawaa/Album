@@ -8,6 +8,7 @@
 #import "Friendship.h"
 
 @implementation Friendship
+@dynamic objectId;
 @dynamic requesterId;
 @dynamic recipientId;
 @dynamic hasFriended;

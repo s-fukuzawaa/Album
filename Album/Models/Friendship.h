@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Friendship : PFObject<PFSubclassing>
+@property (nonatomic, strong) NSString *objectId;
 @property (nonatomic, strong) NSString *requesterId;
 @property (nonatomic, strong) NSString *recipientId;
 @property (nonatomic, strong) NSNumber *hasFriended;
