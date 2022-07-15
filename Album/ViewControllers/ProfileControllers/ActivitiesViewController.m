@@ -10,7 +10,7 @@
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 static int const PENDING = 1;
-@interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
+@interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate, FriendProfileViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *requests;
 
@@ -72,6 +72,10 @@ static int const PENDING = 1;
 
 - (void)activityCell:(ActivityCell *) activityCell didTap: (PFUser*)user {
 	[self fetchActivities];
+}
+
+- (void)didPost {
+    [self fetchActivities];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

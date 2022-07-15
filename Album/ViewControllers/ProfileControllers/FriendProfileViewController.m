@@ -88,10 +88,10 @@ static int const NOT_FRIEND = 0;
 }
 
 - (void) fetchFriendStatus {
-	// Query to find markers that belong to current user
+	// Query to fetch friend status
 	PFQuery *query = [PFQuery queryWithClassName:@"Friendship"];
 	PFUser *currentUser = [PFUser currentUser];
-	[query whereKey:@"requestId" equalTo:currentUser.objectId];
+	[query whereKey:@"requesterId" equalTo:currentUser.objectId];
 	[query whereKey:@"recipientId" equalTo:self.user.objectId];
 	[query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable friendships, NSError * _Nullable error) {
 	         if (friendships != nil) {
@@ -195,6 +195,7 @@ static int const NOT_FRIEND = 0;
 		[self requestAlert];
 		// Update database for request side
 		[self updateRequest];
+        [self.delegate didPost];
 	}else if([self.friendStatus intValue] == FRIENDED) {
 		// If they are already friends, but tapped the button, unfriend
 		self.requestStatus = @(NOT_FRIEND);
@@ -226,6 +227,7 @@ static int const NOT_FRIEND = 0;
 	                                       [self updateRequest];
 	                                       // Update button UI
 	                                       [self updateButton];
+//        [self.delegate didPost];
 				       }];
 	[alert addAction:acceptAction];
 	// Create a reject action
@@ -240,6 +242,7 @@ static int const NOT_FRIEND = 0;
 	                                       [self updateRequest];
 	                                       // Update button UI
 	                                       [self updateButton];
+//        [self.delegate didPost];
 				       }];
 	[alert addAction:rejectAction];
 	// Cancel action
