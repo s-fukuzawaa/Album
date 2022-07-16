@@ -32,6 +32,9 @@
 	[self fetchRequestStatus];
 	// Set friend statuses
 	[self fetchFriendStatus];
+	// Update button UI
+	[self updateButton];
+
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
 	if(sender.selectedSegmentIndex == 0) {
@@ -64,24 +67,31 @@
 }
 
 - (void) updateButton {
+	UIColor *friendshipButtonBackgroundColor;
+	NSString *friendshipButtonText;
+	UIColor *friendshipButtonTitleColor;
 	if(self.request != NULL && [self.requestStatus intValue]== PENDING) {
-		[self.friendButton setTintColor:[UIColor whiteColor]];
-		[self.friendButton setTitle:@"Received Request" forState:UIControlStateNormal];
-		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
-	}
-	else if([self.friendStatus intValue] == FRIENDED) {
-		[self.friendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
-		[self.friendButton setTintColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+		friendshipButtonBackgroundColor = [UIColor whiteColor];
+		friendshipButtonText = @"Received Request";
+		friendshipButtonTitleColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
+	}else if([self.friendStatus intValue] == FRIENDED) {
+		friendshipButtonBackgroundColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
+		friendshipButtonText = @"Friended";
+		friendshipButtonTitleColor = [UIColor whiteColor];
 	}else if([self.friendStatus intValue] == PENDING) {
-		[self.friendButton setTintColor:[UIColor whiteColor]];
-		[self.friendButton setTitle:@"Pending" forState:UIControlStateNormal];
-		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
+		friendshipButtonBackgroundColor = [UIColor whiteColor];
+		friendshipButtonText = @"Pending";
+		friendshipButtonTitleColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
 	}else{
-		[self.friendButton setTintColor:[UIColor whiteColor]];
-		[self.friendButton setTitle:@"Request Friend?" forState:UIControlStateNormal];
-		[self.friendButton setTitleColor: [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
+		friendshipButtonBackgroundColor = [UIColor whiteColor];
+		friendshipButtonText = @"Request Friend?";
+		friendshipButtonTitleColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
 	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
+		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
+		[self.friendButton setBackgroundColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+	});
 }
 
 - (void) fetchFriendStatus {
@@ -221,6 +231,7 @@
 	                                       // Update database
 	                                       [self updateFriendship];
 	                                       [self updateRequest];
+	                                       // Update button UI
 	                                       [self updateButton];
 				       }];
 	[alert addAction:acceptAction];
@@ -234,6 +245,7 @@
 	                                       // Update database
 	                                       [self updateFriendship];
 	                                       [self updateRequest];
+	                                       // Update button UI
 	                                       [self updateButton];
 
 				       }];
