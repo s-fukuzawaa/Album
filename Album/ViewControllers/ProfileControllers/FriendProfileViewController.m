@@ -88,9 +88,9 @@
 		friendshipButtonTitleColor = [UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00];
 	}
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.friendButton setTitleColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00] forState:UIControlStateNormal];
-		[self.friendButton setTitle:@"Friended" forState:UIControlStateNormal];
-		[self.friendButton setBackgroundColor:[UIColor colorWithRed: 0.39 green: 0.28 blue: 0.22 alpha: 1.00]];
+		[self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];
+		[self.friendButton setTitle:friendshipButtonText forState:UIControlStateNormal];
+		[self.friendButton setBackgroundColor:friendshipButtonBackgroundColor];
 	});
 }
 
