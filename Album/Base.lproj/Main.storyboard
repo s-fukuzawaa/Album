@@ -177,7 +177,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4J4-ft-KRM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5437.68115942029" y="257.47767857142856"/>
+            <point key="canvasLocation" x="8325" y="612"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="lci-nG-mLw">
@@ -655,23 +655,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VCP-h5-naV">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VCP-h5-naV">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
-                                    <segue destination="2gN-B2-4s0" kind="embed" id="M6m-w4-WqX"/>
-                                </connections>
-                            </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aSt-fk-JnR">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <segue destination="3cM-l0-y96" kind="embed" id="j1g-aB-4Oi"/>
+                                    <segue destination="2gN-B2-4s0" kind="embed" identifier="mapSegue" id="UhF-Ho-yc2"/>
                                 </connections>
                             </containerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wJk-xD-aTO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="VCP-h5-naV" firstAttribute="leading" secondItem="wJk-xD-aTO" secondAttribute="leading" id="1WK-AN-mIW"/>
+                            <constraint firstItem="VCP-h5-naV" firstAttribute="top" secondItem="wJk-xD-aTO" secondAttribute="top" id="Tho-A4-jMM"/>
+                            <constraint firstItem="VCP-h5-naV" firstAttribute="bottom" secondItem="wJk-xD-aTO" secondAttribute="bottom" id="jAr-nJ-dct"/>
+                            <constraint firstItem="VCP-h5-naV" firstAttribute="trailing" secondItem="wJk-xD-aTO" secondAttribute="trailing" id="k6q-6W-gHe"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="aqP-wT-cP6">
                         <nil key="title"/>
@@ -679,8 +677,9 @@
                             <rect key="frame" x="39" y="5.5" width="336" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
-                                <segment title="Map"/>
-                                <segment title="Album"/>
+                                <segment title="" image="person.circle.fill" catalog="system"/>
+                                <segment title="" image="person.2.fill" catalog="system"/>
+                                <segment title="" image="globe.asia.australia.fill" catalog="system"/>
                             </segments>
                             <connections>
                                 <action selector="viewSwitchControl:" destination="eIU-cF-QCQ" eventType="valueChanged" id="83Z-Fs-Jr3"/>
@@ -688,8 +687,7 @@
                         </segmentedControl>
                     </navigationItem>
                     <connections>
-                        <outlet property="albumViewContainer" destination="VCP-h5-naV" id="j3x-sU-fcr"/>
-                        <outlet property="mapViewContainer" destination="aSt-fk-JnR" id="lOD-zS-6Gw"/>
+                        <outlet property="mapViewContainer" destination="VCP-h5-naV" id="4qa-cU-L2G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K1S-10-ii5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -887,21 +885,6 @@
             </objects>
             <point key="canvasLocation" x="3825" y="2480"/>
         </scene>
-        <!--Album View Controller-->
-        <scene sceneID="48z-yi-tjO">
-            <objects>
-                <viewController id="3cM-l0-y96" customClass="AlbumViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="XqF-OI-Nvv">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="f7g-xm-2A1"/>
-                        <color key="backgroundColor" systemColor="systemCyanColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LqG-vy-KLw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4004" y="259"/>
-        </scene>
         <!--Friend Profile-->
         <scene sceneID="7Qx-Q0-rHy">
             <objects>
@@ -910,38 +893,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-ZC-55u" customClass="PFImageView">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-ZC-55u" customClass="PFImageView">
                                 <rect key="frame" x="130" y="119" width="154" height="151"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="151" id="qej-h8-IYi"/>
+                                </constraints>
                             </imageView>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
                                 <rect key="frame" x="0.0" y="451" width="414" height="445"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="v8b-bp-BxU" kind="embed" id="sPz-9s-BLv"/>
                                 </connections>
                             </containerView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8Jm-G3-bax">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8Jm-G3-bax">
                                 <rect key="frame" x="0.0" y="413" width="414" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
-                                    <segment title="Map"/>
                                     <segment title="Friends"/>
+                                    <segment title="Map"/>
                                 </segments>
                                 <connections>
                                     <action selector="viewSwitchControl:" destination="M2k-nZ-AUg" eventType="valueChanged" id="9TJ-2D-Q6y"/>
                                 </connections>
                             </segmentedControl>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
                                 <rect key="frame" x="0.0" y="452" width="414" height="444"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
-                                    <segue destination="Wk6-GE-gYZ" kind="embed" id="9uL-R6-ZQy"/>
+                                    <segue destination="Wk6-GE-gYZ" kind="embed" identifier="friendMapSegue" id="9uL-R6-ZQy"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
                                 <rect key="frame" x="130" y="310" width="154" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Friend"/>
                                 <connections>
@@ -951,6 +932,25 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ofq-Iq-PSZ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="centerX" secondItem="9cN-q4-ZWy" secondAttribute="centerX" id="3zd-VI-7sl"/>
+                            <constraint firstItem="oqS-7G-ghx" firstAttribute="leading" secondItem="Ofq-Iq-PSZ" secondAttribute="leading" id="4vG-pH-SGf"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="leading" secondItem="4hh-dS-94o" secondAttribute="leading" id="5PQ-11-9i0"/>
+                            <constraint firstItem="4hh-dS-94o" firstAttribute="bottom" secondItem="oqS-7G-ghx" secondAttribute="bottom" id="86d-l1-3gy"/>
+                            <constraint firstItem="oqS-7G-ghx" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="8" symbolic="YES" id="EVL-vq-yBx"/>
+                            <constraint firstItem="VyU-ZC-55u" firstAttribute="leading" secondItem="9cN-q4-ZWy" secondAttribute="leading" id="Elt-Bb-DMO"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="top" secondItem="3pN-hL-cC4" secondAttribute="top" constant="413" id="Gjm-0S-B1W"/>
+                            <constraint firstItem="oqS-7G-ghx" firstAttribute="trailing" secondItem="Ofq-Iq-PSZ" secondAttribute="trailing" id="J2F-7I-SwU"/>
+                            <constraint firstItem="4hh-dS-94o" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="7" id="P4D-aZ-3aY"/>
+                            <constraint firstItem="VyU-ZC-55u" firstAttribute="top" secondItem="Ofq-Iq-PSZ" secondAttribute="top" constant="31" id="SkQ-nE-4fZ"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="centerX" secondItem="VyU-ZC-55u" secondAttribute="centerX" id="TQk-MF-IJe"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="leading" secondItem="oqS-7G-ghx" secondAttribute="leading" id="eiX-85-7Ab"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="trailing" secondItem="oqS-7G-ghx" secondAttribute="trailing" id="f3E-bV-Lou"/>
+                            <constraint firstAttribute="bottom" secondItem="oqS-7G-ghx" secondAttribute="bottom" id="lrN-4V-brF"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="trailing" secondItem="4hh-dS-94o" secondAttribute="trailing" id="t6Z-VL-GDW"/>
+                            <constraint firstItem="8Jm-G3-bax" firstAttribute="top" secondItem="9cN-q4-ZWy" secondAttribute="bottom" constant="72" id="uhg-HL-aWk"/>
+                            <constraint firstItem="VyU-ZC-55u" firstAttribute="leading" secondItem="Ofq-Iq-PSZ" secondAttribute="leading" constant="130" id="v9Y-YT-xhY"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Friend Profile" id="waZ-sw-m0h"/>
                     <connections>
@@ -1014,12 +1014,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hrs-O5-WCc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8035" y="1568"/>
+            <point key="canvasLocation" x="7299" y="1360"/>
         </scene>
-        <!--View Controller-->
+        <!--Friend Map View Controller-->
         <scene sceneID="jSB-nK-Pcd">
             <objects>
-                <viewController id="Wk6-GE-gYZ" sceneMemberID="viewController">
+                <viewController id="Wk6-GE-gYZ" customClass="FriendMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="paT-Fk-Ubi">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1029,7 +1029,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PRc-co-V9v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8036" y="2028"/>
+            <point key="canvasLocation" x="8145" y="1534"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -1040,9 +1040,12 @@
         <image name="arrow.left" catalog="system" width="128" height="98"/>
         <image name="arrow.right" catalog="system" width="128" height="98"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
+        <image name="globe.asia.australia.fill" catalog="system" width="128" height="121"/>
         <image name="image_placeholder" width="375" height="375"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="map" catalog="system" width="128" height="110"/>
+        <image name="person.2.fill" catalog="system" width="128" height="80"/>
+        <image name="person.circle.fill" catalog="system" width="128" height="121"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="suit.heart" catalog="system" width="128" height="109"/>
@@ -1051,9 +1054,6 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemCyanColor">
-            <color red="0.19607843137254902" green="0.67843137254901964" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

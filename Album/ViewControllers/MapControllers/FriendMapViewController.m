@@ -1,15 +1,13 @@
 //
-//  GoogleMapViewController.m
+//  FriendMapViewController.m
 //  Album
 //
-//  Created by Airei Fukuzawa on 7/6/22.
+//  Created by Airei Fukuzawa on 7/18/22.
 //
 
-#import "GoogleMapViewController.h"
+#import "FriendMapViewController.h"
 #import "LocationGenerator.h"
-#import "ComposeViewController.h"
 #import "DetailsViewCOntroller.h"
-#import "Friendship.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
 #import "AlbumConstants.h"
@@ -17,21 +15,21 @@
 #import <Parse/PFImageView.h>
 #import "Pin.h"
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
+@interface FriendMapViewController () <GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @end
 
-@implementation GoogleMapViewController
+@implementation FriendMapViewController
 
 - (void)loadView {
     [super loadView];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
-    kCLLocationAccuracyNearestTenMeters;
+        kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     // Ask for authentication
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
@@ -53,9 +51,8 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
-    
-}
 
+}
 - (void) loadMarkers {
     // Place markers on initial map view
     int i=0;
@@ -71,93 +68,26 @@
 }
 
 - (void) fetchMarkers {
-    if(self.switchStatus == 0) {
-        [self fetchPersonal];
-    }else if(self.switchStatus == 1) {
-        [self fetchPersonal];
-        [self fetchCombined];
-    }else {
-        [self fetchGlobal];
-    }
-}
-
-- (void) fetchPersonal {
-    // Query to find markers that belong to current user
+    // Query to find markers that belong to specific user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    [query whereKey:@"author" equalTo:[PFUser currentUser]];
+    [query whereKey:@"author" equalTo:self.user];
     [query includeKey: @"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-        if (pins != nil) {
-            // Store the posts, update count
-            NSLog(@"Successfully fetched markers!");
-            self.markerArr = (NSMutableArray *)pins;
-            [self loadMarkers];
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-}
-
-- (void) fetchCombined {
-    // Query to find markers that belong to current user and current user's friend
-    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
-    PFObject *currentUser = [PFUser currentUser];
-    [friendQuery whereKey:@"requesterId" equalTo:currentUser.objectId];
-    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
-    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-        if (friendships != nil) {
-            // Store the posts, update count
-            NSLog(@"Successfully fetched friendships!");
-            for(Friendship *friendship in friendships) {
-                NSString *friendId = friendship[@"recipientId"];
-                PFUser *friend = [self fetchUser:friendId][0];
-                PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-                [query whereKey:@"author" equalTo:friend];
-                [query includeKey: @"objectId"];
-                [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-                    if (pins != nil) {
-                        // Store the posts, update count
-                        NSLog(@"Successfully fetched markers!");
-                        self.markerArr = (NSMutableArray *)pins;
-                        [self loadMarkers];
-                    } else {
-                        NSLog(@"%@", error.localizedDescription);
-                    }
-                }];
-            }
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-    
-}
-
-- (NSArray *) fetchUser: (NSString *)userId{
-    PFQuery *userQuery = [PFUser query];
-    [userQuery whereKey:@"objectId" equalTo:userId];
-    
-    return [userQuery findObjects];
-}
-
-- (void) fetchGlobal {
-    PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    [query includeKey: @"objectId"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-        if (pins != nil) {
-            // Store the posts, update count
-            NSLog(@"Successfully fetched markers!");
-            self.markerArr = (NSMutableArray *)pins;
-            [self loadMarkers];
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
+             if (pins != nil) {
+             // Store the posts, update count
+             NSLog(@"Successfully fetched markers!");
+             self.markerArr = (NSMutableArray *)pins;
+             [self loadMarkers];
+         } else {
+             NSLog(@"%@", error.localizedDescription);
+         }
+     }];
 }
 
 - (NSArray *) fetchPinsFromCoord: (CLLocationCoordinate2D) coordinate {
     // Fetch pins with specific coordinate
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    [query whereKey:@"author" equalTo:[PFUser currentUser]];
+    [query whereKey:@"author" equalTo:self.user];
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
     [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
     [query includeKey: @"objectId"];
@@ -167,10 +97,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
-                                                                  _mapView.camera.target.longitude);
-    GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
-    marker.map = self.mapView;
+    // Do any additional setup after loading the view.
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
@@ -185,17 +112,10 @@
     return NO;
 }
 
-
-
-- (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
-    marker.map = self.mapView;
-}
-
 - (void)mapView:(GMSMapView *)mapView
-didTapPOIWithPlaceID:(NSString *)placeID
-           name:(NSString *)name
-       location:(CLLocationCoordinate2D)location {
+        didTapPOIWithPlaceID:(NSString *)placeID
+        name:(NSString *)name
+        location:(CLLocationCoordinate2D)location {
     self.infoMarker = [GMSMarker markerWithPosition:location];
     self.infoMarker.snippet = placeID;
     self.infoMarker.title = name;
@@ -219,11 +139,11 @@ didTapPOIWithPlaceID:(NSString *)placeID
         PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
         [markerView.pinImageView setFile:imageFile];
         [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [markerView.pinImageView setImage:image];
-            }
-        }];
+                 if (!error) {
+                 UIImage *image = [UIImage imageWithData:imageData];
+                 [markerView.pinImageView setImage:image];
+             }
+         }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -256,11 +176,11 @@ didTapPOIWithPlaceID:(NSString *)placeID
             PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
             [markerView.pinImageView setFile:imageFile];
             [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [markerView.pinImageView setImage:image];
-                }
-            }];
+                     if (!error) {
+                     UIImage *image = [UIImage imageWithData:imageData];
+                     [markerView.pinImageView setImage:image];
+                 }
+             }];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
@@ -287,10 +207,8 @@ didTapPOIWithPlaceID:(NSString *)placeID
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if(self.placeToPins[marker.title]) {
         [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
-    }else{
-        [self performSegueWithIdentifier:@"composeSegue" sender:self];
     }
-    
+
 }
 
 - (void)didPost {
@@ -306,13 +224,7 @@ didTapPOIWithPlaceID:(NSString *)placeID
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"composeSegue"]) {
-        ComposeViewController *composeVC = [segue destinationViewController];
-        composeVC.placeName = self.infoMarker.title;
-        composeVC.coordinate = self.infoMarker.position;
-        composeVC.placeID = self.infoMarker.snippet;
-        composeVC.delegate = self;
-    }else if([segue.identifier isEqual:@"detailsSegue"]) {
+   if([segue.identifier isEqual:@"detailsSegue"]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         GMSMarker *marker=sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
@@ -331,5 +243,14 @@ didTapPOIWithPlaceID:(NSString *)placeID
         detailsVC.caption = [@"Caption: " stringByAppendingString:firstPin[@"captionText"]];
     }
 }
-@end
+/*
+#pragma mark - Navigation
 
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

@@ -6,6 +6,7 @@
 //
 
 #import "FriendProfileViewController.h"
+#import "FriendMapViewController.h"
 #import "Friendship.h"
 #import "AlbumConstants.h"
 #import <PFImageView.h>
@@ -24,8 +25,8 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.friendMapContainer.alpha = 0.0;
-	self.friendsGridContainer.alpha = 1.0;
+    self.friendMapContainer.alpha = 0.0;
+    self.friendsGridContainer.alpha = 1.0;
 	// Set user profile image view
 	[self fetchProfile];
 	// Set request statuses
@@ -39,8 +40,9 @@
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
 	if(sender.selectedSegmentIndex == 0) {
 		[UIView animateWithDuration:0.5 animations:^{
+                 self.friendsGridContainer.alpha = 1.0;
 		         self.friendMapContainer.alpha = 0.0;
-		         self.friendsGridContainer.alpha = 1.0;
+		         
 		 }];
 	} else { // Album View case
 		[UIView animateWithDuration:0.5 animations:^{
@@ -264,5 +266,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return NULL;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqual:@"friendMapSegue"]) {
+        FriendMapViewController *friendMapVC = [segue destinationViewController];
+        friendMapVC.user = self.user;
+    }
 }
 @end

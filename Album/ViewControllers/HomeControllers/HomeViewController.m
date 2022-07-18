@@ -6,31 +6,42 @@
 //
 
 #import "HomeViewController.h"
+#import "GoogleMapViewController.h"
 
 @interface HomeViewController ()
-
+@property (nonatomic, strong) GoogleMapViewController *prevVC;
 @end
 
 @implementation HomeViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // Initial view with map
+    GoogleMapViewController *googleMapVC = [[GoogleMapViewController alloc] init];
+    googleMapVC.switchStatus = 0;
+    self.prevVC = googleMapVC;
+    [self addChildViewController:self.prevVC];
+    [self.mapViewContainer addSubview:self.prevVC.view];
+}
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	// Initial view with map
-	self.mapViewContainer.alpha = 0.0;
-	self.albumViewContainer.alpha = 1.0;
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
 	// Map View case
-	if(sender.selectedSegmentIndex == 0) {
-		[UIView animateWithDuration:0.5 animations:^{
-		         self.mapViewContainer.alpha = 0.0;
-		         self.albumViewContainer.alpha = 1.0;
-		 }];
-	} else { // Album View case
-		[UIView animateWithDuration:0.5 animations:^{
-		         self.mapViewContainer.alpha = 1.0;
-		         self.albumViewContainer.alpha = 0.0;
-		 }];
-	}
+    [self.prevVC.view removeFromSuperview];
+    [self.prevVC removeFromParentViewController];
+    [self performSegueWithIdentifier:@"mapSegue" sender:sender];
+}
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    GoogleMapViewController *googleMapVC = [segue destinationViewController];
+    if ([sender isKindOfClass:[UISegmentedControl class]]) {
+        googleMapVC.switchStatus = ((UISegmentedControl *)sender).selectedSegmentIndex;
+    }else{
+        googleMapVC.switchStatus = 0;
+    }
 }
 @end

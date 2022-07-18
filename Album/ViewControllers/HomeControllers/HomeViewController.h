@@ -11,8 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
-@property (weak, nonatomic) IBOutlet UIView *albumViewContainer;
-
 @end
 
 NS_ASSUME_NONNULL_END
