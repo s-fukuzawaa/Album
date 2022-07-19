@@ -34,6 +34,5 @@
 			 [self.pinImageView setImage:image];
 		 }
 	 }];
-
 }
 @end

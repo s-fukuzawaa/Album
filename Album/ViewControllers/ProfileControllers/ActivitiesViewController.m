@@ -33,7 +33,6 @@
 - (IBAction)backButton:(id)sender {
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
-
 - (void) fetchActivities {
 	[self fetchRequests];
 }
