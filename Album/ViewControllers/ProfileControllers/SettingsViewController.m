@@ -20,10 +20,6 @@
 
 @implementation SettingsViewController
 
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
 - (IBAction)updateButton:(id)sender {
 }
 - (IBAction)backButton:(id)sender {
@@ -34,15 +30,6 @@
 	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 	LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
 	myDelegate.window.rootViewController = loginViewController;
-	[PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
-	 }];
-}
-
-
-	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-	LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-	myDelegate.window.rootViewController = loginViewController;
-	[PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
-	 }];
+	[PFUser logOutInBackgroundWithBlock:nil];
 }
 @end

@@ -12,7 +12,6 @@
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
-
 @interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
@@ -72,18 +71,16 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	// Get the new view controller using [segue destinationViewController].
+    UINavigationController *navigationController = [segue destinationViewController];
 	// Pass the selected object to the new view controller.
 	if([segue.identifier isEqualToString:@"activitiesSegue"]) {
-		UINavigationController *navigationController = [segue destinationViewController];
 		ActivitiesViewController *activitiesController = (ActivitiesViewController*)navigationController.topViewController;
 		//        activitiesController.delegate = self; TODO: Add delegate later
 
 	}else if([segue.identifier isEqualToString:@"addFriendSegue"]) {
-		UINavigationController *navigationController = [segue destinationViewController];
 		AddFriendViewController *addFriendController = (AddFriendViewController*)navigationController.topViewController;
 		//        addFriendController.delegate = self; TODO: Add delegate later
 	}else if([segue.identifier isEqualToString:@"settingsSegue"]) {
-		UINavigationController *navigationController = [segue destinationViewController];
 		SettingsViewController *settingsController = (SettingsViewController*)navigationController.topViewController;
 		//        settingsController.delegate = self; TODO: Add delegate later
 	}
