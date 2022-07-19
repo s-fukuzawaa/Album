@@ -13,7 +13,6 @@
 		AF0D2D69287F43B8000A3870 /* InfoMarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF0D2D68287F43B8000A3870 /* InfoMarkerView.m */; };
 		AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1558272876702B00C3FD82 /* LoginViewController.m */; };
 		AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582A2876704000C3FD82 /* SignUpViewController.m */; };
-		AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582D287746F200C3FD82 /* HomeViewController.m */; };
 		AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583028774BC500C3FD82 /* ProfileViewController.m */; };
 		AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583328774C1900C3FD82 /* SettingsViewController.m */; };
 		AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583828774D4000C3FD82 /* ActivitiesViewController.m */; };
@@ -81,8 +80,6 @@
 		AF1558272876702B00C3FD82 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		AF1558292876704000C3FD82 /* SignUpViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		AF15582A2876704000C3FD82 /* SignUpViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
-		AF15582C287746F200C3FD82 /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
-		AF15582D287746F200C3FD82 /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		AF15582F28774BC500C3FD82 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		AF15583028774BC500C3FD82 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		AF15583228774C1900C3FD82 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -231,8 +228,6 @@
 		AF1558432877508600C3FD82 /* HomeControllers */ = {
 			isa = PBXGroup;
 			children = (
-				AF15582C287746F200C3FD82 /* HomeViewController.h */,
-				AF15582D287746F200C3FD82 /* HomeViewController.m */,
 				AF155844287750CB00C3FD82 /* AlbumViewController.h */,
 				AF155845287750CB00C3FD82 /* AlbumViewController.m */,
 			);
@@ -677,7 +672,6 @@
 				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,
 				AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */,
 				AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */,
-				AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
