@@ -498,7 +498,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="197"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Aai-HZ-1fK" customClass="PFImageView">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Aai-HZ-1fK" customClass="PFImageView">
                                                     <rect key="frame" x="16" y="40" width="101" height="101"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="101" id="9om-bM-Yul"/>
@@ -583,35 +583,47 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="117" id="KWR-Ef-sBB" customClass="ActivityCell">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="117"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivityCell" rowHeight="173" id="KWR-Ef-sBB" customClass="ActivityCell">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="173"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KWR-Ef-sBB" id="ssS-gZ-UcX">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="117"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="173"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sj0-e0-vw4">
-                                                    <rect key="frame" x="20" y="11" width="100" height="95"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Sj0-e0-vw4" customClass="PFImageView">
+                                                    <rect key="frame" x="16" y="24" width="117" height="117"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="Sj0-e0-vw4" secondAttribute="height" multiplier="1:1" id="hqb-qL-I3o"/>
+                                                        <constraint firstAttribute="width" constant="117" id="i4C-Ye-bfh"/>
+                                                        <constraint firstAttribute="height" constant="117" id="orW-kC-yfo"/>
+                                                    </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehi-XY-76z">
-                                                    <rect key="frame" x="142" y="35" width="153" height="48"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehi-XY-76z">
+                                                    <rect key="frame" x="157" y="72.5" width="41.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ufa-HL-IDk">
-                                                    <rect key="frame" x="319" y="39" width="65" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ufa-HL-IDk">
+                                                    <rect key="frame" x="354.5" y="67" width="43.5" height="31"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system"/>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Ehi-XY-76z" firstAttribute="centerY" secondItem="Sj0-e0-vw4" secondAttribute="centerY" id="EU5-7O-LRE"/>
+                                                <constraint firstAttribute="trailing" secondItem="Ufa-HL-IDk" secondAttribute="trailing" constant="16" id="eei-5G-csl"/>
+                                                <constraint firstItem="Sj0-e0-vw4" firstAttribute="top" secondItem="ssS-gZ-UcX" secondAttribute="top" constant="24" id="fqj-QD-a0A"/>
+                                                <constraint firstAttribute="bottom" secondItem="Sj0-e0-vw4" secondAttribute="bottom" constant="32" id="g3t-BG-W5x"/>
+                                                <constraint firstItem="Sj0-e0-vw4" firstAttribute="leading" secondItem="ssS-gZ-UcX" secondAttribute="leading" constant="16" id="hon-h2-KqO"/>
+                                                <constraint firstItem="Ufa-HL-IDk" firstAttribute="centerY" secondItem="Sj0-e0-vw4" secondAttribute="centerY" id="ljT-vt-hS0"/>
+                                                <constraint firstItem="Ehi-XY-76z" firstAttribute="leading" secondItem="Sj0-e0-vw4" secondAttribute="trailing" constant="24" id="qW5-45-S8K"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="userImageView" destination="Sj0-e0-vw4" id="bV7-SP-7ax"/>
+                                            <outlet property="userImageView" destination="Sj0-e0-vw4" id="vxX-fW-Bts"/>
                                             <outlet property="usernameLabel" destination="Ehi-XY-76z" id="6CB-Cw-7dn"/>
+                                            <segue destination="M2k-nZ-AUg" kind="show" id="Ge9-LY-Ved"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -927,13 +939,13 @@
                                     <segue destination="Wk6-GE-gYZ" kind="embed" id="9uL-R6-ZQy"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRt-NQ-wLN">
-                                <rect key="frame" x="131" y="295" width="152" height="31"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
+                                <rect key="frame" x="130" y="310" width="154" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Friend"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Friend"/>
                                 <connections>
-                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="Wb6-ml-ze8"/>
+                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="GiJ-DT-hGq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -942,6 +954,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Friend Profile" id="waZ-sw-m0h"/>
                     <connections>
+                        <outlet property="friendButton" destination="9cN-q4-ZWy" id="9b9-fI-hSC"/>
                         <outlet property="friendMapContainer" destination="oqS-7G-ghx" id="Xhz-Lg-xkQ"/>
                         <outlet property="friendsGridContainer" destination="4hh-dS-94o" id="mfS-ox-fDb"/>
                         <outlet property="userImageView" destination="VyU-ZC-55u" id="rHr-RS-wsy"/>
@@ -1019,6 +1032,9 @@
             <point key="canvasLocation" x="8036" y="2028"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ge9-LY-Ved"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="98"/>
         <image name="arrow.left" catalog="system" width="128" height="98"/>

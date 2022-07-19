@@ -11,6 +11,7 @@
 #import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
 #import "Pin.h"
@@ -70,7 +71,7 @@
 
 - (void) fetchMarkers {
 	// Query to find markers that belong to current user
-	PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+	PFQuery *query = [PFQuery queryWithClassName:classNamePin];
 	[query whereKey:@"author" equalTo:[PFUser currentUser]];
 	[query includeKey: @"objectId"];
 	[query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
@@ -87,7 +88,7 @@
 
 - (NSArray *) fetchPinsFromCoord: (CLLocationCoordinate2D) coordinate {
 	// Fetch pins with specific coordinate
-	PFQuery *query = [PFQuery queryWithClassName:@"Pin"];
+	PFQuery *query = [PFQuery queryWithClassName:classNamePin];
 	[query whereKey:@"author" equalTo:[PFUser currentUser]];
 	[query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
 	[query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
@@ -145,16 +146,14 @@
 		PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
 		// Set Image
 		NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-		if(imagesFromPin && imagesFromPin.count > 0) {
-			PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-			[markerView.pinImageView setFile:imageFile];
-			[imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-			         if (!error) {
-					 UIImage *image = [UIImage imageWithData:imageData];
-					 [markerView.pinImageView setImage:image];
-				 }
-			 }];
-		}
+		PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+		[markerView.pinImageView setFile:imageFile];
+		[imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+		         if (!error) {
+				 UIImage *image = [UIImage imageWithData:imageData];
+				 [markerView.pinImageView setImage:image];
+			 }
+		 }];
 		// Set place name
 		[markerView.placeNameLabel setText:firstPin[@"placeName"]];
 		// Set date
@@ -183,14 +182,16 @@
 		InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
 		// Set image of the info window to first in the array
 		NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-		PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-		[markerView.pinImageView setFile:imageFile];
-		[imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-		         if (!error) {
-				 UIImage *image = [UIImage imageWithData:imageData];
-				 [markerView.pinImageView setImage:image];
-			 }
-		 }];
+		if(imagesFromPin && imagesFromPin.count > 0) {
+			PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+			[markerView.pinImageView setFile:imageFile];
+			[imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+			         if (!error) {
+					 UIImage *image = [UIImage imageWithData:imageData];
+					 [markerView.pinImageView setImage:image];
+				 }
+			 }];
+		}
 		// Set place name
 		[markerView.placeNameLabel setText:firstPin[@"placeName"]];
 		// Set date
@@ -206,7 +207,7 @@
 
 - (NSArray*) imagesFromPin: (NSString*) pinId {
 	// Fetch images related to specific pin
-	PFQuery *query = [PFQuery queryWithClassName:@"Image"];
+	PFQuery *query = [PFQuery queryWithClassName:classNameImage];
 	[query whereKey:@"pinId" equalTo:pinId];
 	return [query findObjects];
 }
@@ -230,7 +231,6 @@
 	marker.snippet = self.infoMarker.snippet;
 	marker.map = self.mapView;
 	[self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-
 }
 #pragma mark - Navigation
 
