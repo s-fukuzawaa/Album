@@ -7,6 +7,7 @@
 
 #import "DetailsViewController.h"
 #import <Parse/PFImageView.h>
+
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;

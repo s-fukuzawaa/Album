@@ -6,6 +6,7 @@
 //
 
 #import "ActivityCell.h"
+
 @implementation ActivityCell
 - (void)setUser:(PFUser *)user {
 // Since we're replacing the default setter, we have to set the underlying private storage _movie ourselves.

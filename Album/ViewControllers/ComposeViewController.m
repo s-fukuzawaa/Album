@@ -10,6 +10,7 @@
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
+
 @interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
