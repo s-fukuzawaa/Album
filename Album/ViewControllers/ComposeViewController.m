@@ -10,7 +10,8 @@
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
-@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+#import "ELCImagePickerHeader.h"
+@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ELCImagePickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -77,11 +78,21 @@
 	}
 	else {
 		NSLog(@"Camera 🚫 available so we will use photo library instead");
-		UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-		imagePickerVC.delegate = self;
-		imagePickerVC.allowsEditing = YES;
-		imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-		[self presentViewController:imagePickerVC animated:YES completion:nil];
+//		UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+//		imagePickerVC.delegate = self;
+//		imagePickerVC.allowsEditing = YES;
+//		imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//		[self presentViewController:imagePickerVC animated:YES completion:nil];
+        // Create the image picker
+        ELCImagePickerController *elcPicker = [[ELCImagePickerController alloc] initImagePicker];
+        elcPicker.maximumImagesCount = 4; //Set the maximum number of images to select, defaults to 4
+        elcPicker.returnsOriginalImage = NO; //Only return the fullScreenImage, not the fullResolutionImage
+        elcPicker.returnsImage = YES; //Return UIimage if YES. If NO, only return asset location information
+        elcPicker.onOrder = YES; //For multiple image selection, display and return selected order of images
+        elcPicker.imagePickerDelegate = self;
+
+        //Present modally
+        [self presentViewController:elcPicker animated:YES completion:nil];
 	}
 }
 
