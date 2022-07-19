@@ -27,6 +27,7 @@
 		AF1FE7E4288210EF00C5E0A5 /* AlbumConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E3288210EF00C5E0A5 /* AlbumConstants.m */; };
 		AF1FE7E72885CAD800C5E0A5 /* FriendMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */; };
 		AF1FE84228872AAE00C5E0A5 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */; };
+		AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -108,6 +109,8 @@
 		AF1FE7E52885CAD800C5E0A5 /* FriendMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendMapViewController.h; sourceTree = "<group>"; };
 		AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendMapViewController.m; sourceTree = "<group>"; };
 		AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		AF1FE8432887355C00C5E0A5 /* PhotoCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionCell.h; sourceTree = "<group>"; };
+		AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionCell.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -337,6 +340,8 @@
 				AF0D2D68287F43B8000A3870 /* InfoMarkerView.m */,
 				AFCC30EE287CCFF000521733 /* InfoWindow.xib */,
 				AF0D2D61287F3A1D000A3870 /* InfoExistWindow.xib */,
+				AF1FE8432887355C00C5E0A5 /* PhotoCollectionCell.h */,
+				AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -666,6 +671,7 @@
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */,
 				AFCC30F9287DDB9200521733 /* Image.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
 				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,

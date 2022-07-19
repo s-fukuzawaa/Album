@@ -8,7 +8,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "56C2F40F-7C41-4BBE-97B4-7A3F09996F06"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
@@ -17,6 +17,22 @@
             startingLineNumber = "180"
             endingLineNumber = "180"
             landmarkName = "-fetchPinsFromCoord:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E949FC06-FF0E-4A4F-BA02-DE96157E858E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Album/ViewControllers/ComposeViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "-picker:didFinishPicking:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
