@@ -181,7 +181,7 @@
         int i=0;
         while(i<pins.count) {
             Pin *pin = pins[i];
-            if([self.friendsIdSet containsObject:pin.author.objectId] == NO) {
+            if([self.friendsIdSet containsObject:pin.author.objectId] == NO && [pin.author.objectId isEqual:[PFUser currentUser].objectId] == NO) {
                 [pins removeObject:pin];
             }
             i++;
