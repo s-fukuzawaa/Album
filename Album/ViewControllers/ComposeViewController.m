@@ -7,15 +7,18 @@
 
 #import "ComposeViewController.h"
 #import <UITextView+Placeholder.h>
+#import <PhotosUI/PHPicker.h>
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
-#import "ELCImagePickerHeader.h"
-@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ELCImagePickerControllerDelegate>
+
+@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UIDatePicker *traveledDate;
+@property (strong, nonatomic) PHPickerConfiguration *config;
+@property (strong, nonatomic) NSMutableArray *photos;
 
 @end
 
@@ -38,6 +41,14 @@
 
 	// Set location label
 	self.locationLabel.text = [self.locationLabel.text stringByAppendingString:self.placeName];
+    
+    // Config PHPicker
+    self.config = [[PHPickerConfiguration alloc] init];
+    self.config.selectionLimit = 10;
+    self.config.filter = [PHPickerFilter imagesFilter];
+    
+    // Set up photos array
+    self.photos = [[NSMutableArray alloc] init];
 }
 
 - (void) didTapImage:(UITapGestureRecognizer *)sender {
@@ -83,17 +94,28 @@
 //		imagePickerVC.allowsEditing = YES;
 //		imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
 //		[self presentViewController:imagePickerVC animated:YES completion:nil];
-        // Create the image picker
-        ELCImagePickerController *elcPicker = [[ELCImagePickerController alloc] initImagePicker];
-        elcPicker.maximumImagesCount = 4; //Set the maximum number of images to select, defaults to 4
-        elcPicker.returnsOriginalImage = NO; //Only return the fullScreenImage, not the fullResolutionImage
-        elcPicker.returnsImage = YES; //Return UIimage if YES. If NO, only return asset location information
-        elcPicker.onOrder = YES; //For multiple image selection, display and return selected order of images
-        elcPicker.imagePickerDelegate = self;
-
-        //Present modally
-        [self presentViewController:elcPicker animated:YES completion:nil];
+        PHPickerViewController *pickerViewController = [[PHPickerViewController alloc] initWithConfiguration:self.config];
+        pickerViewController.delegate = self;
+        [self presentViewController:pickerViewController animated:YES completion:nil];
 	}
+}
+
+-(void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results{
+   [picker dismissViewControllerAnimated:YES completion:nil];
+    
+   for (PHPickerResult *result in results)
+   {
+      // Get UIImage
+      [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error)
+      {
+         if ([object isKindOfClass:[UIImage class]])
+         {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.photos addObject:(UIImage*)object];
+            });
+         }
+      }];
+   }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
