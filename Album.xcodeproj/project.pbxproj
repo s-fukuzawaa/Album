@@ -28,6 +28,7 @@
 		AF1FE7E72885CAD800C5E0A5 /* FriendMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */; };
 		AF1FE84228872AAE00C5E0A5 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */; };
 		AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */; };
+		AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -111,6 +112,8 @@
 		AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		AF1FE8432887355C00C5E0A5 /* PhotoCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionCell.h; sourceTree = "<group>"; };
 		AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionCell.m; sourceTree = "<group>"; };
+		AF1FE8462887590C00C5E0A5 /* ColorPickViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorPickViewController.h; sourceTree = "<group>"; };
+		AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorPickViewController.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 				AF15583628774C6D00C3FD82 /* AuthenticationControllers */,
 				AF15583528774C4A00C3FD82 /* ProfileControllers */,
 				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
+				AF1FE8462887590C00C5E0A5 /* ColorPickViewController.h */,
+				AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */,
 				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
 				AF15584028774F4000C3FD82 /* DetailsViewController.h */,
 				AF15584128774F4000C3FD82 /* DetailsViewController.m */,
@@ -664,6 +669,7 @@
 				AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */,
 				AF60C07C287633930033DCB0 /* main.m in Sources */,
 				AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */,
+				AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */,
 				AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */,
 				AF1FE7E4288210EF00C5E0A5 /* AlbumConstants.m in Sources */,
 				AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */,

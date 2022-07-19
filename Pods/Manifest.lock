@@ -24,6 +24,7 @@ PODS:
   - GoogleMaps/Base (7.0.0)
   - GoogleMaps/Maps (7.0.0):
     - GoogleMaps/Base
+  - iOS-Color-Picker (1.2)
   - Parse (1.19.3):
     - Parse/Core (= 1.19.3)
   - Parse/Core (1.19.3):
@@ -35,6 +36,7 @@ PODS:
 DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - iOS-Color-Picker
   - Parse
   - Parse/UI
   - "UITextView+Placeholder"
@@ -44,6 +46,7 @@ SPEC REPOS:
     - Bolts
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - iOS-Color-Picker
     - Parse
     - "UITextView+Placeholder"
 
@@ -51,9 +54,10 @@ SPEC CHECKSUMS:
   Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
+  iOS-Color-Picker: 4284a4d744a7cafe9d22d4b66eefc45342b80f1d
   Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: b860b857050549dc9011811323cdaa9bf768aad5
+PODFILE CHECKSUM: 96c7e7b6409bb63496c55d1fde7fc24c9a3b6825
 
 COCOAPODS: 1.11.3

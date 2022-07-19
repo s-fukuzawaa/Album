@@ -11,6 +11,7 @@ target 'Album' do
   pod 'UITextView+Placeholder'
   pod 'Parse'
   pod 'Parse/UI'
+  pod 'iOS-Color-Picker'
   target 'AlbumTests' do
     inherit! :search_paths
     # Pods for testing

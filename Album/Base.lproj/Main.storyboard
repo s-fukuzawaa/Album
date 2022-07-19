@@ -399,6 +399,7 @@
                         <outlet property="profileImageView" destination="euU-cq-HSP" id="wIm-CR-ztA"/>
                         <outlet property="pwField" destination="wGU-Vu-DaJ" id="lS4-ue-0n6"/>
                         <outlet property="usernameField" destination="OW7-oz-9dO" id="TII-Rl-rdh"/>
+                        <segue destination="6ce-bF-0fi" kind="presentation" identifier="colorPickSegue" id="Pjr-P7-Ymg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kqz-bl-2aj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -739,6 +740,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="whJ-I2-H8R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1723" y="940"/>
+        </scene>
+        <!--Color Pick View Controller-->
+        <scene sceneID="2SX-pM-R0k">
+            <objects>
+                <viewController id="6ce-bF-0fi" customClass="ColorPickViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yt5-pm-p0w">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="lSS-Kr-axA"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xfO-4L-Zid" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="681" y="1750"/>
         </scene>
         <!--Profile-->
         <scene sceneID="6Vq-Sr-pOi">
