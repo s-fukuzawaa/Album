@@ -6,15 +6,17 @@
 //
 
 #import "SignUpViewController.h"
+#import "FCColorPickerViewController.h"
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
-@interface SignUpViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface SignUpViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FCColorPickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
-
+@property (weak, nonatomic) IBOutlet UIImageView *colorView;
+@property (nonatomic, strong) UIColor* color;
 @end
 
 @implementation SignUpViewController
@@ -44,6 +46,7 @@
 	newUser.email = self.emailField.text;
 	newUser.password = self.pwField.text;
 	newUser[@"profileImage"] = self.profileImageView.file;
+    newUser[@"colorHexString"] = [self hexStringForColor:self.color];
 	// Check for empty fields
 	if([self.usernameField.text isEqual:@""]|| [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
 		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Empty Fields" message:@"Username or Password or Email is empty!"
@@ -158,6 +161,47 @@
 	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	return newImage;
+}
+- (IBAction)colorPickButton:(id)sender {
+    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
+    colorPicker.color = self.color;
+    colorPicker.delegate = self;
+    
+    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentViewController:colorPicker animated:YES completion:nil];
+}
+
+#pragma mark - FCColorPickerViewControllerDelegate Methods
+
+-(void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
+    self.color = color;
+    [self.colorView setImage:[self createImageWithColor:color]];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (UIImage *)createImageWithColor: (UIColor *)color {
+    CGRect rect=CGRectMake(0.0f, 0.0f, 57, 57);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+
+- (NSString *)hexStringForColor:(UIColor *)color {
+      const CGFloat *components = CGColorGetComponents(color.CGColor);
+      CGFloat r = components[0];
+      CGFloat g = components[1];
+      CGFloat b = components[2];
+      NSString *hexString=[NSString stringWithFormat:@"%02X%02X%02X", (int)(r * 255), (int)(g * 255), (int)(b * 255)];
+      return hexString;
 }
 
 @end

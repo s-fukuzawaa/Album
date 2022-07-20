@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment version="2304" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +29,7 @@
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Imo-b5-qFX">
-                    <rect key="frame" x="20" y="35" width="280" height="428"/>
+                    <rect key="frame" x="20" y="15" width="280" height="448"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IKr-00-RZB">
                             <rect key="frame" x="0.0" y="0.0" width="280" height="70"/>
@@ -39,7 +37,7 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="oC3-uC-r2P">
                                     <rect key="frame" x="0.0" y="0.0" width="135" height="70"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="41">
+                                        <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="41">
                                             <rect key="frame" x="0.0" y="0.0" width="135" height="30"/>
                                             <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                             <state key="normal" title="Choose">
@@ -49,7 +47,7 @@
                                                 <action selector="chooseSelectedColor" destination="-1" eventType="touchUpInside" id="62"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="59">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="59">
                                             <rect key="frame" x="0.0" y="40" width="135" height="30"/>
                                             <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                             <state key="normal" title="Cancel">
@@ -76,10 +74,10 @@
                             </constraints>
                         </stackView>
                         <imageView multipleTouchEnabled="YES" contentMode="scaleToFill" image="colormap.png" translatesAutoresizingMaskIntoConstraints="NO" id="75">
-                            <rect key="frame" x="0.0" y="80" width="280" height="294"/>
+                            <rect key="frame" x="0.0" y="80" width="280" height="314"/>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="73" customClass="FCBrightDarkGradView">
-                            <rect key="frame" x="0.0" y="384" width="280" height="44"/>
+                            <rect key="frame" x="0.0" y="404" width="280" height="44"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="nq6-Us-Uvh"/>
@@ -97,6 +95,7 @@
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="BMb-Rh-6dc"/>
             <color key="backgroundColor" red="0.22282608700000001" green="0.22282608700000001" blue="0.22282608700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="BMb-Rh-6dc" firstAttribute="bottom" secondItem="Imo-b5-qFX" secondAttribute="bottom" constant="20" id="OKS-R3-QYb"/>
@@ -106,7 +105,7 @@
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="BMb-Rh-6dc"/>
+            <point key="canvasLocation" x="139" y="153"/>
         </view>
     </objects>
     <resources>

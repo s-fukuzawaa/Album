@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -315,16 +314,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4N7-tC-C5X">
-                                <rect key="frame" x="130" y="709" width="154" height="30"/>
-                                <menu key="menu" id="9F9-5D-Qy9">
-                                    <children>
-                                        <command title="Red" id="Q0M-N7-vxe"/>
-                                        <command title="Blue" id="yxI-ai-vYv"/>
-                                    </children>
-                                </menu>
-                                <state key="normal" title="Choose Your Pin Color"/>
-                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="euU-cq-HSP" customClass="PFImageView">
                                 <rect key="frame" x="92" y="126" width="230" height="230"/>
                                 <color key="tintColor" systemColor="labelColor"/>
@@ -358,28 +347,45 @@
                                     <action selector="signUpButton:" destination="hIP-dE-LjB" eventType="touchUpInside" id="g6y-Oh-NeJ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pfV-hW-5B5">
+                                <rect key="frame" x="33" y="692" width="169" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Choose Your Pin Color"/>
+                                <connections>
+                                    <action selector="colorPickButton:" destination="hIP-dE-LjB" eventType="touchUpInside" id="Y72-aj-zPR"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BY5-Kr-UQf">
+                                <rect key="frame" x="263" y="679" width="59" height="57"/>
+                                <color key="backgroundColor" systemColor="labelColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="59" id="uDC-As-ISs"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="js3-0g-ffR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="wGU-Vu-DaJ" firstAttribute="top" secondItem="6gu-H7-wBP" secondAttribute="bottom" constant="8" id="03l-1Q-gVN"/>
+                            <constraint firstItem="BY5-Kr-UQf" firstAttribute="centerY" secondItem="pfV-hW-5B5" secondAttribute="centerY" id="0v4-HJ-ZGB"/>
+                            <constraint firstItem="BY5-Kr-UQf" firstAttribute="leading" secondItem="pfV-hW-5B5" secondAttribute="trailing" constant="61" id="1AI-Nw-oQ0"/>
                             <constraint firstItem="ifu-6V-KZi" firstAttribute="trailing" secondItem="euU-cq-HSP" secondAttribute="trailing" id="2x6-kI-o9r"/>
                             <constraint firstItem="0ZN-he-Zd2" firstAttribute="top" secondItem="ifu-6V-KZi" secondAttribute="bottom" constant="36" id="6ZL-EZ-wAv"/>
-                            <constraint firstItem="4N7-tC-C5X" firstAttribute="centerX" secondItem="fzm-0B-6ck" secondAttribute="centerX" id="Hfu-ig-zro"/>
+                            <constraint firstItem="BY5-Kr-UQf" firstAttribute="trailing" secondItem="wGU-Vu-DaJ" secondAttribute="trailing" id="Bl4-7y-i7a"/>
+                            <constraint firstItem="fzm-0B-6ck" firstAttribute="centerX" secondItem="wGU-Vu-DaJ" secondAttribute="centerX" id="GuJ-Nu-25X"/>
                             <constraint firstItem="ifu-6V-KZi" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="K70-kA-wPQ"/>
                             <constraint firstItem="wGU-Vu-DaJ" firstAttribute="trailing" secondItem="ifu-6V-KZi" secondAttribute="trailing" id="LoA-W1-HNR"/>
                             <constraint firstItem="js3-0g-ffR" firstAttribute="bottom" secondItem="fzm-0B-6ck" secondAttribute="bottom" constant="60" id="QZa-7A-oOI"/>
                             <constraint firstItem="wGU-Vu-DaJ" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="Qbd-ZN-bRo"/>
-                            <constraint firstItem="4N7-tC-C5X" firstAttribute="top" secondItem="wGU-Vu-DaJ" secondAttribute="bottom" constant="56" id="Rmg-Nf-zKW"/>
                             <constraint firstItem="OW7-oz-9dO" firstAttribute="trailing" secondItem="ifu-6V-KZi" secondAttribute="trailing" id="TsC-Xm-QRg"/>
                             <constraint firstItem="0ZN-he-Zd2" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="Ua7-aH-Acu"/>
-                            <constraint firstItem="4N7-tC-C5X" firstAttribute="centerX" secondItem="wGU-Vu-DaJ" secondAttribute="centerX" id="X8Z-0x-fjZ"/>
                             <constraint firstItem="IbA-WR-y6C" firstAttribute="top" secondItem="euU-cq-HSP" secondAttribute="bottom" constant="36" id="XOj-fX-nRy"/>
                             <constraint firstItem="IbA-WR-y6C" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="ZZ4-mu-TjX"/>
-                            <constraint firstItem="fzm-0B-6ck" firstAttribute="top" secondItem="4N7-tC-C5X" secondAttribute="bottom" constant="32" id="cml-3o-VZq"/>
                             <constraint firstItem="6gu-H7-wBP" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="evO-cJ-xQb"/>
+                            <constraint firstItem="fzm-0B-6ck" firstAttribute="top" secondItem="pfV-hW-5B5" secondAttribute="bottom" constant="48" id="fD8-cW-3at"/>
                             <constraint firstItem="OW7-oz-9dO" firstAttribute="leading" secondItem="euU-cq-HSP" secondAttribute="leading" id="glF-vq-tOC"/>
+                            <constraint firstItem="BY5-Kr-UQf" firstAttribute="top" secondItem="wGU-Vu-DaJ" secondAttribute="bottom" constant="26" id="oVa-kI-WwK"/>
                             <constraint firstAttribute="trailing" secondItem="euU-cq-HSP" secondAttribute="trailing" constant="92" id="pFu-Zc-vcm"/>
                             <constraint firstItem="ifu-6V-KZi" firstAttribute="top" secondItem="IbA-WR-y6C" secondAttribute="bottom" constant="8" id="qPL-Ah-7mh"/>
                             <constraint firstItem="OW7-oz-9dO" firstAttribute="trailing" secondItem="euU-cq-HSP" secondAttribute="trailing" id="rEJ-Dj-XMQ"/>
@@ -395,6 +401,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="zOH-1l-EyP"/>
                     <connections>
+                        <outlet property="colorView" destination="BY5-Kr-UQf" id="tD7-M9-65d"/>
                         <outlet property="emailField" destination="ifu-6V-KZi" id="E13-5r-s8E"/>
                         <outlet property="profileImageView" destination="euU-cq-HSP" id="wIm-CR-ztA"/>
                         <outlet property="pwField" destination="wGU-Vu-DaJ" id="lS4-ue-0n6"/>
@@ -820,7 +827,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaL-zN-fe3">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaL-zN-fe3" customClass="PFImageView">
                                 <rect key="frame" x="117" y="151" width="181" height="180"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -863,17 +870,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4tX-eU-H22">
-                                <rect key="frame" x="129" y="677" width="154" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <menu key="menu" id="2CM-bX-358">
-                                    <children>
-                                        <command title="Item 1" id="tQZ-6z-eIw"/>
-                                        <command title="Item 2" id="LQx-6A-PZ7"/>
-                                    </children>
-                                </menu>
-                                <state key="normal" title="Choose Your Pin Color"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3nd-1g-CUn">
                                 <rect key="frame" x="143" y="758" width="129" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -881,6 +877,19 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Update Settings"/>
                                 <connections>
                                     <action selector="updateButton:" destination="O0c-HY-hDX" eventType="touchUpInside" id="bh5-9u-Jdi"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iVn-cY-Xlt" customClass="PFImageView">
+                                <rect key="frame" x="286" y="662" width="79" height="79"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9S-4D-IFJ">
+                                <rect key="frame" x="48" y="686" width="169" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Choose Your Pin Color"/>
+                                <connections>
+                                    <action selector="colorPickButton:" destination="O0c-HY-hDX" eventType="touchUpInside" id="imR-wg-FJr"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -900,8 +909,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="colorView" destination="iVn-cY-Xlt" id="lpM-SV-0nx"/>
                         <outlet property="emailField" destination="PCa-il-6mc" id="V1R-El-FHN"/>
-                        <outlet property="profileImageView" destination="FaL-zN-fe3" id="wOY-hs-u74"/>
+                        <outlet property="profileImageView" destination="FaL-zN-fe3" id="jUV-I9-jA8"/>
                         <outlet property="pwField" destination="0Fi-ko-eRk" id="cLD-2v-bfe"/>
                         <outlet property="usernameField" destination="YEb-uX-r2l" id="fZL-is-wcg"/>
                     </connections>

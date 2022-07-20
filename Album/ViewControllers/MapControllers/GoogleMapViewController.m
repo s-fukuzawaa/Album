@@ -6,6 +6,7 @@
 //
 
 #import "GoogleMapViewController.h"
+#import "ColorConvertHelper.h"
 #import "LocationGenerator.h"
 #import "ComposeViewController.h"
 #import "DetailsViewCOntroller.h"
@@ -24,12 +25,17 @@
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
+@property (nonatomic, weak) PFUser *currentUser;
+@property (nonatomic, strong) ColorConvertHelper* colorHelper;
 @end
 
 @implementation GoogleMapViewController
 
 - (void)loadView {
     [super loadView];
+    self.colorHelper = [[ColorConvertHelper alloc] init];
+    // Set user
+    self.currentUser = [PFUser currentUser];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
@@ -64,12 +70,14 @@
     for(Pin *pin in self.markerArr) {
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
+        PFUser *author = pin.author;
+        PFUser *friend = [self fetchUser:author.objectId][0];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:friend[@"colorHexString"]]];
         marker.title = pin.placeName;
         marker.snippet = pin.placeID;
         marker.map = self.mapView;
     }
 }
-
 - (void) fetchMarkers {
     NSInteger index = self.segmentedControl.selectedSegmentIndex;
     if(index == 0) {
@@ -89,7 +97,7 @@
 - (void) fetchPersonal {
     // Query to find markers that belong to current user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    [query whereKey:@"author" equalTo:[PFUser currentUser]];
+    [query whereKey:@"author" equalTo:self.currentUser];
     [query includeKey: @"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
@@ -106,8 +114,7 @@
 - (void) fetchFriends {
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
-    PFObject *currentUser = [PFUser currentUser];
-    [friendQuery whereKey:@"requesterId" equalTo:currentUser.objectId];
+    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
     [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
     [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
         if (friendships != nil) {
@@ -169,7 +176,7 @@
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     NSInteger index = self.segmentedControl.selectedSegmentIndex;
     if(index == 0) {
-        [query whereKey:@"author" equalTo:[PFUser currentUser]];
+        [query whereKey:@"author" equalTo:self.currentUser];
     }
     
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
@@ -181,7 +188,7 @@
         int i=0;
         while(i<pins.count) {
             Pin *pin = pins[i];
-            if([self.friendsIdSet containsObject:pin.author.objectId] == NO && [pin.author.objectId isEqual:[PFUser currentUser].objectId] == NO) {
+            if([self.friendsIdSet containsObject:pin.author.objectId] == NO && [pin.author.objectId isEqual:self.currentUser.objectId] == NO) {
                 [pins removeObject:pin];
             }
             i++;
@@ -195,6 +202,7 @@
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     marker.map = self.mapView;
 }
 
@@ -229,6 +237,7 @@ didTapPOIWithPlaceID:(NSString *)placeID
     self.infoMarker.snippet = placeID;
     self.infoMarker.title = name;
     self.infoMarker.opacity = 0;
+    self.infoMarker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     CGPoint pos = self.infoMarker.infoWindowAnchor;
     pos.y = 1;
     self.infoMarker.infoWindowAnchor = pos;
@@ -326,6 +335,7 @@ didTapPOIWithPlaceID:(NSString *)placeID
     marker.title = self.infoMarker.title;
     marker.snippet = self.infoMarker.snippet;
     marker.map = self.mapView;
+    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
