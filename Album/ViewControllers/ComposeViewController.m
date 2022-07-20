@@ -21,6 +21,7 @@
 @property (strong, nonatomic) PHPickerConfiguration *config;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (nonatomic) int currentIndex;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
 
@@ -51,9 +52,18 @@
     // Photo carousel
     self.imageCarouselView.delegate = self;
     self.imageCarouselView.dataSource = self;
+    self.imageCarouselView.layer.borderWidth = 1.0f;
+    self.imageCarouselView.layer.borderColor = [[UIColor blackColor] CGColor];
     // Set up photos array
     self.photos = [[NSMutableArray alloc] init];
     self.currentIndex = 0;
+    // Set up page control
+    self.pageControl.numberOfPages = self.photos.count;
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.imageCarouselView reloadData];
 }
 
 - (void) didTapImage:(UITapGestureRecognizer *)sender {
@@ -105,7 +115,8 @@
 
 -(void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results{
     [picker dismissViewControllerAnimated:YES completion:nil];
-    
+    [self.photos removeAllObjects];
+    self.pageControl.numberOfPages = 0;
     for (PHPickerResult *result in results)
     {
         // Get UIImage
@@ -113,9 +124,15 @@
          {
             if ([object isKindOfClass:[UIImage class]])
             {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self.photos addObject:(UIImage *)object];
+//                });
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.photos addObject:(UIImage*)object];
+                    self.pageControl.numberOfPages = self.pageControl.numberOfPages+1;
+                    [self.photos addObject:(UIImage *)object];
+                    [self.imageCarouselView reloadData];
                 });
+                
             }
         }];
     }
@@ -165,29 +182,45 @@
             NSLog(@"Error posting: %@", error.localizedDescription);
         } else {
             NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
-            [Image postImage:self.pinImageView.image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
-                if(error) {
-                    NSLog(@"Error saving image: %@", error.localizedDescription);
-                }
-                else{
-                    NSLog(@"Successfully saved image");
-                    [self.delegate didPost];
-                }
-            } ];
+            for(UIImage* image in self.photos) {
+                [Image postImage:image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
+                    if(error) {
+                        NSLog(@"Error saving image: %@", error.localizedDescription);
+                    }
+                    else{
+                        NSLog(@"Successfully saved image");
+                    }
+                } ];
+            }
+            [self.delegate didPost];
+            
         }
     }];
     
     [self returnMap];
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if(self.photos.count == 0) {
+        return 1;
+    }
     return self.photos.count;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-    photoCell.photoImageView.image = self.photos[indexPath.row];
-    photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
+    if(self.photos.count == 0) {
+//        UIImage *resizedImage = [self resizeImage:[UIImage systemImageNamed: @"image_placeholder"] withSize:photoCell.photoImageView.image.size];
+//        photoCell.photoImageView.image = resizedImage;
+//        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        photoCell.photoImageView.image = [UIImage imageNamed: @"image_placeholder"];
+    }else{
+//        UIImage *resizedImage = [self resizeImage:self.photos[indexPath.row] withSize:photoCell.photoImageView.image.size];
+//        photoCell.photoImageView.image = resizedImage;
+        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        photoCell.photoImageView.image = self.photos[indexPath.row];
+    }
     return photoCell;
 }
 - (IBAction) tapped:(id) sender {
