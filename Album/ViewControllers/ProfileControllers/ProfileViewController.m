@@ -74,11 +74,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqualToString:@"activitiesSegue"]) {
-        UINavigationController *navigationController = [segue destinationViewController];
-        ActivitiesViewController *activitiesController = (ActivitiesViewController *)navigationController.topViewController;
-        //        activitiesController.delegate = self; TODO: Add delegate later
-    } else if ([segue.identifier isEqualToString:@"addFriendSegue"]) {
+   if ([segue.identifier isEqualToString:@"addFriendSegue"]) {
         UINavigationController *navigationController = [segue destinationViewController];
         AddFriendViewController *addFriendController = (AddFriendViewController *)navigationController.topViewController;
         //        addFriendController.delegate = self; TODO: Add delegate later
