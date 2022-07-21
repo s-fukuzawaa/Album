@@ -215,7 +215,6 @@
     [self loadView];
 }
 
-
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
     GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
     marker.map = self.mapView;

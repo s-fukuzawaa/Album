@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "Parse/PFImageView.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @protocol ActivityCellDelegate;
 @interface ActivityCell : UITableViewCell

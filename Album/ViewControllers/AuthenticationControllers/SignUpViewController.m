@@ -106,7 +106,7 @@
 		                                       imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
 		                                       [self presentViewController:imagePickerVC animated:YES completion:nil];
 					       }];
-		// Add the upload from library action to the alert controller
+		// Add the upload from library action to the alert controller\
 		[alert addAction:uploadAction];
 		//Cancel
 		UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"

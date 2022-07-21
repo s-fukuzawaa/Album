@@ -20,10 +20,6 @@
 
 @implementation SettingsViewController
 
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
 - (IBAction)updateButton:(id)sender {
 }
 - (IBAction)backButton:(id)sender {
@@ -31,12 +27,9 @@
 }
 - (IBAction)logoutButton:(id)sender {
 	SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
-
 	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 	LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
 	myDelegate.window.rootViewController = loginViewController;
-	[PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
-	 }];
+	[PFUser logOutInBackgroundWithBlock:nil];
 }
-
 @end

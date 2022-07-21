@@ -10,6 +10,7 @@
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 #import "AlbumConstants.h"
+
 @interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *requests;
@@ -33,7 +34,6 @@
 - (IBAction)backButton:(id)sender {
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
-
 - (void) fetchActivities {
 	[self fetchRequests];
 }
