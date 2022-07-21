@@ -202,5 +202,8 @@
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
 }
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
+}
 
 @end

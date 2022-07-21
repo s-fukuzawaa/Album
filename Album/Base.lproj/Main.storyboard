@@ -953,6 +953,10 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1Dg-WR-Vcq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Lmi-Fj-m3T" appends="YES" id="sZG-tJ-zSZ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="DsY-IQ-je9">
                         <barButtonItem key="leftBarButtonItem" title="Back" image="arrow.backward" catalog="system" id="Ki0-wJ-WJf">
@@ -975,6 +979,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dTs-c7-C0g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Lmi-Fj-m3T">
+                    <connections>
+                        <action selector="tap:" destination="O0c-HY-hDX" id="a2c-lc-4Ir"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3824.6376811594205" y="3221.6517857142858"/>
         </scene>
