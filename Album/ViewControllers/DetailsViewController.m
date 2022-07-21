@@ -7,15 +7,22 @@
 
 #import "DetailsViewController.h"
 #import <Parse/PFImageView.h>
+#import "PhotoCollectionCell.h"
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet PFImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
-
+@property (nonatomic) int currentIndex;
 @end
 
 @implementation DetailsViewController
+
+//- (void) viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    // Photo carousel
+//    self.imageCarouselView.delegate = self;
+//    self.imageCarouselView.dataSource = self;
+//}
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -26,14 +33,54 @@
 	self.dateLabel.text = self.date;
 	// Set caption
 	self.captionTextView.text = self.caption;
-	// Set image
-	[self.pinImageView setFile:self.pinImage];
-	[self.pinImage getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-	         if (!error) {
-			 UIImage *image = [UIImage imageWithData:imageData];
-			 [self.pinImageView setImage:image];
-		 }
-	 }];
+//	// Set image
+//	[self.pinImage getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+//	         if (!error) {
+//			 UIImage *image = [UIImage imageWithData:imageData];
+//			 [self.pinImageView setImage:image];
+//		 }
+//	 }];
+    // Photo carousel
+    self.imageCarouselView.delegate = self;
+    self.imageCarouselView.dataSource = self;
+    // Set up photos array
+    self.currentIndex = 0;
 
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if(self.imagesFromPin.count == 0) {
+        return 1;
+    }
+    return self.imagesFromPin.count;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"detailCell" forIndexPath:indexPath];
+    if(self.imagesFromPin.count == 0) {
+        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        photoCell.photoImageView.image = [UIImage imageNamed: @"image_placeholder"];
+    }else{
+        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        PFFileObject *file = self.imagesFromPin[indexPath.row];
+//        [photoCell.photoImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                        if (!error) {
+                            UIImage *image = [UIImage imageWithData:imageData];
+                            [photoCell.photoImageView setImage:image];
+                        }
+                    }];
+//        photoCell.photoImageView.image = [UIImage imageNamed: @"feed_tab"];
+//        UIImage* temp = self.imagesFromPin[indexPath.row];
+////        [photoCell.photoImageView setImage:temp];
+//        photoCell.photoImageView.image = temp;
+    }
+    return photoCell;
+}
+
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView{
+    self.currentIndex = scrollView.contentOffset.x /self.imageCarouselView.frame.size.width;
+    self.pageIndicator.currentPage = self.currentIndex;
 }
 @end

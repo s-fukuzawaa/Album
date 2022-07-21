@@ -18,7 +18,7 @@
 #import <Parse/PFImageView.h>
 #import "Pin.h"
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate, ComposeViewControllerDelegate>
+@interface GoogleMapViewController ()<GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, ComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
@@ -353,11 +353,20 @@ didTapPOIWithPlaceID:(NSString *)placeID
         GMSMarker *marker=sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
-        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            detailsVC.pinImage = imageFile;
+        NSArray* images = self.pinImages[firstPin.objectId];
+        NSMutableArray *pinImages = [[NSMutableArray alloc] init];
+        for(PFObject *imageObj in images) {
+            PFFileObject *file = imageObj[@"imageFile"];
+            [pinImages addObject:file];
+//            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+//                if (!error) {
+//                    UIImage *image = [UIImage imageWithData:imageData];
+//                    [imagesFromPin addObject: image];
+//                }
+//            }];
+            
         }
+        detailsVC.imagesFromPin = pinImages;
         // Set place name
         detailsVC.placeName = firstPin[@"placeName"];
         // Set date

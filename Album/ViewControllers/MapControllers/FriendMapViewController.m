@@ -7,6 +7,7 @@
 
 #import "FriendMapViewController.h"
 #import "LocationGenerator.h"
+#import "ColorConvertHelper.h"
 #import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
@@ -15,17 +16,19 @@
 #import <Parse/PFImageView.h>
 #import "Pin.h"
 
-@interface FriendMapViewController () <GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate>
+@interface FriendMapViewController () <GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
+@property (nonatomic, strong) ColorConvertHelper* colorHelper;
 @end
 
 @implementation FriendMapViewController
 
 - (void)loadView {
     [super loadView];
+    self.colorHelper = [[ColorConvertHelper alloc] init];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
@@ -61,6 +64,7 @@
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         marker.title = pin.placeName;
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.user[@"colorHexString"]]];
         marker.snippet = pin.placeID;
         marker.map = self.mapView;
         i++;
@@ -120,6 +124,7 @@
     self.infoMarker.snippet = placeID;
     self.infoMarker.title = name;
     self.infoMarker.opacity = 0;
+    self.infoMarker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.user[@"colorHexString"]]];
     CGPoint pos = self.infoMarker.infoWindowAnchor;
     pos.y = 1;
     self.infoMarker.infoWindowAnchor = pos;
@@ -211,15 +216,6 @@
 
 }
 
-- (void)didPost {
-    // Place marker after composing pin at the location
-    GMSMarker *marker = [[GMSMarker alloc] init];
-    marker.position = CLLocationCoordinate2DMake(self.infoMarker.position.latitude, self.infoMarker.position.longitude);
-    marker.title = self.infoMarker.title;
-    marker.snippet = self.infoMarker.snippet;
-    marker.map = self.mapView;
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-}
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -229,11 +225,7 @@
         GMSMarker *marker=sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
-        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            detailsVC.pinImage = imageFile;
-        }
+        detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
         // Set place name
         detailsVC.placeName = firstPin[@"placeName"];
         // Set date
