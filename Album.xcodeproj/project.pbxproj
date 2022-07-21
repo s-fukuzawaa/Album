@@ -336,9 +336,9 @@
 				AF15583628774C6D00C3FD82 /* AuthenticationControllers */,
 				AF15583528774C4A00C3FD82 /* ProfileControllers */,
 				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
+				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
 				AF1FE8462887590C00C5E0A5 /* ColorPickViewController.h */,
 				AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */,
-				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
 				AF15584028774F4000C3FD82 /* DetailsViewController.h */,
 				AF15584128774F4000C3FD82 /* DetailsViewController.m */,
 			);

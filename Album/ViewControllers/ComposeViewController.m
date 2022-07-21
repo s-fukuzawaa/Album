@@ -13,7 +13,8 @@
 #import "Image.h"
 #import "Pin.h"
 
-@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
+@interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+PHPickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -41,10 +42,8 @@
     UITapGestureRecognizer *imageTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapImage:)];
     [self.imageCarouselView addGestureRecognizer:imageTapGestureRecognizer];
     [self.imageCarouselView setUserInteractionEnabled:YES];
-    
     // Set location label
     self.locationLabel.text = [self.locationLabel.text stringByAppendingString:self.placeName];
-    
     // Config PHPicker
     self.config = [[PHPickerConfiguration alloc] init];
     self.config.selectionLimit = 10;
@@ -59,21 +58,21 @@
     self.currentIndex = 0;
     // Set up page control
     self.pageControl.numberOfPages = self.photos.count;
-}
+} /* viewDidLoad */
 
-- (void) viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.imageCarouselView reloadData];
 }
 
-- (void) didTapImage:(UITapGestureRecognizer *)sender {
+- (void)didTapImage:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
         // Create a cancel action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                            handler:^(UIAlertAction *_Nonnull action) {
             UIImagePickerController *imagePickerVC = [UIImagePickerController new];
             imagePickerVC.delegate = self;
             imagePickerVC.allowsEditing = YES;
@@ -85,22 +84,23 @@
         // Create an OK action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction * _Nonnull action) {
-            PHPickerViewController *pickerViewController = [[PHPickerViewController alloc] initWithConfiguration:self.config];
+                                                             handler:^(UIAlertAction *_Nonnull action) {
+            PHPickerViewController *pickerViewController =
+            [[PHPickerViewController alloc] initWithConfiguration:self.config];
             pickerViewController.delegate = self;
-            [self presentViewController:pickerViewController animated:YES completion:nil];
+            [self presentViewController:pickerViewController animated:YES completion:
+             nil];
         }];
         // Add the OK action to the alert controller
         [alert addAction:uploadAction];
         //Cancel
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                          style:UIAlertActionStyleDefault
-                                                       handler: nil];
+                                                       handler:nil];
         // Add the OK action to the alert controller
         [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
-    }
-    else {
+    } else {
         NSLog(@"Camera 🚫 available so we will use photo library instead");
         //		UIImagePickerController *imagePickerVC = [UIImagePickerController new];
         //		imagePickerVC.delegate = self;
@@ -111,34 +111,30 @@
         pickerViewController.delegate = self;
         [self presentViewController:pickerViewController animated:YES completion:nil];
     }
-}
+} /* didTapImage */
 
--(void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results{
+- (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results {
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.photos removeAllObjects];
     self.pageControl.numberOfPages = 0;
-    for (PHPickerResult *result in results)
-    {
+    for (PHPickerResult *result in results) {
         // Get UIImage
-        [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error)
+        [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object,
+                                                                                   NSError *_Nullable error)
          {
-            if ([object isKindOfClass:[UIImage class]])
-            {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [self.photos addObject:(UIImage *)object];
-//                });
+            if ([object isKindOfClass:[UIImage class]]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.pageControl.numberOfPages = self.pageControl.numberOfPages+1;
+                    self.pageControl.numberOfPages =
+                    self.pageControl.numberOfPages + 1;
                     [self.photos addObject:(UIImage *)object];
                     [self.imageCarouselView reloadData];
                 });
-                
             }
         }];
     }
-}
+} /* picker */
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
     originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
@@ -160,7 +156,7 @@
     return newImage;
 }
 
-- (void) returnMap {
+- (void)returnMap {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)crossButton:(id)sender {
@@ -177,30 +173,28 @@
     newPin[@"latitude"] = @(self.coordinate.latitude);
     newPin[@"longitude"] = @(self.coordinate.longitude);
     newPin[@"traveledOn"] = self.traveledDate.date;
-    [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
         if (error) {
             NSLog(@"Error posting: %@", error.localizedDescription);
         } else {
             NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
-            for(UIImage* image in self.photos) {
-                [Image postImage:image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError * _Nullable error) {
-                    if(error) {
+            for (UIImage *image in self.photos) {
+                [Image postImage:image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError *_Nullable error) {
+                    if (error) {
                         NSLog(@"Error saving image: %@", error.localizedDescription);
-                    }
-                    else{
+                    } else {
                         NSLog(@"Successfully saved image");
                     }
                 } ];
             }
             [self.delegate didPost];
-            
         }
     }];
     
     [self returnMap];
-}
+} /* postButton */
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if(self.photos.count == 0) {
+    if (self.photos.count == 0) {
         return 1;
     }
     return self.photos.count;
@@ -209,26 +203,22 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-    if(self.photos.count == 0) {
-//        UIImage *resizedImage = [self resizeImage:[UIImage systemImageNamed: @"image_placeholder"] withSize:photoCell.photoImageView.image.size];
-//        photoCell.photoImageView.image = resizedImage;
-//        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+    // Add placeholder image cell when there are no images
+    if (self.photos.count == 0) {
         photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-        photoCell.photoImageView.image = [UIImage imageNamed: @"image_placeholder"];
-    }else{
-//        UIImage *resizedImage = [self resizeImage:self.photos[indexPath.row] withSize:photoCell.photoImageView.image.size];
-//        photoCell.photoImageView.image = resizedImage;
+        photoCell.photoImageView.image = [UIImage imageNamed:@"image_placeholder"];
+    } else {
         photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
         photoCell.photoImageView.image = self.photos[indexPath.row];
     }
     return photoCell;
 }
-- (IBAction) tapped:(id) sender {
+- (IBAction)tapped:(id)sender {
     [self.view endEditing:YES];
 }
 
-- (void) scrollViewDidScroll:(UIScrollView *)scrollView{
-    self.currentIndex = scrollView.contentOffset.x /self.imageCarouselView.frame.size.width;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
     self.pageIndicator.currentPage = self.currentIndex;
 }
 

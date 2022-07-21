@@ -19,8 +19,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
 @property (weak, nonatomic) IBOutlet PFImageView *colorView;
-@property (nonatomic, strong) UIColor* color;
-@property (nonatomic, strong) ColorConvertHelper* colorHelper;
+@property (nonatomic, strong) UIColor *color;
+@property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @end
 
 @implementation SettingsViewController
@@ -29,44 +29,49 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setCurrentView];
-    UITapGestureRecognizer *profileTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
+    // Tap gesture added to change profile pic
+    UITapGestureRecognizer *profileTapGestureRecognizer =
+    [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
+    // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
-    
 }
-- (void) setCurrentView {
+- (void)setCurrentView {
+    // Fetch current user's profile and set it
     PFUser *user = [PFUser currentUser];
-    if(user[@"profileImage"]) {
+    if (user[@"profileImage"]) {
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
             if (!error) {
                 UIImage *image = [UIImage imageWithData:imageData];
                 [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
                 self.profileImageView.layer.masksToBounds = YES;
             }
         }];
     }
-    if(user[@"colorHexString"]) {
-        UIColor* color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
+    
+    // Display current user marker color
+    if (user[@"colorHexString"]) {
+        UIColor *color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
         [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
     }
     self.usernameField.text = user.username;
     self.emailField.text = user.email;
     self.pwField.text = user.password;
     self.pwField.placeholder = @"Please enter non-empty password";
-}
+} /* setCurrentView */
 
-- (void) didTapUserProfile:(UITapGestureRecognizer *)sender {
+- (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
         // Take photo action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                            handler:^(UIAlertAction *_Nonnull action) {
             UIImagePickerController *imagePickerVC = [UIImagePickerController new];
             imagePickerVC.delegate = self;
             imagePickerVC.allowsEditing = YES;
@@ -78,7 +83,7 @@
         // Create an upload from library action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction * _Nonnull action) {
+                                                             handler:^(UIAlertAction *_Nonnull action) {
             UIImagePickerController *imagePickerVC = [UIImagePickerController new];
             imagePickerVC.delegate = self;
             imagePickerVC.allowsEditing = YES;
@@ -90,7 +95,7 @@
         //Cancel
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                          style:UIAlertActionStyleDefault
-                                                       handler: nil];
+                                                       handler:nil];
         // Add the cancel action to the alert controller
         [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
@@ -102,9 +107,9 @@
         imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
-}
+} /* didTapUserProfile */
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
     originalImage = [self resizeImage:originalImage withSize:self.profileImageView.image.size];
@@ -115,7 +120,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (PFFileObject *)getPFFileFromImage: (UIImage * _Nullable)image {
+- (PFFileObject *)getPFFileFromImage:(UIImage *_Nullable)image {
     // Check if image is not nil
     if (!image) {
         return nil;
@@ -141,31 +146,32 @@
 
 - (IBAction)updateButton:(id)sender {
     PFUser *user = [PFUser currentUser];
-    if(![self.usernameField.text isEqualToString:user.username]) {
+    if (![self.usernameField.text isEqualToString:user.username]) {
         user.username = self.usernameField.text;
     }
-    if(![self.pwField.text isEqualToString:user.password]) {
+    if (![self.pwField.text isEqualToString:user.password] && ![self.pwField.text isEqualToString:@""]) {
         user.password = self.pwField.text;
     }
-    if(![self.emailField.text isEqualToString:user.email]) {
+    if (![self.emailField.text isEqualToString:user.email]) {
         user.email = self.emailField.text;
     }
-    if(![self.profileImageView.file isEqual:user[@"profileImage"]]) {
+    if (![self.profileImageView.file isEqual:user[@"profileImage"]]) {
         user[@"profileImage"] = self.profileImageView.file;
     }
     NSString *hexString = [self.colorHelper hexStringForColor:self.color];
-    if(![hexString isEqualToString:user[@"colorHexString"]]) {
+    if (![hexString isEqualToString:user[@"colorHexString"]]) {
         user[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
     }
-    
-    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    // Update user properties when necessary
+    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
         } else {
             NSLog(@"User updated successfully");
         }
     }];
-}
+} /* updateButton */
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -175,20 +181,20 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     myDelegate.window.rootViewController = loginViewController;
-    [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
-    }];
+    [PFUser logOutInBackgroundWithBlock:nil];
 }
--(void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
+- (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
     [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
+- (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)colorPickButton:(id)sender {
+    // Show color picker
     FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
     colorPicker.color = self.color;
     colorPicker.delegate = self;

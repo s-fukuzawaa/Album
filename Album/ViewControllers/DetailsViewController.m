@@ -17,39 +17,23 @@
 
 @implementation DetailsViewController
 
-//- (void) viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    // Photo carousel
-//    self.imageCarouselView.delegate = self;
-//    self.imageCarouselView.dataSource = self;
-//}
-
 - (void)viewDidLoad {
-	[super viewDidLoad];
-	// Do any additional setup after loading the view.
-	// Set location
-	self.placeNameLabel.text = self.placeName;
-	// Set date
-	self.dateLabel.text = self.date;
-	// Set caption
-	self.captionTextView.text = self.caption;
-//	// Set image
-//	[self.pinImage getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-//	         if (!error) {
-//			 UIImage *image = [UIImage imageWithData:imageData];
-//			 [self.pinImageView setImage:image];
-//		 }
-//	 }];
+    [super viewDidLoad];
+    // Set location
+    self.placeNameLabel.text = self.placeName;
+    // Set date
+    self.dateLabel.text = self.date;
+    // Set caption
+    self.captionTextView.text = self.caption;
     // Photo carousel
     self.imageCarouselView.delegate = self;
     self.imageCarouselView.dataSource = self;
     // Set up photos array
     self.currentIndex = 0;
-
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if(self.imagesFromPin.count == 0) {
+    if (self.imagesFromPin.count == 0) {
         return 1;
     }
     return self.imagesFromPin.count;
@@ -58,29 +42,19 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"detailCell" forIndexPath:indexPath];
-    if(self.imagesFromPin.count == 0) {
+    // Add placeholder cell when no images are found
+    if (self.imagesFromPin.count == 0) {
         photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-        photoCell.photoImageView.image = [UIImage imageNamed: @"image_placeholder"];
-    }else{
+        photoCell.photoImageView.image = [UIImage imageNamed:@"image_placeholder"];
+    } else {
         photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-        PFFileObject *file = self.imagesFromPin[indexPath.row];
-//        [photoCell.photoImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                        if (!error) {
-                            UIImage *image = [UIImage imageWithData:imageData];
-                            [photoCell.photoImageView setImage:image];
-                        }
-                    }];
-//        photoCell.photoImageView.image = [UIImage imageNamed: @"feed_tab"];
-//        UIImage* temp = self.imagesFromPin[indexPath.row];
-////        [photoCell.photoImageView setImage:temp];
-//        photoCell.photoImageView.image = temp;
+        photoCell.photoImageView.image = self.imagesFromPin[indexPath.row];
     }
     return photoCell;
 }
 
-- (void) scrollViewDidScroll:(UIScrollView *)scrollView{
-    self.currentIndex = scrollView.contentOffset.x /self.imageCarouselView.frame.size.width;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
     self.pageIndicator.currentPage = self.currentIndex;
 }
 @end
