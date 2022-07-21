@@ -1,19 +1,19 @@
 //
-//  GoogleMapViewController.h
+//  FriendMapViewController.h
 //  Album
 //
-//  Created by Airei Fukuzawa on 7/6/22.
+//  Created by Airei Fukuzawa on 7/18/22.
 //
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <Parse/Parse.h>
 @import GoogleMaps;
 @import GoogleMapsUtils;
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GoogleMapViewController : UIViewController
-@property (nonatomic) NSInteger switchStatus;
+@interface FriendMapViewController : UIViewController
+@property (nonatomic, strong) PFUser *user;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation* currentLocation;
 @property (nonatomic, strong) GMSMapView *mapView;

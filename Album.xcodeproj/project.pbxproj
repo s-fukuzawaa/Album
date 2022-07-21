@@ -13,7 +13,6 @@
 		AF0D2D69287F43B8000A3870 /* InfoMarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF0D2D68287F43B8000A3870 /* InfoMarkerView.m */; };
 		AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1558272876702B00C3FD82 /* LoginViewController.m */; };
 		AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582A2876704000C3FD82 /* SignUpViewController.m */; };
-		AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15582D287746F200C3FD82 /* HomeViewController.m */; };
 		AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583028774BC500C3FD82 /* ProfileViewController.m */; };
 		AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583328774C1900C3FD82 /* SettingsViewController.m */; };
 		AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583828774D4000C3FD82 /* ActivitiesViewController.m */; };
@@ -26,6 +25,7 @@
 		AF15585528789D1500C3FD82 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585428789D1500C3FD82 /* FriendCell.m */; };
 		AF1FE7E0288082C100C5E0A5 /* Friendship.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7DF288082C100C5E0A5 /* Friendship.m */; };
 		AF1FE7E4288210EF00C5E0A5 /* AlbumConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E3288210EF00C5E0A5 /* AlbumConstants.m */; };
+		AF1FE7E72885CAD800C5E0A5 /* FriendMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -80,8 +80,6 @@
 		AF1558272876702B00C3FD82 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		AF1558292876704000C3FD82 /* SignUpViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		AF15582A2876704000C3FD82 /* SignUpViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
-		AF15582C287746F200C3FD82 /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
-		AF15582D287746F200C3FD82 /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		AF15582F28774BC500C3FD82 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		AF15583028774BC500C3FD82 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		AF15583228774C1900C3FD82 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -106,6 +104,8 @@
 		AF1FE7DF288082C100C5E0A5 /* Friendship.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Friendship.m; sourceTree = "<group>"; };
 		AF1FE7E2288210D100C5E0A5 /* AlbumConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumConstants.h; sourceTree = "<group>"; };
 		AF1FE7E3288210EF00C5E0A5 /* AlbumConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumConstants.m; sourceTree = "<group>"; };
+		AF1FE7E52885CAD800C5E0A5 /* FriendMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendMapViewController.h; sourceTree = "<group>"; };
+		AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendMapViewController.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -228,8 +228,6 @@
 		AF1558432877508600C3FD82 /* HomeControllers */ = {
 			isa = PBXGroup;
 			children = (
-				AF15582C287746F200C3FD82 /* HomeViewController.h */,
-				AF15582D287746F200C3FD82 /* HomeViewController.m */,
 				AF155844287750CB00C3FD82 /* AlbumViewController.h */,
 				AF155845287750CB00C3FD82 /* AlbumViewController.m */,
 			);
@@ -353,6 +351,8 @@
 			children = (
 				AF60C0B9287642880033DCB0 /* GoogleMapViewController.h */,
 				AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */,
+				AF1FE7E52885CAD800C5E0A5 /* FriendMapViewController.h */,
+				AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */,
 			);
 			path = MapControllers;
 			sourceTree = "<group>";
@@ -651,6 +651,7 @@
 				AFCC30F6287DD5CF00521733 /* Pin.m in Sources */,
 				AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */,
 				AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */,
+				AF1FE7E72885CAD800C5E0A5 /* FriendMapViewController.m in Sources */,
 				AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */,
 				AF60C07C287633930033DCB0 /* main.m in Sources */,
 				AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */,
@@ -671,7 +672,6 @@
 				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,
 				AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */,
 				AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */,
-				AF15582E287746F200C3FD82 /* HomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
