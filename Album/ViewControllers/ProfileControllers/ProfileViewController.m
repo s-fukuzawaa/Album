@@ -9,6 +9,10 @@
 #import "ActivitiesviewController.h"
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
+#import "PhotoCollectionCell.h"
+#import "AlbumConstants.h"
+#import "ParseAPIHelper.h"
+#import "Friendship.h"
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
@@ -16,18 +20,27 @@
 @interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
-
+@property (strong, nonatomic) NSArray* friendships;
+@property (strong, nonatomic) PFUser* currentUser;
+@property (strong, nonatomic) ParseAPIHelper *apiHelper;
+@property (strong, nonatomic) NSArray *friendsArray;
 @end
 
 @implementation ProfileViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Set API helper
+    self.apiHelper = [[ParseAPIHelper alloc] init];
+    // Store current user
+    self.currentUser = [PFUser currentUser];
     // Assign collection view delegate and dataSource
     self.friendsCollectionView.dataSource = self;
     self.friendsCollectionView.delegate = self;
     // Load profile image
-    [self fetchProfile];
+    [self setProfile];
+    // Fetch friends
+    self.friendsArray = [self.apiHelper fetchFriends:self.currentUser.objectId];
 }
 - (IBAction)activitiesButton:(id)sender {
     [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
@@ -40,33 +53,38 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 0;
+    return self.friendsArray.count;
 }
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
-                                                                                                                                          NSIndexPath *)indexPath {
-                                                                                                                                              return CGSizeMake(3, 3);
-                                                                                                                                          }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return NULL;
+    PhotoCollectionCell *profileCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"profileCell" forIndexPath:indexPath];
+    if (self.friendsArray.count == 0) {
+        profileCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        profileCell.photoImageView.image = [UIImage imageNamed:@"profile_tab"];
+    } else {
+        profileCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        PFFileObject *file = self.friendsArray[indexPath.row][@"profileImage"];
+        profileCell.photoImageView.image = [UIImage imageWithData:[file getData]];
+    }
+    return profileCell;
 }
 
-- (void)fetchProfile {
+- (void)setProfile {
     PFUser *user = [PFUser currentUser];
     if (user[@"profileImage"]) {
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+                  if (!error) {
+                  UIImage *image = [UIImage imageWithData:imageData];
+                  [self.profileImageView setImage:image];
+                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                  self.profileImageView.layer.masksToBounds = YES;
+                  }
+              }];
     }
 }
+
 
 #pragma mark - Navigation
 

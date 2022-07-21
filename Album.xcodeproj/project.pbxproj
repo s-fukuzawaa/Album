@@ -30,6 +30,7 @@
 		AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */; };
 		AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */; };
 		AF1FE84B288780D300C5E0A5 /* ColorConvertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */; };
+		AF2D66692889B2CD0055AD77 /* ParseAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -117,6 +118,8 @@
 		AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorPickViewController.m; sourceTree = "<group>"; };
 		AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorConvertHelper.m; sourceTree = "<group>"; };
 		AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorConvertHelper.h; sourceTree = "<group>"; };
+		AF2D66672889B2CD0055AD77 /* ParseAPIHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParseAPIHelper.h; sourceTree = "<group>"; };
+		AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParseAPIHelper.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -261,6 +264,8 @@
 			children = (
 				AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */,
 				AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */,
+				AF2D66672889B2CD0055AD77 /* ParseAPIHelper.h */,
+				AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -691,6 +696,7 @@
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AF2D66692889B2CD0055AD77 /* ParseAPIHelper.m in Sources */,
 				AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */,
 				AFCC30F9287DDB9200521733 /* Image.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,

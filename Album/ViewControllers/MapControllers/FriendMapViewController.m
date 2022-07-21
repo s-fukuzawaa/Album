@@ -211,7 +211,18 @@
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+        DetailsViewController *detailsVC = [[DetailsViewController alloc] init];
+        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        // Set Image
+        detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
+        // Set place name
+        detailsVC.placeName = firstPin[@"placeName"];
+        // Set date
+        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
+        detailsVC.date = date;
+        // Set caption
+        detailsVC.caption = [@"Caption: " stringByAppendingString:firstPin[@"captionText"]];
+        [self presentViewController:detailsVC animated:YES completion:nil];
     }
 }
 
