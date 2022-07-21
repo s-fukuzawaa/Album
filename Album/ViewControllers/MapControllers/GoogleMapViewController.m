@@ -19,7 +19,7 @@
 #import "Pin.h"
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate,
-                                      ComposeViewControllerDelegate>
+ComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
@@ -40,7 +40,7 @@
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
-        kCLLocationAccuracyNearestTenMeters;
+    kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     // Ask for authentication
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
@@ -50,7 +50,7 @@
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
     GMSCameraPosition *camera =
-        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     [self fetchMarkers];
     self.view = self.mapView;
@@ -101,15 +101,15 @@
     [query whereKey:@"author" equalTo:self.currentUser];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-               if (pins != nil) {
-               // Store the posts, update count
-               NSLog(@"Successfully fetched markers!");
-               self.markerArr = (NSMutableArray *)pins;
-               [self loadMarkers];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 
 - (void)fetchFriends {
@@ -118,35 +118,35 @@
     [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
     [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
     [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-                     if (friendships != nil) {
-                     NSLog(@"Successfully fetched friendships!");
-                     // For each friend, find their pins
-                     for (Friendship *friendship in friendships) {
-                     NSString *friendId = friendship[@"recipientId"];
-                     PFUser *friend = [self fetchUser:friendId][0];
-                     [self.friendsIdSet addObject:friendId];
-                     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-                     [query whereKey:@"author" equalTo:friend];
-                     [query includeKey:@"objectId"];
-                     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-                                if (pins != nil) {
-                                // Store the pins, update count
-                                NSLog(@"Successfully fetched pins!");
-                                // Add pins to the marker array
-                                for (PFObject *pin in pins) {
-                                [self.markerArr addObject:pin];
-                                }
-                                // Reload markers
-                                [self loadMarkers];
-                                } else {
-                                NSLog(@"%@", error.localizedDescription);
-                                }
-                     }];
-                     }
-                     } else {
-                     NSLog(@"%@", error.localizedDescription);
-                     }
-                 }];
+        if (friendships != nil) {
+            NSLog(@"Successfully fetched friendships!");
+            // For each friend, find their pins
+            for (Friendship *friendship in friendships) {
+                NSString *friendId = friendship[@"recipientId"];
+                PFUser *friend = [self fetchUser:friendId][0];
+                [self.friendsIdSet addObject:friendId];
+                PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+                [query whereKey:@"author" equalTo:friend];
+                [query includeKey:@"objectId"];
+                [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
+                    if (pins != nil) {
+                        // Store the pins, update count
+                        NSLog(@"Successfully fetched pins!");
+                        // Add pins to the marker array
+                        for (PFObject *pin in pins) {
+                            [self.markerArr addObject:pin];
+                        }
+                        // Reload markers
+                        [self loadMarkers];
+                    } else {
+                        NSLog(@"%@", error.localizedDescription);
+                    }
+                }];
+            }
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* fetchFriends */
 
 // Used to find specfic user
@@ -160,15 +160,15 @@
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-               if (pins != nil) {
-               // Store the posts, update count
-               NSLog(@"Successfully fetched markers!");
-               self.markerArr = (NSMutableArray *)pins;
-               [self loadMarkers];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 
 - (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
@@ -178,7 +178,7 @@
     if (index == 0) {
         [query whereKey:@"author" equalTo:self.currentUser];
     }
-
+    
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
     [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
     [query includeKey:@"objectId"];
@@ -259,11 +259,11 @@
         PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
         [markerView.pinImageView setFile:imageFile];
         [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                       if (!error) {
-                       UIImage *image = [UIImage imageWithData:imageData];
-                       [markerView.pinImageView setImage:image];
-                       }
-                   }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [markerView.pinImageView setImage:image];
+            }
+        }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -293,11 +293,11 @@
             PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
             [markerView.pinImageView setFile:imageFile];
             [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                           if (!error) {
-                           UIImage *image = [UIImage imageWithData:imageData];
-                           [markerView.pinImageView setImage:image];
-                           }
-                       }];
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
@@ -360,11 +360,11 @@
         for (PFObject *imageObj in imageObjs) {
             PFFileObject *file = imageObj[@"imageFile"];
             [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                      if (!error) {
-                      UIImage *image = [UIImage imageWithData:imageData];
-                      [pinImages addObject:image];
-                      }
-                  }];
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [pinImages addObject:image];
+                }
+            }];
         }
         detailsVC.imagesFromPin = pinImages;
         // Set place name

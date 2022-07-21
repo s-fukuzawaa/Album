@@ -32,7 +32,7 @@
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
-        kCLLocationAccuracyNearestTenMeters;
+    kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     // Ask for authentication
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
@@ -42,7 +42,7 @@
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
     GMSCameraPosition *camera =
-        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     [self fetchMarkers];
     self.view = self.mapView;
@@ -77,15 +77,15 @@
     [query whereKey:@"author" equalTo:self.user];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-               if (pins != nil) {
-               // Store the posts, update count
-               NSLog(@"Successfully fetched markers!");
-               self.markerArr = (NSMutableArray *)pins;
-               [self loadMarkers];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 
 - (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
@@ -144,11 +144,11 @@
         PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
         [markerView.pinImageView setFile:imageFile];
         [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                       if (!error) {
-                       UIImage *image = [UIImage imageWithData:imageData];
-                       [markerView.pinImageView setImage:image];
-                       }
-                   }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [markerView.pinImageView setImage:image];
+            }
+        }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -181,11 +181,11 @@
             PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
             [markerView.pinImageView setFile:imageFile];
             [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                           if (!error) {
-                           UIImage *image = [UIImage imageWithData:imageData];
-                           [markerView.pinImageView setImage:image];
-                           }
-                       }];
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];

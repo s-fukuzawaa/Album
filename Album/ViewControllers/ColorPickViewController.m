@@ -22,7 +22,7 @@
     FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
     colorPicker.color = self.color;
     colorPicker.delegate = self;
-
+    
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
 }
@@ -37,14 +37,5 @@
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-/*
- #pragma mark - Navigation
- *
- * // In a storyboard-based application, you will often want to do a little preparation before navigation
- * - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- * // Get the new view controller using [segue destinationViewController].
- * // Pass the selected object to the new view controller.
- * }
- */
 
 @end
