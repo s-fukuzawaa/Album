@@ -13,6 +13,7 @@
 extern NSString *const classNameFriendship;
 extern NSString *const classNamePin;
 extern NSString *const classNameImage;
+extern NSString *const classNameUserPin;
 // Constants to manage friendship status
 extern int const PENDING;
 extern int const FRIENDED;

@@ -7,6 +7,7 @@
 
 #import "FriendProfileViewController.h"
 #import "FriendMapViewController.h"
+#import "FriendGridViewController.h"
 #import "Friendship.h"
 #import "AlbumConstants.h"
 #import <PFImageView.h>
@@ -15,6 +16,7 @@
 @interface FriendProfileViewController ()
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -267,6 +269,9 @@
     if ([segue.identifier isEqual:@"friendMapSegue"]) {
         FriendMapViewController *friendMapVC = [segue destinationViewController];
         friendMapVC.user = self.user;
+    }else if ([segue.identifier isEqual:@"friendGridSegue"]){
+        FriendGridViewController *friendGridVC = [segue destinationViewController];
+        friendGridVC.user = self.user;
     }
 }
 @end

@@ -6,7 +6,7 @@
 //
 
 #import "ParseAPIHelper.h"
-#import "Parse.h"
+#import "Parse/Parse.h"
 #import "Friendship.h"
 #import "AlbumConstants.h"
 

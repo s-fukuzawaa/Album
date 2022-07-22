@@ -10,6 +10,7 @@
 NSString *const classNameFriendship = @"Friendship";
 NSString *const classNameImage = @"Image";
 NSString *const classNamePin = @"Pin";
+NSString *const classNameUserPin = @"UserPin";
 // Constants for friendship status
 int const PENDING = 1;
 int const FRIENDED = 2;

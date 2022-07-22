@@ -6,14 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Pin.h"
 #import <Parse/Parse.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
-@property (strong, nonatomic) NSString *placeName;
-@property (strong, nonatomic) NSString *date;
+@property (strong, nonatomic) Pin *pin;
 @property (strong, nonatomic) NSMutableArray *imagesFromPin;
-@property (strong, nonatomic) NSString *caption;
 @property (weak, nonatomic) IBOutlet UICollectionView *imageCarouselView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageIndicator;
 
