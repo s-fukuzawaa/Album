@@ -217,7 +217,7 @@
         detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
         // Set place name
         detailsVC.pin = (Pin *)firstPin;
-        [self presentViewController:detailsVC animated:YES completion:nil];
+        [self.delegate didTapWindow:(Pin *)firstPin imagesFromPin:self.pinImages[firstPin.objectId]];
     }
 }
 

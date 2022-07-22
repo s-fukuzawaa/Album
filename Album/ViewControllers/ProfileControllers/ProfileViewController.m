@@ -39,15 +39,21 @@
     self.friendsCollectionView.delegate = self;
     self.friendsCollectionView.dataSource = self;
     // Fetch friends
-    self.friendsArray = [self.apiHelper fetchFriends:self.currentUser.objectId];
-//    self.friendsArray = [[NSMutableArray alloc]init];
-    [self.friendsCollectionView reloadData];
+    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+        if(friendArr != nil) {
+            self.friendsArray = friendArr;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.friendsCollectionView reloadData];
+            });
+        }else{
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     // Load profile image
     [self setProfile];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self fetchFriend];
     [self.friendsCollectionView reloadData];
 }
 - (IBAction)activitiesButton:(id)sender {
@@ -63,27 +69,6 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.friendsArray.count;
 }
-
-//- (void)fetchFriend {
-//    // Query to find markers that belong to current user and current user's friend
-//    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
-//    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
-//    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
-//    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-//        if (friendships != nil) {
-//            NSLog(@"Successfully fetched friendships!");
-//            // For each friend, find their pins
-//            for (Friendship *friendship in friendships) {
-//                NSString *friendId = friendship[@"recipientId"];
-//                PFUser *friend = [self.apiHelper fetchUser:friendId][0];
-//                [self.friendsArray addObject:friend];
-//            }
-//            [self.friendsCollectionView reloadData];
-//        } else {
-//            NSLog(@"%@", error.localizedDescription);
-//        }
-//    }];
-//} /* fetchFriends */
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *profileCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"profileCell" forIndexPath:indexPath];

@@ -8,12 +8,14 @@
 #import "FriendProfileViewController.h"
 #import "FriendMapViewController.h"
 #import "FriendGridViewController.h"
+#import "DetailsViewController.h"
 #import "Friendship.h"
 #import "AlbumConstants.h"
+#import "Pin.h"
 #import <PFImageView.h>
 #import <Parse/Parse.h>
 
-@interface FriendProfileViewController ()
+@interface FriendProfileViewController () <FriendMapViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
@@ -21,6 +23,9 @@
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
 @property (strong, nonatomic) Friendship *request; // Friendship where requester = tapped user
+@property (strong, nonatomic) NSArray* imagesToDetail;
+@property (strong, nonatomic) Pin* pin;
+
 @end
 
 @implementation FriendProfileViewController
@@ -269,9 +274,32 @@
     if ([segue.identifier isEqual:@"friendMapSegue"]) {
         FriendMapViewController *friendMapVC = [segue destinationViewController];
         friendMapVC.user = self.user;
+        friendMapVC.delegate = self;
     }else if ([segue.identifier isEqual:@"friendGridSegue"]){
         FriendGridViewController *friendGridVC = [segue destinationViewController];
         friendGridVC.user = self.user;
+    }else if([segue.identifier isEqual:@"friendProfileDetailsSegue"]) {
+        DetailsViewController *detailsVC = [segue destinationViewController];
+        detailsVC.pin = self.pin;
+        detailsVC.imagesFromPin = self.imagesToDetail;
     }
+}
+
+- (void)didTapWindow: (Pin*) pin imagesFromPin:(NSArray*) imageFiles{
+    self.pin = pin;
+    // Set Images array
+    NSMutableArray *pinImages = [[NSMutableArray alloc] init];
+    // For each image object, get the image file and convert to UIImage
+    for (PFObject *imageObj in imageFiles) {
+        PFFileObject *file = imageObj[@"imageFile"];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [pinImages addObject:image];
+            }
+        }];
+    }
+    self.imagesToDetail = pinImages;
+    [self performSegueWithIdentifier:@"friendProfileDetailsSegue" sender:nil];
 }
 @end

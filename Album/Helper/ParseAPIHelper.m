@@ -20,14 +20,13 @@
     return [userQuery findObjects];
 }
 
-- (NSArray*)fetchFriends: (NSString *)userId {
-    // Create returning friend set
-    NSMutableArray *friendArr = [[NSMutableArray alloc] init];
+- (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
     [friendQuery whereKey:@"requesterId" equalTo:userId];
     [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
     [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
+        NSMutableArray *friendArr = [[NSMutableArray alloc] init];
         if (friendships != nil) {
             NSLog(@"Successfully fetched friendships!");
             // For each friend, find their pins
@@ -39,7 +38,7 @@
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
+        block(friendArr,error);
     }];
-    return friendArr;
 } /* fetchFriends */
 @end

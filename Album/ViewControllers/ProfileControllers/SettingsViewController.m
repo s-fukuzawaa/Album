@@ -181,7 +181,9 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     myDelegate.window.rootViewController = loginViewController;
-    [PFUser logOutInBackgroundWithBlock:nil];
+    // Do not send nil for block
+    [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
+    }];
 }
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;

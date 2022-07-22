@@ -31,9 +31,15 @@ ComposeViewControllerDelegate>
 @end
 
 @implementation GoogleMapViewController
-
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 0.0; self.mapView.alpha = 0.0;}];
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 1; self.mapView.alpha = 1;}];
+}
 - (void)loadView {
     [super loadView];
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 0.0; self.mapView.alpha = 0.0;}];
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 1; self.mapView.alpha = 1;}];
     self.colorHelper = [[ColorConvertHelper alloc] init];
     // Set user
     self.currentUser = [PFUser currentUser];
@@ -64,6 +70,7 @@ ComposeViewControllerDelegate>
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
     self.friendsIdSet = [[NSMutableSet alloc] init];
+    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
 } /* loadView */
 
 - (void)loadMarkers {
@@ -219,9 +226,11 @@ ComposeViewControllerDelegate>
     self.circ.map = self.mapView;
     return NO;
 }
-
+- (void) animate{
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 0.0; self.mapView.alpha = 0.0;}];
+    [UIView animateWithDuration:1 animations:^{self.view.alpha = 1; self.mapView.alpha = 1;}];
+}
 - (IBAction)switchControl:(id)sender {
-    [UIView animateWithDuration:1.5 animations:^{self.view.alpha = 0.0; self.mapView.alpha = 0.0;}];
     [self.mapView clear];
 //    [UIView animateWithDuration:1 animations:^{self.mapView.alpha = 0;}];
 //    [UIView animateWithDuration:1 animations:^{self.mapView.alpha = 1;}];
