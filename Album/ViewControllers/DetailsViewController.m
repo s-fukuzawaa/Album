@@ -7,6 +7,7 @@
 
 #import "DetailsViewController.h"
 #import "AlbumConstants.h"
+#import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
 @interface DetailsViewController ()
@@ -14,9 +15,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (nonatomic) int currentIndex;
 @property (strong, nonatomic) PFUser* currentUser;
-@property (strong, nonatomic) PFObject* likeStatus;
+@property (strong, nonatomic) UserPin* likeStatus;
 @end
 
 @implementation DetailsViewController
@@ -39,10 +41,15 @@
     // Photo carousel
     self.imageCarouselView.delegate = self;
     self.imageCarouselView.dataSource = self;
-    // Set up photos array
-    self.currentIndex = 0;
     // Set up like status
     [self setLikeStatus];
+    // Set up page control
+    self.currentIndex = 0;
+    self.pageControl.numberOfPages = 0;
+    // Set button
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLiked:)];
+       tapGesture.numberOfTapsRequired = 2;
+       [self.likeButton addGestureRecognizer:tapGesture];
 }
 
 - (void) setLikeStatus {
@@ -52,12 +59,21 @@
     [likeQuery findObjectsInBackgroundWithBlock:^(NSArray *statuses, NSError *error) {
         if (statuses != nil) {
             NSLog(@"Successfully fetched like statuses!");
-            // For each friend, find their pins
-            self.likeStatus = statuses[0];
-            if((BOOL)self.likeStatus[@"hasLiked"] == YES) {
-                [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-            }else {
+            if(statuses.count == 0){
+                self.likeStatus = [[UserPin alloc] init];
+                self.likeStatus.userId = self.currentUser.objectId;
+                self.likeStatus.pinId = self.pin.objectId;
+                self.likeStatus.hasLiked = NO;
+                [self.likeStatus saveInBackground];
                 [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+            }else {
+                // For each friend, find their pins
+                self.likeStatus = statuses[0];
+                if(self.likeStatus.hasLiked == YES) {
+                    [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
+                }else {
+                    [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+                }
             }
             NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
             [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
@@ -66,22 +82,73 @@
         }
     }];
 }
-- (IBAction)tapLiked:(id)sender {
-    // Update count of pin
-    if ((BOOL)self.likeStatus[@"hasLiked"] == YES) {
-        [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-        self.pin.likeCount = @([self.pin.likeCount intValue]-1);
-        if([self.pin.likeCount intValue] < 0) {
-            self.pin.likeCount = @(0);
+-(IBAction)tapLiked:(id)sender withEvent:(UIEvent*)event {
+   UITouch* touch = [[event allTouches] anyObject];
+   if (touch.tapCount == 2) {
+       // Update count of pin
+       if(self.likeStatus.hasLiked){
+           NSLog(@"Here");
+       }else{
+           NSLog(@"There");
+       }
+       self.likeStatus.hasLiked = !self.likeStatus.hasLiked;
+       if(self.likeStatus.hasLiked){
+           NSLog(@"Here");
+       }else{
+           NSLog(@"There");
+       }
+       if (self.likeStatus.hasLiked == YES) {
+           self.pin.likeCount = @([self.pin.likeCount intValue]+1);
+           if([self.pin.likeCount intValue] < 0) {
+               self.pin.likeCount = @(0);
+           }
+           [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
+       } else {
+           self.pin.likeCount = @([self.pin.likeCount intValue]-1);
+           if([self.pin.likeCount intValue] < 0) {
+               self.pin.likeCount = @(0);
+           }
+           [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+       }
+       NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
+       [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
+       [self.pin saveInBackground];
+       [self.likeStatus saveInBackground];
+   }
+}
+
+- (void)tapLiked:(UITapGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateRecognized) {
+        // Update count of pin
+        if(self.likeStatus.hasLiked){
+            NSLog(@"Here");
+        }else{
+            NSLog(@"There");
         }
-        self.currentUser[@"hasLiked"] = @(NO);
-    } else {
-        [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-        self.pin.likeCount = @([self.pin.likeCount intValue]+1);
-        self.currentUser[@"hasLiked"] = @(YES);
+        self.likeStatus.hasLiked = !self.likeStatus.hasLiked;
+        if(self.likeStatus.hasLiked){
+            NSLog(@"Here");
+        }else{
+            NSLog(@"There");
+        }
+        if (self.likeStatus.hasLiked == YES) {
+            self.pin.likeCount = @([self.pin.likeCount intValue]+1);
+            if([self.pin.likeCount intValue] < 0) {
+                self.pin.likeCount = @(0);
+            }
+            [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
+        } else {
+            self.pin.likeCount = @([self.pin.likeCount intValue]-1);
+            if([self.pin.likeCount intValue] < 0) {
+                self.pin.likeCount = @(0);
+            }
+            [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+        }
+        NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
+        [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
+        [self.pin saveInBackground];
+        [self.likeStatus saveInBackground];
     }
-    [self.pin saveInBackground];
-    [self.currentUser saveInBackground];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -102,6 +169,7 @@
         photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
         photoCell.photoImageView.image = self.imagesFromPin[indexPath.row];
     }
+    self.pageControl.numberOfPages = self.imagesFromPin.count;
     return photoCell;
 }
 

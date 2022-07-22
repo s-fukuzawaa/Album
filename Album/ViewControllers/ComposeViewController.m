@@ -102,11 +102,6 @@ PHPickerViewControllerDelegate>
         [self presentViewController:alert animated:YES completion:nil];
     } else {
         NSLog(@"Camera 🚫 available so we will use photo library instead");
-        //		UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-        //		imagePickerVC.delegate = self;
-        //		imagePickerVC.allowsEditing = YES;
-        //		imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        //		[self presentViewController:imagePickerVC animated:YES completion:nil];
         PHPickerViewController *pickerViewController = [[PHPickerViewController alloc] initWithConfiguration:self.config];
         pickerViewController.delegate = self;
         [self presentViewController:pickerViewController animated:YES completion:nil];

@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
-@property (weak, nonatomic) IBOutlet PFImageView *colorView;
+@property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @end
@@ -201,6 +201,9 @@
     
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
+}
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
 }
 
 @end

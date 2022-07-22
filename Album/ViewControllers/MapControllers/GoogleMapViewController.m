@@ -221,7 +221,11 @@ ComposeViewControllerDelegate>
 }
 
 - (IBAction)switchControl:(id)sender {
+    [UIView animateWithDuration:1.5 animations:^{self.view.alpha = 0.0; self.mapView.alpha = 0.0;}];
     [self.mapView clear];
+//    [UIView animateWithDuration:1 animations:^{self.mapView.alpha = 0;}];
+//    [UIView animateWithDuration:1 animations:^{self.mapView.alpha = 1;}];
+
     [self loadView];
 }
 
