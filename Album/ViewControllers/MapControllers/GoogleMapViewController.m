@@ -78,7 +78,7 @@
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         PFUser *author = pin.author;
-        PFUser *friend = [self.apiHelper fetchUser:author.objectId][0];
+        PFUser *friend = [self fetchUser:author.objectId][0];
         marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:friend[@"colorHexString"]]];
         marker.title = pin.placeName;
         marker.snippet = pin.placeID;
@@ -125,7 +125,7 @@
                                                                // For each friend, find their pins
                                                                for (Friendship *friendship in friendArr) {
                                                                NSString *friendId = friendship[@"recipientId"];
-                                                               PFUser *friend = [self.apiHelper fetchUser:friendId][0];
+                                                               PFUser *friend = [self fetchUser:friendId][0];
                                                                [self.friendsIdSet addObject:friendId];
                                                                PFQuery *query = [PFQuery queryWithClassName:classNamePin];
                                                                [query whereKey:@"author" equalTo:friend];
@@ -151,7 +151,12 @@
                                                            }];
 } /* fetchFriends */
 
-
+// Used to find specfic user
+- (NSArray *) fetchUser: (NSString *)userId {
+    PFQuery *userQuery = [PFUser query];
+    [userQuery whereKey:@"objectId" equalTo:userId];
+    return [userQuery findObjects];
+}
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query includeKey:@"objectId"];
