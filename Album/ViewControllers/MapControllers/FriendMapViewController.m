@@ -8,7 +8,6 @@
 #import "FriendMapViewController.h"
 #import "LocationGenerator.h"
 #import "ColorConvertHelper.h"
-#import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
 #import "AlbumConstants.h"
@@ -28,6 +27,7 @@
 
 - (void)loadView {
     [super loadView];
+    // Initialize color converting helper class
     self.colorHelper = [[ColorConvertHelper alloc] init];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
@@ -56,6 +56,7 @@
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
 } /* loadView */
+
 - (void)loadMarkers {
     // Place markers on initial map view
     int i = 0;
@@ -211,27 +212,8 @@
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        DetailsViewController *detailsVC = [[DetailsViewController alloc] init];
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
-        // Set Image
-        detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
-        // Set place name
-        detailsVC.pin = (Pin *)firstPin;
         [self.delegate didTapWindow:(Pin *)firstPin imagesFromPin:self.pinImages[firstPin.objectId]];
-    }
-}
-
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"detailsSegue"]) {
-        DetailsViewController *detailsVC = [segue destinationViewController];
-        GMSMarker *marker = sender;
-        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
-        // Set Image
-        detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
-        detailsVC.pin = (Pin *)firstPin;
     }
 }
 @end

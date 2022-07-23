@@ -21,8 +21,8 @@
 @interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
-@property (strong, nonatomic) NSArray* friendships;
-@property (strong, nonatomic) PFUser* currentUser;
+@property (strong, nonatomic) NSArray *friendships;
+@property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) ParseAPIHelper *apiHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
 @end
@@ -40,18 +40,18 @@
     self.friendsCollectionView.dataSource = self;
     // Fetch friends
     [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-        if(friendArr != nil) {
-            self.friendsArray = friendArr;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.friendsCollectionView reloadData];
-            });
-        }else{
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
+                                                               if (friendArr != nil) {
+                                                               self.friendsArray = friendArr;
+                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                               [self.friendsCollectionView reloadData];
+                                                               });
+                                                               } else {
+                                                               NSLog(@"%@", error.localizedDescription);
+                                                               }
+                                                           }];
     // Load profile image
     [self setProfile];
-}
+} /* viewDidLoad */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.friendsCollectionView reloadData];
@@ -72,6 +72,7 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *profileCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"profileCell" forIndexPath:indexPath];
+    // Default place holder cell
     if (self.friendsArray.count == 0) {
         profileCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
         profileCell.photoImageView.image = [UIImage imageNamed:@"profile_tab"];
@@ -89,18 +90,18 @@
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+                  if (!error) {
+                  UIImage *image = [UIImage imageWithData:imageData];
+                  [self.profileImageView setImage:image];
+                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                  self.profileImageView.layer.masksToBounds = YES;
+                  }
+              }];
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
+        NSIndexPath *)indexPath {
     int totalwidth = self.friendsCollectionView.bounds.size.width;
     int numberOfCellsPerRow = 3;
     int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
@@ -110,23 +111,14 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqualToString:@"activitiesSegue"]) {
-        UINavigationController *navigationController = [segue destinationViewController];
-        ActivitiesViewController *activitiesController = (ActivitiesViewController *)navigationController.topViewController;
-        //        activitiesController.delegate = self; TODO: Add delegate later
-    } else if ([segue.identifier isEqualToString:@"addFriendSegue"]) {
-        UINavigationController *navigationController = [segue destinationViewController];
-        AddFriendViewController *addFriendController = (AddFriendViewController *)navigationController.topViewController;
-        //        addFriendController.delegate = self; TODO: Add delegate later
-    } else if ([segue.identifier isEqualToString:@"settingsSegue"]) {
+    if ([segue.identifier isEqualToString:@"settingsSegue"]) {
         UINavigationController *navigationController = [segue destinationViewController];
         SettingsViewController *settingsController = (SettingsViewController *)navigationController.topViewController;
         //        settingsController.delegate = self; TODO: Add delegate later
-    } else if([segue.identifier isEqualToString:@"friendProfileSegue"]){
+    } else if ([segue.identifier isEqualToString:@"friendProfileSegue"]) {
         NSIndexPath *indexPath = [self.friendsCollectionView indexPathForCell:(PhotoCollectionCell *)sender];
         FriendProfileViewController *friendVC = [segue destinationViewController];
         friendVC.user = self.friendsArray[indexPath.row];

@@ -17,8 +17,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (nonatomic) int currentIndex;
-@property (strong, nonatomic) PFUser* currentUser;
-@property (strong, nonatomic) UserPin* likeStatus;
+@property (strong, nonatomic) PFUser *currentUser;
+@property (strong, nonatomic) UserPin *likeStatus;
 @end
 
 @implementation DetailsViewController
@@ -48,108 +48,67 @@
     self.pageControl.numberOfPages = 0;
     // Set button
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLiked:)];
-       tapGesture.numberOfTapsRequired = 2;
-       [self.likeButton addGestureRecognizer:tapGesture];
-}
+    tapGesture.numberOfTapsRequired = 2;
+    [self.likeButton addGestureRecognizer:tapGesture];
+} /* viewDidLoad */
 
-- (void) setLikeStatus {
+- (void)setLikeStatus {
     PFQuery *likeQuery = [PFQuery queryWithClassName:classNameUserPin];
     [likeQuery whereKey:@"userId" equalTo:self.currentUser.objectId];
     [likeQuery whereKey:@"pinId" equalTo:self.pin.objectId];
     [likeQuery findObjectsInBackgroundWithBlock:^(NSArray *statuses, NSError *error) {
-        if (statuses != nil) {
-            NSLog(@"Successfully fetched like statuses!");
-            if(statuses.count == 0){
-                self.likeStatus = [[UserPin alloc] init];
-                self.likeStatus.userId = self.currentUser.objectId;
-                self.likeStatus.pinId = self.pin.objectId;
-                self.likeStatus.hasLiked = NO;
-                [self.likeStatus saveInBackground];
-                [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-            }else {
-                // For each friend, find their pins
-                self.likeStatus = statuses[0];
-                if(self.likeStatus.hasLiked == YES) {
+                   if (statuses != nil) {
+                   NSLog(@"Successfully fetched like statuses!");
+                   // If no like status, create one
+                   if (statuses.count == 0) {
+                   self.likeStatus = [[UserPin alloc] init];
+                   self.likeStatus.userId = self.currentUser.objectId;
+                   self.likeStatus.pinId = self.pin.objectId;
+                   self.likeStatus.hasLiked = NO;
+                   [self.likeStatus saveInBackground];
+                   [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+                   } else {
+                   // Set like button corresponding to the hasLiked field
+                   self.likeStatus = statuses[0];
+                   if (self.likeStatus.hasLiked == YES) {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-                }else {
+                   } else {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-                }
-            }
-            NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
-            [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-}
--(IBAction)tapLiked:(id)sender withEvent:(UIEvent*)event {
-   UITouch* touch = [[event allTouches] anyObject];
-   if (touch.tapCount == 2) {
-       // Update count of pin
-       if(self.likeStatus.hasLiked){
-           NSLog(@"Here");
-       }else{
-           NSLog(@"There");
-       }
-       self.likeStatus.hasLiked = !self.likeStatus.hasLiked;
-       if(self.likeStatus.hasLiked){
-           NSLog(@"Here");
-       }else{
-           NSLog(@"There");
-       }
-       if (self.likeStatus.hasLiked == YES) {
-           self.pin.likeCount = @([self.pin.likeCount intValue]+1);
-           if([self.pin.likeCount intValue] < 0) {
-               self.pin.likeCount = @(0);
-           }
-           [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-       } else {
-           self.pin.likeCount = @([self.pin.likeCount intValue]-1);
-           if([self.pin.likeCount intValue] < 0) {
-               self.pin.likeCount = @(0);
-           }
-           [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-       }
-       NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
-       [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
-       [self.pin saveInBackground];
-       [self.likeStatus saveInBackground];
-   }
-}
+                   }
+                   }
+                   NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
+                   [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
+                   } else {
+                   NSLog(@"%@", error.localizedDescription);
+                   }
+               }];
+} /* setLikeStatus */
 
 - (void)tapLiked:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateRecognized) {
-        // Update count of pin
-        if(self.likeStatus.hasLiked){
-            NSLog(@"Here");
-        }else{
-            NSLog(@"There");
-        }
+        // Update like status of pin
         self.likeStatus.hasLiked = !self.likeStatus.hasLiked;
-        if(self.likeStatus.hasLiked){
-            NSLog(@"Here");
-        }else{
-            NSLog(@"There");
-        }
+        // Update count and button view accordingly
         if (self.likeStatus.hasLiked == YES) {
-            self.pin.likeCount = @([self.pin.likeCount intValue]+1);
-            if([self.pin.likeCount intValue] < 0) {
+            self.pin.likeCount = @([self.pin.likeCount intValue] + 1);
+            if ([self.pin.likeCount intValue] < 0) {
                 self.pin.likeCount = @(0);
             }
             [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
         } else {
-            self.pin.likeCount = @([self.pin.likeCount intValue]-1);
-            if([self.pin.likeCount intValue] < 0) {
+            self.pin.likeCount = @([self.pin.likeCount intValue] - 1);
+            if ([self.pin.likeCount intValue] < 0) {
                 self.pin.likeCount = @(0);
             }
             [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
         }
-        NSString *formattedString = [NSString stringWithFormat:@"%@ likes",self.pin.likeCount];
+        NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
         [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
         [self.pin saveInBackground];
+        // Save the status object in background
         [self.likeStatus saveInBackground];
     }
-}
+} /* tapLiked */
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (self.imagesFromPin.count == 0) {
@@ -158,7 +117,6 @@
     return self.imagesFromPin.count;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"detailCell" forIndexPath:indexPath];
     // Add placeholder cell when no images are found

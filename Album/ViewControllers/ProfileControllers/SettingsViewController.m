@@ -31,7 +31,7 @@
     [self setCurrentView];
     // Tap gesture added to change profile pic
     UITapGestureRecognizer *profileTapGestureRecognizer =
-    [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
+        [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
     // Add color converting helper object
@@ -44,15 +44,15 @@
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+                  if (!error) {
+                  UIImage *image = [UIImage imageWithData:imageData];
+                  [self.profileImageView setImage:image];
+                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                  self.profileImageView.layer.masksToBounds = YES;
+                  }
+              }];
     }
-    
+
     // Display current user marker color
     if (user[@"colorHexString"]) {
         UIColor *color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
@@ -72,24 +72,24 @@
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
+                                                                UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+                                                                imagePickerVC.delegate = self;
+                                                                imagePickerVC.allowsEditing = YES;
+                                                                imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+                                                                [self presentViewController:imagePickerVC animated:YES completion:nil];
+                                                            }];
         // Add the take photo action to the alertController
         [alert addAction:photoAction];
         // Create an upload from library action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
+                                                                 UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+                                                                 imagePickerVC.delegate = self;
+                                                                 imagePickerVC.allowsEditing = YES;
+                                                                 imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                                                                 [self presentViewController:imagePickerVC animated:YES completion:nil];
+                                                             }];
         // Add the upload from library action to the alert controller
         [alert addAction:uploadAction];
         //Cancel
@@ -164,12 +164,12 @@
     }
     // Update user properties when necessary
     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-        if (error != nil) {
-            NSLog(@"Error: %@", error.localizedDescription);
-        } else {
-            NSLog(@"User updated successfully");
-        }
-    }];
+              if (error != nil) {
+              NSLog(@"Error: %@", error.localizedDescription);
+              } else {
+              NSLog(@"User updated successfully");
+              }
+          }];
 } /* updateButton */
 
 - (IBAction)backButton:(id)sender {
@@ -177,13 +177,13 @@
 }
 - (IBAction)logoutButton:(id)sender {
     SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
-    
+
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     myDelegate.window.rootViewController = loginViewController;
     // Do not send nil for block
-    [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
-    }];
+    [PFUser logOutInBackgroundWithBlock:^(NSError *_Nullable error) {
+            }];
 }
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
@@ -200,7 +200,7 @@
     FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
     colorPicker.color = self.color;
     colorPicker.delegate = self;
-    
+
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
 }

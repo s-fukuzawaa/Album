@@ -27,21 +27,19 @@
     self.friendCollectionView.dataSource = self;
     // Fetch friends
     [self.apiHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-        if(friendArr != nil) {
-            self.friendsArray = friendArr;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.friendCollectionView reloadData];
-            });
-        }else{
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-//    self.friendsArray = [[NSMutableArray alloc]init];
+                                                        if (friendArr != nil) {
+                                                        self.friendsArray = friendArr;
+                                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                        [self.friendCollectionView reloadData];
+                                                        });
+                                                        } else {
+                                                        NSLog(@"%@", error.localizedDescription);
+                                                        }
+                                                    }];
     [self.friendCollectionView reloadData];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self fetchFriend];
     [self.friendCollectionView reloadData];
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -60,8 +58,8 @@
     return profileCell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
+        NSIndexPath *)indexPath {
     int totalwidth = self.friendCollectionView.bounds.size.width;
     int numberOfCellsPerRow = 3;
     int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;

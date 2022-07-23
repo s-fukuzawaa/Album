@@ -23,8 +23,8 @@
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
 @property (strong, nonatomic) Friendship *request; // Friendship where requester = tapped user
-@property (strong, nonatomic) NSArray* imagesToDetail;
-@property (strong, nonatomic) Pin* pin;
+@property (strong, nonatomic) NSArray *imagesToDetail;
+@property (strong, nonatomic) Pin *pin;
 
 @end
 
@@ -275,17 +275,17 @@
         FriendMapViewController *friendMapVC = [segue destinationViewController];
         friendMapVC.user = self.user;
         friendMapVC.delegate = self;
-    }else if ([segue.identifier isEqual:@"friendGridSegue"]){
+    } else if ([segue.identifier isEqual:@"friendGridSegue"]) {
         FriendGridViewController *friendGridVC = [segue destinationViewController];
         friendGridVC.user = self.user;
-    }else if([segue.identifier isEqual:@"friendProfileDetailsSegue"]) {
+    } else if ([segue.identifier isEqual:@"friendProfileDetailsSegue"]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         detailsVC.pin = self.pin;
         detailsVC.imagesFromPin = self.imagesToDetail;
     }
 }
 
-- (void)didTapWindow: (Pin*) pin imagesFromPin:(NSArray*) imageFiles{
+- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)imageFiles {
     self.pin = pin;
     // Set Images array
     NSMutableArray *pinImages = [[NSMutableArray alloc] init];
@@ -293,11 +293,11 @@
     for (PFObject *imageObj in imageFiles) {
         PFFileObject *file = imageObj[@"imageFile"];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [pinImages addObject:image];
-            }
-        }];
+                  if (!error) {
+                  UIImage *image = [UIImage imageWithData:imageData];
+                  [pinImages addObject:image];
+                  }
+              }];
     }
     self.imagesToDetail = pinImages;
     [self performSegueWithIdentifier:@"friendProfileDetailsSegue" sender:nil];
