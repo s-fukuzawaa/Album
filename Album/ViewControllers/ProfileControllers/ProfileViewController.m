@@ -68,22 +68,4 @@
     }
 }
 
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-   if ([segue.identifier isEqualToString:@"addFriendSegue"]) {
-        UINavigationController *navigationController = [segue destinationViewController];
-        AddFriendViewController *addFriendController = (AddFriendViewController *)navigationController.topViewController;
-        //        addFriendController.delegate = self; TODO: Add delegate later
-    } else if ([segue.identifier isEqualToString:@"settingsSegue"]) {
-        UINavigationController *navigationController = [segue destinationViewController];
-        SettingsViewController *settingsController = (SettingsViewController *)navigationController.topViewController;
-        //        settingsController.delegate = self; TODO: Add delegate later
-    }
-}
-
-
 @end

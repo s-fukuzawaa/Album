@@ -66,39 +66,7 @@
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
-                                                                preferredStyle:(UIAlertControllerStyleAlert)];
-        // Take photo action
-        UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
-                                                              style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
-        // Add the take photo action to the alertController
-        [alert addAction:photoAction];
-        // Create an upload from library action
-        UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
-        // Add the upload from library action to the alert controller
-        [alert addAction:uploadAction];
-        //Cancel
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:nil];
-        // Add the cancel action to the alert controller
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self cameraAlert];
     } else {
         NSLog(@"Camera 🚫 available so we will use photo library instead");
         UIImagePickerController *imagePickerVC = [UIImagePickerController new];
@@ -108,6 +76,42 @@
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
 } /* didTapUserProfile */
+
+- (void) cameraAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Take photo action
+    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the take photo action to the alertController
+    [alert addAction:photoAction];
+    // Create an upload from library action
+    UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the upload from library action to the alert controller
+    [alert addAction:uploadAction];
+    //Cancel
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    // Add the cancel action to the alert controller
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
