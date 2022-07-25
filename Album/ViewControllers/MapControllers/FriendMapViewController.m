@@ -10,6 +10,7 @@
 #import "ColorConvertHelper.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
+#import "Image.h"
 #import "AlbumConstants.h"
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
@@ -142,14 +143,9 @@
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-        [markerView.pinImageView setFile:imageFile];
-        [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                       if (!error) {
-                       UIImage *image = [UIImage imageWithData:imageData];
-                       [markerView.pinImageView setImage:image];
-                       }
-                   }];
+        if(imagesFromPin.count!=0) {
+            [markerView.pinImageView setImage:imagesFromPin[0]];
+        }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -179,14 +175,7 @@
         // Set image of the info window to first in the array
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                           if (!error) {
-                           UIImage *image = [UIImage imageWithData:imageData];
-                           [markerView.pinImageView setImage:image];
-                           }
-                       }];
+            [markerView.pinImageView setImage:imagesFromPin[0]];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
@@ -205,7 +194,17 @@
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
+    NSArray *imageObjs = [query findObjects];
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    for(Image *imageObject in imageObjs) {
+        [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                       if (!error) {
+                       UIImage *image = [UIImage imageWithData:imageData];
+                           [images addObject:image];
+                       }
+                   }];
+    }
+    return (NSArray*) images;
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker

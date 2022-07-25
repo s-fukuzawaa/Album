@@ -15,6 +15,7 @@
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
 #import "AlbumConstants.h"
+#import "Image.h"
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
 #import "Pin.h"
@@ -229,11 +230,6 @@
 }
 
 
-- (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
-    marker.map = self.mapView;
-}
-
 - (void)         mapView:(GMSMapView *)mapView
     didTapPOIWithPlaceID:(NSString *)placeID
                     name:(NSString *)name
@@ -259,15 +255,8 @@
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin[0][@"imageFile"]) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                           if (!error) {
-                           UIImage *image = [UIImage imageWithData:imageData];
-                           [markerView.pinImageView setImage:image];
-                           }
-                       }];
+        if(imagesFromPin.count!=0) {
+            [markerView.pinImageView setImage:imagesFromPin[0]];
         }
         
         // Set place name
@@ -289,21 +278,13 @@
             }
             [self.placeToPins[pin[@"placeName"]] addObject:pin];
             // Save images of the specific pin to the cache data structure
-            NSArray *imagesFromPin = [self imagesFromPin:pin.objectId];
-            [self.pinImages setObject:imagesFromPin forKey:pin.objectId];
+            [self.pinImages setObject:[self imagesFromPin:pin.objectId] forKey:pin.objectId];
         }
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
         // Set image of the info window to first in the array
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                           if (!error) {
-                           UIImage *image = [UIImage imageWithData:imageData];
-                           [markerView.pinImageView setImage:image];
-                           }
-                       }];
+            [markerView.pinImageView setImage:imagesFromPin[0]];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
@@ -322,7 +303,17 @@
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
+    NSArray *imageObjs = [query findObjects];
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    for(Image *imageObject in imageObjs) {
+        [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                       if (!error) {
+                       UIImage *image = [UIImage imageWithData:imageData];
+                           [images addObject:image];
+                       }
+                   }];
+    }
+    return (NSArray*) images;
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
@@ -360,18 +351,7 @@
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Images array
-        NSArray *imageObjs = self.pinImages[firstPin.objectId];
-        NSMutableArray *pinImages = [[NSMutableArray alloc] init];
-        // For each image object, get the image file and convert to UIImage
-        for (PFObject *imageObj in imageObjs) {
-            PFFileObject *file = imageObj[@"imageFile"];
-            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                      if (!error) {
-                      UIImage *image = [UIImage imageWithData:imageData];
-                      [pinImages addObject:image];
-                      }
-                  }];
-        }
+        NSMutableArray *pinImages = self.pinImages[firstPin.objectId];
         // Save pin
         detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;

@@ -285,21 +285,9 @@
     }
 }
 
-- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)imageFiles {
+- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)images {
     self.pin = pin;
-    // Set Images array
-    NSMutableArray *pinImages = [[NSMutableArray alloc] init];
-    // For each image object, get the image file and convert to UIImage
-    for (PFObject *imageObj in imageFiles) {
-        PFFileObject *file = imageObj[@"imageFile"];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                  if (!error) {
-                  UIImage *image = [UIImage imageWithData:imageData];
-                  [pinImages addObject:image];
-                  }
-              }];
-    }
-    self.imagesToDetail = pinImages;
+    self.imagesToDetail = images;
     [self performSegueWithIdentifier:@"friendProfileDetailsSegue" sender:nil];
 }
 @end

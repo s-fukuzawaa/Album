@@ -22,7 +22,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Placename" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AOp-gA-Iac">
-                    <rect key="frame" x="70" y="139" width="84" height="21"/>
+                    <rect key="frame" x="70" y="151" width="84" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -33,27 +33,26 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="jOG-DS-qYm" customClass="PFImageView">
-                    <rect key="frame" x="64" y="24" width="96" height="95"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="jOG-DS-qYm">
+                    <rect key="frame" x="48" y="12" width="128" height="131"/>
                 </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="jOG-DS-qYm" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="24" id="5RC-N3-RKi"/>
-                <constraint firstItem="AOp-gA-Iac" firstAttribute="top" secondItem="jOG-DS-qYm" secondAttribute="bottom" constant="20" id="Cwm-4b-aeE"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="G7e-S8-r0e" secondAttribute="bottom" constant="20" id="Idn-ON-QGF"/>
-                <constraint firstItem="AOp-gA-Iac" firstAttribute="centerX" secondItem="jOG-DS-qYm" secondAttribute="centerX" id="J4b-WA-F2j"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="top" secondItem="jOG-DS-qYm" secondAttribute="top" constant="20" id="YGz-9z-ght"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jOG-DS-qYm" secondAttribute="trailing" constant="64" id="bw4-US-gPO"/>
-                <constraint firstItem="jOG-DS-qYm" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="64" id="jCw-o5-Nxu"/>
-                <constraint firstItem="G7e-S8-r0e" firstAttribute="centerX" secondItem="jOG-DS-qYm" secondAttribute="centerX" id="nj8-Mi-K7G"/>
-                <constraint firstItem="G7e-S8-r0e" firstAttribute="top" secondItem="AOp-gA-Iac" secondAttribute="bottom" constant="20" id="p7B-zr-Dki"/>
+                <constraint firstItem="AOp-gA-Iac" firstAttribute="centerX" secondItem="jOG-DS-qYm" secondAttribute="centerX" id="4hu-B8-bgj"/>
+                <constraint firstItem="G7e-S8-r0e" firstAttribute="centerX" secondItem="jOG-DS-qYm" secondAttribute="centerX" id="5b4-pN-7o8"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="G7e-S8-r0e" secondAttribute="bottom" constant="20" id="6q9-Cd-txR"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jOG-DS-qYm" secondAttribute="trailing" constant="48" id="CPH-jR-vMb"/>
+                <constraint firstItem="AOp-gA-Iac" firstAttribute="top" secondItem="jOG-DS-qYm" secondAttribute="bottom" constant="8" symbolic="YES" id="NM9-3n-Jj5"/>
+                <constraint firstItem="G7e-S8-r0e" firstAttribute="top" secondItem="AOp-gA-Iac" secondAttribute="bottom" constant="8" symbolic="YES" id="dHT-cV-PoA"/>
+                <constraint firstItem="jOG-DS-qYm" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="48" id="fDv-Ns-Da4"/>
+                <constraint firstItem="jOG-DS-qYm" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="i5w-jB-prB"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="dateLabel" destination="G7e-S8-r0e" id="7cg-pL-kNH"/>
-                <outlet property="pinImageView" destination="jOG-DS-qYm" id="9Ev-LM-1jX"/>
+                <outlet property="pinImageView" destination="jOG-DS-qYm" id="TtN-ub-Obj"/>
                 <outlet property="placeNameLabel" destination="AOp-gA-Iac" id="p0n-mG-i8u"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="143.63839285714286"/>
