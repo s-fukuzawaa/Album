@@ -26,8 +26,8 @@
 
 @implementation FriendMapViewController
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     self.colorHelper = [[ColorConvertHelper alloc] init];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
@@ -41,8 +41,7 @@
     }
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
-    GMSCameraPosition *camera =
-    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     [self fetchMarkers];
     self.view = self.mapView;
@@ -55,7 +54,8 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
-} /* loadView */
+} /* viewDidLoad */
+
 - (void)loadMarkers {
     // Place markers on initial map view
     int i = 0;
@@ -97,11 +97,6 @@
     [query includeKey:@"objectId"];
     [query orderByDescending:(@"traveledOn")];
     return [query findObjects];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
@@ -211,7 +206,7 @@
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+        [self performSegueWithIdentifier:segueDetails sender:marker];
     }
 }
 
@@ -219,7 +214,7 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"detailsSegue"]) {
+    if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];

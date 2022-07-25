@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AlbumConstants.h"
 #import "ColorConvertHelper.h"
 
 @interface ColorConvertHelper ()
@@ -14,7 +15,7 @@
 @implementation ColorConvertHelper
 
 - (UIImage *)createImageWithColor:(UIColor *)color {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 57, 57);
+    CGRect rect = rect;
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, [color CGColor]);

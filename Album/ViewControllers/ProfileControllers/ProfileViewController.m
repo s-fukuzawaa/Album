@@ -9,6 +9,7 @@
 #import "ActivitiesviewController.h"
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
@@ -30,13 +31,13 @@
     [self fetchProfile];
 }
 - (IBAction)activitiesButton:(id)sender {
-    [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
+    [self performSegueWithIdentifier:segueActivities sender:nil];
 }
 - (IBAction)addFriendButton:(id)sender {
-    [self performSegueWithIdentifier:@"addFriendSegue" sender:nil];
+    [self performSegueWithIdentifier:segueAddFriend sender:nil];
 }
 - (IBAction)settingsButton:(id)sender {
-    [self performSegueWithIdentifier:@"settingsSegue" sender:nil];
+    [self performSegueWithIdentifier:segueSettings sender:nil];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {

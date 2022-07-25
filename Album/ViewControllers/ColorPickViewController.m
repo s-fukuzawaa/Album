@@ -14,10 +14,6 @@
 
 @implementation ColorPickViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
 - (IBAction)chooseColor:(id)sender {
     FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
     colorPicker.color = self.color;

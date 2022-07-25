@@ -10,6 +10,16 @@
 NSString *const classNameFriendship = @"Friendship";
 NSString *const classNameImage = @"Image";
 NSString *const classNamePin = @"Pin";
+NSString *const segueLogin = @"loginSegue";
+NSString *const segueSignup = @"signupSegue";
+NSString *const segueColorPick = @"colorPickSegue";
+NSString *const segueAddFriend = @"addFriendSegue";
+NSString *const segueActivities = @"activitiesSegue";
+NSString *const segueSettings = @"settingsSegue";
+NSString *const segueCompose = @"composeSegue";
+NSString *const segueDetails = @"detailsSegue";
+NSString *const segueFriendMap = @"friendMapSegue";
+CGRect const rect = CGRectMake(0.0f, 0.0f, 57, 57);
 // Constants for friendship status
 int const PENDING = 1;
 int const FRIENDED = 2;

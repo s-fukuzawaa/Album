@@ -7,6 +7,7 @@
 
 #import "LoginViewController.h"
 #import "SignUpViewController.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 
 @interface LoginViewController ()
@@ -51,7 +52,7 @@
                                                                          } else {
                                                                          NSLog(@"User logged in successfully");
                                                                          // Segue to main home view
-                                                                         [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+                                                                         [self performSegueWithIdentifier:segueLogin sender:nil];
                                                                          }
                                                                      }];
 } /* loginButton */
@@ -73,7 +74,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 - (IBAction)signUpButton:(id)sender {
-    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
+    [self performSegueWithIdentifier:segueSignup sender:nil];
 }
 
 - (IBAction)tap:(id)sender {
