@@ -15,6 +15,7 @@
 
 @interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,
 PHPickerViewControllerDelegate>
+
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -235,5 +236,4 @@ PHPickerViewControllerDelegate>
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
     self.pageIndicator.currentPage = self.currentIndex;
 }
-
 @end

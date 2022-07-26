@@ -146,6 +146,7 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+
 }
 
 - (IBAction)updateButton:(id)sender {
@@ -209,5 +210,4 @@
 - (IBAction)tap:(id)sender {
     [self.view endEditing:YES];
 }
-
 @end

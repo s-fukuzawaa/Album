@@ -10,6 +10,7 @@
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 #import "AlbumConstants.h"
+
 @interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *friendRequests;

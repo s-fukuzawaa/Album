@@ -56,5 +56,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
     self.pageIndicator.currentPage = self.currentIndex;
+
 }
 @end
