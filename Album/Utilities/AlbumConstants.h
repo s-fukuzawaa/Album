@@ -25,7 +25,6 @@ extern NSString *const segueCompose;
 extern NSString *const segueDetails;
 extern NSString *const segueAddFriend;
 extern NSString *const segueFriendMap;
-extern CGRect const rect;
 // Constants to manage friendship status
 extern int const PENDING;
 extern int const FRIENDED;
