@@ -31,7 +31,13 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "492"
+<<<<<<< Updated upstream
             endingLineNumber = "492">
+=======
+            endingLineNumber = "492"
+            landmarkName = "-prepareForSegue:sender:"
+            landmarkType = "7">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -45,7 +51,13 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "462"
+<<<<<<< Updated upstream
             endingLineNumber = "462">
+=======
+            endingLineNumber = "462"
+            landmarkName = "-viewController:didAutocompleteWithPlace:"
+            landmarkType = "7">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -60,7 +72,11 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "452"
             endingLineNumber = "452"
+<<<<<<< Updated upstream
             landmarkName = "-prepareForSegue:sender:"
+=======
+            landmarkName = "-viewController:didAutocompleteWithPlace:"
+>>>>>>> Stashed changes
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -92,8 +108,13 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "257"
             endingLineNumber = "257"
+<<<<<<< Updated upstream
             landmarkName = "GoogleMapViewController"
             landmarkType = "3">
+=======
+            landmarkName = "-viewDidLoad"
+            landmarkType = "7">
+>>>>>>> Stashed changes
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

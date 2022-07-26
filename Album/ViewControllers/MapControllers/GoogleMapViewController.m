@@ -38,45 +38,45 @@
 
 @implementation GoogleMapViewController
 
-- (void)loadView {
-    [super loadView];
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
-    self.radius = 5000;
-    self.colorHelper = [[ColorConvertHelper alloc] init];
-    // Set user
-    self.currentUser = [PFUser currentUser];
-    // Initialize the location manager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy =
-        kCLLocationAccuracyNearestTenMeters;
-    self.locationManager.delegate = self;
-    // Ask for authentication
-    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager startUpdatingLocation];
-    }
-    // Set the intiial map view position
-    CLLocation *curPos = self.locationManager.location;
-    GMSCameraPosition *camera =
-        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
-    self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
-    [self fetchMarkers];
-    self.view = self.mapView;
-    self.mapView.myLocationEnabled = true;
-    self.mapView.delegate = self;
-    // Set the date formatter
-    self.formatter = [[NSDateFormatter alloc] init];
-    [self.formatter setDateFormat:@"MMM dd, YYYY"];
-    [self.formatter setDateStyle:NSDateFormatterMediumStyle];
-    // Initialize data structures to cache retrieved data
-    self.placeToPins = [[NSMutableDictionary alloc] init];
-    self.pinImages = [[NSMutableDictionary alloc] init];
-    self.friendsIdSet = [[NSMutableSet alloc] init];
-    // Add animation when change segmentedControl
-    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
-    
-} /* loadView */
+//- (void)loadView {
+//    [super loadView];
+//    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+//    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+//    self.radius = 5000;
+//    self.colorHelper = [[ColorConvertHelper alloc] init];
+//    // Set user
+//    self.currentUser = [PFUser currentUser];
+//    // Initialize the location manager
+//    self.locationManager = [[CLLocationManager alloc] init];
+//    self.locationManager.desiredAccuracy =
+//        kCLLocationAccuracyNearestTenMeters;
+//    self.locationManager.delegate = self;
+//    // Ask for authentication
+//    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+//        [self.locationManager requestWhenInUseAuthorization];
+//        [self.locationManager startUpdatingLocation];
+//    }
+//    // Set the intiial map view position
+//    CLLocation *curPos = self.locationManager.location;
+//    GMSCameraPosition *camera =
+//        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+//    self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+//    [self fetchMarkers];
+//    self.view = self.mapView;
+//    self.mapView.myLocationEnabled = true;
+//    self.mapView.delegate = self;
+//    // Set the date formatter
+//    self.formatter = [[NSDateFormatter alloc] init];
+//    [self.formatter setDateFormat:@"MMM dd, YYYY"];
+//    [self.formatter setDateStyle:NSDateFormatterMediumStyle];
+//    // Initialize data structures to cache retrieved data
+//    self.placeToPins = [[NSMutableDictionary alloc] init];
+//    self.pinImages = [[NSMutableDictionary alloc] init];
+//    self.friendsIdSet = [[NSMutableSet alloc] init];
+//    // Add animation when change segmentedControl
+//    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
+//
+//} /* loadView */
 
 - (void)loadMarkers {
     // Place markers on initial map view
@@ -217,22 +217,73 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+    self.radius = 5000;
+    self.colorHelper = [[ColorConvertHelper alloc] init];
+    // Set user
+    self.currentUser = [PFUser currentUser];
+    // Initialize the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy =
+        kCLLocationAccuracyNearestTenMeters;
+    self.locationManager.delegate = self;
+    // Ask for authentication
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager startUpdatingLocation];
+    }
+    // Set the intiial map view position
+    CLLocation *curPos = self.locationManager.location;
+    GMSCameraPosition *camera =
+        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+    [self fetchMarkers];
+    self.view = self.mapView;
+    self.mapView.myLocationEnabled = true;
+    self.mapView.delegate = self;
+    // Set date formatter
+    [self setFormatter];
+    // Initialize data structures to cache retrieved data
+    self.placeToPins = [[NSMutableDictionary alloc] init];
+    self.pinImages = [[NSMutableDictionary alloc] init];
+    self.friendsIdSet = [[NSMutableSet alloc] init];
+    // Add animation when change segmentedControl
+    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
+    
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
+    [self setButton:mapCenter];
+    [self setMarkerCircle:mapCenter];
+}
+- (void) setFormatter {
+    // Set the date formatter
+    self.formatter = [[NSDateFormatter alloc] init];
+    [self.formatter setDateFormat:@"MMM dd, YYYY"];
+    [self.formatter setDateStyle:NSDateFormatterMediumStyle];
+}
+- (void) setMarkerCircle: (CLLocationCoordinate2D) mapCenter {
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     marker.map = self.mapView;
+   
+    self.radius = 5000;
+    self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+    self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+    self.circ.map = self.mapView;
+}
+- (void) setButton: (CLLocationCoordinate2D) mapCenter{
     // Set button
     UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
         self.radius = 1000;
         [self.mapView clear];
-        [self loadView];
         GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
         marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
         marker.map = self.mapView;
         self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
         self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
         self.circ.map = self.mapView;
+        [self.mapView view];
     }];
     UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
         self.radius = 5000;
@@ -249,10 +300,6 @@
     UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
-    self.radius = 5000;
-    self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
-    self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
-    self.circ.map = self.mapView;
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
