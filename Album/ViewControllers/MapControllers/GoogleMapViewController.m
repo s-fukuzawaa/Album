@@ -314,7 +314,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 }
 - (IBAction)switchControl:(id)sender {
     [self.mapView clear];
-    [self loadView];
+    [self recenterView:self.radius];
 }
 
 
@@ -367,7 +367,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         [markerView addSubview:indicator];
         [markerView.pinImageView setHidden:YES];
         [markerView.placeNameLabel setText:@"Loading..."];
-//        [markerView.placeNameLabel setHidden:YES];
         [markerView.dateLabel setHidden:YES];
         PFObject *firstPin = pinsFromCoord[0];
         if (!self.placeToPins[firstPin[@"placeName"]]) {
@@ -448,8 +447,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
-- (IBAction)radiusOptions:(id)sender {
-}
+
 - (IBAction)searchPlaceButton:(id)sender {
     GMSAutocompleteViewController *acController = [[GMSAutocompleteViewController alloc] init];
     acController.delegate = self;
@@ -479,11 +477,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         [self setMarkerCircle:location];
         [self fetchMarkers];
     });
-    
-    // Do something with the selected place.
-    NSLog(@"Place name %@", place.name);
-    NSLog(@"Place ID %@", place.placeID);
-    NSLog(@"Place attributions %@", place.attributions.string);
 }
 
 

@@ -30,8 +30,8 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
             landmarkName = "GoogleMapViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
             landmarkName = "-searchPlaceButton:"
             landmarkType = "7">
          </BreakpointContent>
