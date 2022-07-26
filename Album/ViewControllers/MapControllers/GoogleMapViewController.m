@@ -19,9 +19,10 @@
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
 #import "Pin.h"
+@import GooglePlaces;
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate,
-                                      ComposeViewControllerDelegate>
+                                      ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
@@ -31,6 +32,8 @@
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
 @property (nonatomic, weak) PFUser *currentUser;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
+@property (nonatomic, strong) GMSAutocompleteFilter *filter;
+@property (nonatomic) int radius;
 @end
 
 @implementation GoogleMapViewController
@@ -71,6 +74,36 @@
     self.friendsIdSet = [[NSMutableSet alloc] init];
     // Add animation when change segmentedControl
     [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
+    // Set button
+    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
+                                                                  _mapView.camera.target.longitude);
+    UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        self.radius = 1000;
+        [self.mapView clear];
+        [self loadView];
+        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+        marker.map = self.mapView;
+        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+        self.circ.map = self.mapView;
+    }];
+    UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        self.radius = 1000;
+        [self.mapView clear];
+        [self loadView];
+        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+        marker.map = self.mapView;
+        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+        self.circ.map = self.mapView;
+    }];
+    NSArray* radiusOptions = [NSArray arrayWithObjects:radius1, radius2, nil];
+    UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
+    [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
+    
 } /* loadView */
 
 - (void)loadMarkers {
@@ -104,13 +137,19 @@
 
 - (void)fetchPersonal {
     // Query to find markers that belong to current user
+    CLLocationCoordinate2D coordinate = self.locationManager.location.coordinate;
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query whereKey:@"author" equalTo:self.currentUser];
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(coordinate.latitude + self.radius)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(coordinate.latitude - self.radius)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(coordinate.longitude + self.radius)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(coordinate.longitude - self.radius)];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
                if (pins != nil) {
                // Store the posts, update count
                NSLog(@"Successfully fetched markers!");
+                   NSLog(@"Count %lu",pins.count);
                self.markerArr = (NSMutableArray *)pins;
                [self loadMarkers];
                } else {
@@ -121,7 +160,8 @@
 
 - (void)fetchFriends {
     // Query to find markers that belong to current user and current user's friend
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+    CLLocationCoordinate2D coordinate = self.locationManager.location.coordinate;
+    [self.apiHelper fetchFriends:self.currentUser.objectId coordinate:coordinate radius:self.radius withBlock:^(NSArray *friendArr, NSError *error) {
                                                                if (friendArr != nil) {
                                                                // For each friend, find their pins
                                                                for (Friendship *friendship in friendArr) {
@@ -207,17 +247,18 @@
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     marker.map = self.mapView;
+    self.radius = 1000;
+    self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+    self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+    self.circ.map = self.mapView;
+    
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
-    self.circ.map = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
         [self.mapView animateToZoom:self.mapView.camera.zoom + 1];
         return YES;
     }
-    self.circ = [GMSCircle circleWithPosition:marker.position radius:800];
-    self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
-    self.circ.map = self.mapView;
     return NO;
 }
 - (void)animate {
@@ -336,6 +377,59 @@
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
+- (IBAction)radiusOptions:(id)sender {
+    
+}
+- (IBAction)searchPlaceButton:(id)sender {
+  GMSAutocompleteViewController *acController = [[GMSAutocompleteViewController alloc] init];
+      acController.delegate = self;
+
+  // Specify the place data types to return.
+  GMSPlaceField fields = (GMSPlaceFieldName | GMSPlaceFieldPlaceID | GMSPlaceFieldCoordinate);
+  acController.placeFields = fields;
+
+  // Specify a filter.
+  self.filter = [[GMSAutocompleteFilter alloc] init];
+  self.filter.type = kGMSPlacesAutocompleteTypeFilterNoFilter;
+  acController.autocompleteFilter = _filter;
+
+  // Display the autocomplete view controller.
+  [self presentViewController:acController animated:YES completion:nil];
+}
+
+- (void)viewController:(GMSAutocompleteViewController *)viewController
+didAutocompleteWithPlace:(GMSPlace *)place {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    CLLocationCoordinate2D location = place.coordinate;
+    GMSCameraUpdate *locationCam = [GMSCameraUpdate setTarget:location zoom:12];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mapView animateWithCameraUpdate:locationCam];
+        GMSMarker *marker = [GMSMarker markerWithPosition:location];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+        self.circ.map = self.mapView;
+        marker.map = self.mapView;
+    });
+    
+      // Do something with the selected place.
+      NSLog(@"Place name %@", place.name);
+      NSLog(@"Place ID %@", place.placeID);
+      NSLog(@"Place attributions %@", place.attributions.string);
+}
+
+
+- (void)viewController:(GMSAutocompleteViewController *)viewController
+didFailAutocompleteWithError:(NSError *)error {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)wasCancelled:(GMSAutocompleteViewController *)viewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation

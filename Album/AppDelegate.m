@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 #import "Parse/Parse.h"
 @import GoogleMaps;
+@import GooglePlaces;
 @interface AppDelegate ()
 
 @end
@@ -23,6 +24,7 @@
 
     NSString *key = [dict objectForKey: @"ggl_map_api_key"];
     [GMSServices provideAPIKey:key];
+    [GMSPlacesClient provideAPIKey:key];
     
     // Set up Parse
     NSString *appId = [dict objectForKey: @"app_id"];

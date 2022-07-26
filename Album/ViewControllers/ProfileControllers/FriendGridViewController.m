@@ -26,7 +26,7 @@
     self.friendCollectionView.delegate = self;
     self.friendCollectionView.dataSource = self;
     // Fetch friends
-    [self.apiHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+    [self.apiHelper fetchFriendsNoLimit:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
                                                         if (friendArr != nil) {
                                                         self.friendsArray = friendArr;
                                                         dispatch_async(dispatch_get_main_queue(), ^{

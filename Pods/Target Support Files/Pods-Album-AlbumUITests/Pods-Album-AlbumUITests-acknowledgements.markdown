@@ -233,6 +233,10 @@ third-party archives.
 
 Copyright 2022 Google
 
+## GooglePlaces
+
+Copyright 2022 Google
+
 ## IQKeyboardManager
 
 MIT License
