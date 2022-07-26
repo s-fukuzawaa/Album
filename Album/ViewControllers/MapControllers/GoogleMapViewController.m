@@ -283,7 +283,7 @@
         self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
         self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
         self.circ.map = self.mapView;
-        [self.mapView view];
+        [self loadView];
     }];
     UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
         self.radius = 5000;
