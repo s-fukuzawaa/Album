@@ -42,6 +42,7 @@
     [super loadView];
     [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
     [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+    self.radius = 5000;
     self.colorHelper = [[ColorConvertHelper alloc] init];
     // Set user
     self.currentUser = [PFUser currentUser];
@@ -74,35 +75,6 @@
     self.friendsIdSet = [[NSMutableSet alloc] init];
     // Add animation when change segmentedControl
     [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
-    // Set button
-    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
-                                                                  _mapView.camera.target.longitude);
-    UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-        self.radius = 1000;
-        [self.mapView clear];
-        [self loadView];
-        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
-        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
-        marker.map = self.mapView;
-        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
-        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
-        self.circ.map = self.mapView;
-    }];
-    UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-        self.radius = 1000;
-        [self.mapView clear];
-        [self loadView];
-        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
-        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
-        marker.map = self.mapView;
-        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
-        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
-        self.circ.map = self.mapView;
-    }];
-    NSArray* radiusOptions = [NSArray arrayWithObjects:radius1, radius2, nil];
-    UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
-    [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
     
 } /* loadView */
 
@@ -140,10 +112,13 @@
     CLLocationCoordinate2D coordinate = self.locationManager.location.coordinate;
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query whereKey:@"author" equalTo:self.currentUser];
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(coordinate.latitude + self.radius)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(coordinate.latitude - self.radius)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(coordinate.longitude + self.radius)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(coordinate.longitude - self.radius)];
+    double earthR = 6378137;
+    double dLat = (double)(self.radius)/earthR;
+    double dLon = (double)(self.radius)/(earthR*cos(M_PI*coordinate.latitude/180));
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(coordinate.latitude + dLat * 180/M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(coordinate.latitude - dLat * 180/M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(coordinate.longitude + dLon * 180/M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(coordinate.longitude - dLon * 180/M_PI)];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
                if (pins != nil) {
@@ -247,11 +222,37 @@
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     marker.map = self.mapView;
-    self.radius = 1000;
+    // Set button
+    UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        self.radius = 1000;
+        [self.mapView clear];
+        [self loadView];
+        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+        marker.map = self.mapView;
+        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+        self.circ.map = self.mapView;
+    }];
+    UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        self.radius = 5000;
+        [self.mapView clear];
+        [self loadView];
+        GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+        marker.map = self.mapView;
+        self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+        self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
+        self.circ.map = self.mapView;
+    }];
+    NSArray* radiusOptions = [NSArray arrayWithObjects:radius1, radius2, nil];
+    UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
+    [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
+    self.radius = 5000;
     self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
     self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
     self.circ.map = self.mapView;
-    
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
