@@ -34,7 +34,7 @@
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
         [alert addAction:cancelAction];
-
+        
         // Create an OK action
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
@@ -44,16 +44,16 @@
     }
     // Ask Parse to login
     [PFUser logInWithUsernameInBackground:username password:password block:^(PFUser *user, NSError *error) {
-                                                                         if (error != nil) {
-                                                                         NSLog(@"User log in failed: %@", error.localizedDescription);
-                                                                         // Present auth error alert
-                                                                         [self authError];
-                                                                         } else {
-                                                                         NSLog(@"User logged in successfully");
-                                                                         // Segue to main home view
-                                                                         [self performSegueWithIdentifier:@"loginSegue" sender:nil];
-                                                                         }
-                                                                     }];
+        if (error != nil) {
+            NSLog(@"User log in failed: %@", error.localizedDescription);
+            // Present auth error alert
+            [self authError];
+        } else {
+            NSLog(@"User logged in successfully");
+            // Segue to main home view
+            [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+        }
+    }];
 } /* loginButton */
 
 - (void)authError {
@@ -64,7 +64,7 @@
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
     [alert addAction:cancelAction];
-
+    
     // Create an OK action
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                        style:UIAlertActionStyleDefault

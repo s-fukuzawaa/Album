@@ -57,31 +57,31 @@
     [likeQuery whereKey:@"userId" equalTo:self.currentUser.objectId];
     [likeQuery whereKey:@"pinId" equalTo:self.pin.objectId];
     [likeQuery findObjectsInBackgroundWithBlock:^(NSArray *statuses, NSError *error) {
-                   if (statuses != nil) {
-                   NSLog(@"Successfully fetched like statuses!");
-                   // If no like status, create one
-                   if (statuses.count == 0) {
-                   self.likeStatus = [[UserPin alloc] init];
-                   self.likeStatus.userId = self.currentUser.objectId;
-                   self.likeStatus.pinId = self.pin.objectId;
-                   self.likeStatus.hasLiked = NO;
-                   [self.likeStatus saveInBackground];
-                   [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-                   } else {
-                   // Set like button corresponding to the hasLiked field
-                   self.likeStatus = statuses[0];
-                   if (self.likeStatus.hasLiked == YES) {
+        if (statuses != nil) {
+            NSLog(@"Successfully fetched like statuses!");
+            // If no like status, create one
+            if (statuses.count == 0) {
+                self.likeStatus = [[UserPin alloc] init];
+                self.likeStatus.userId = self.currentUser.objectId;
+                self.likeStatus.pinId = self.pin.objectId;
+                self.likeStatus.hasLiked = NO;
+                [self.likeStatus saveInBackground];
+                [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+            } else {
+                // Set like button corresponding to the hasLiked field
+                self.likeStatus = statuses[0];
+                if (self.likeStatus.hasLiked == YES) {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-                   } else {
+                } else {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-                   }
-                   }
-                   NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
-                   [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
-                   } else {
-                   NSLog(@"%@", error.localizedDescription);
-                   }
-               }];
+                }
+            }
+            NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
+            [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* setLikeStatus */
 
 - (void)tapLiked:(UITapGestureRecognizer *)sender {

@@ -46,14 +46,14 @@
 - (IBAction)viewSwitchControl:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         [UIView animateWithDuration:0.5 animations:^{
-                                            self.friendsGridContainer.alpha = 1.0;
-                                            self.friendMapContainer.alpha = 0.0;
-                                        }];
+            self.friendsGridContainer.alpha = 1.0;
+            self.friendMapContainer.alpha = 0.0;
+        }];
     } else { // Album View case
         [UIView animateWithDuration:0.5 animations:^{
-                                            self.friendMapContainer.alpha = 1.0;
-                                            self.friendsGridContainer.alpha = 0.0;
-                                        }];
+            self.friendMapContainer.alpha = 1.0;
+            self.friendsGridContainer.alpha = 0.0;
+        }];
     }
 }
 
@@ -63,13 +63,13 @@
         PFFileObject *file = user[@"profileImage"];
         [self.userImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                  if (!error) {
-                  UIImage *image = [UIImage imageWithData:imageData];
-                  [self.userImageView setImage:image];
-                  self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
-                  self.userImageView.layer.masksToBounds = YES;
-                  }
-              }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.userImageView setImage:image];
+                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
+                self.userImageView.layer.masksToBounds = YES;
+            }
+        }];
     }
 }
 
@@ -108,22 +108,22 @@
     [query whereKey:@"requesterId" equalTo:currentUser.objectId];
     [query whereKey:@"recipientId" equalTo:self.user.objectId];
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable friendships, NSError *_Nullable error) {
-               if (friendships != nil) {
-               // Check if friendships exist between tapped user and current user
-               if (friendships.count == 0) {
+        if (friendships != nil) {
+            // Check if friendships exist between tapped user and current user
+            if (friendships.count == 0) {
                 // If not, add friendship
                 [self updateFriendship];
-               } else {
+            } else {
                 // Otherwise, store
                 self.friendship = friendships[0];
                 self.friendStatus = self.friendship.hasFriended;
                 // Update button UI
                 [self updateButton];
-               }
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+            }
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* fetchFriendStatus */
 
 - (void)fetchRequestStatus {
@@ -133,19 +133,19 @@
     [query whereKey:@"recipientId" equalTo:currentUser.objectId];
     [query whereKey:@"requesterId" equalTo:self.user.objectId];
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable requests, NSError *_Nullable error) {
-               if (requests != nil) {
-               // Check if friend requests made to current user from tapped user
-               if (requests.count != 0) {
+        if (requests != nil) {
+            // Check if friend requests made to current user from tapped user
+            if (requests.count != 0) {
                 // Store properties
                 self.request = requests[0];
                 self.requestStatus = self.request.hasFriended;
                 // UPdate button UI
                 [self updateButton];
-               }
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+            }
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* fetchRequestStatus */
 
 - (void)updateFriendship {
@@ -158,12 +158,12 @@
         friendship.recipientId = self.user.objectId;
         friendship.hasFriended = @(NOT_FRIEND);
         [friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-                        if (error) {
-                        NSLog(@"Error posting: %@", error.localizedDescription);
-                        } else {
-                        NSLog(@"Friendship saved successfully! Status:%@", self.friendStatus);
-                        }
-                    }];
+            if (error) {
+                NSLog(@"Error posting: %@", error.localizedDescription);
+            } else {
+                NSLog(@"Friendship saved successfully! Status:%@", self.friendStatus);
+            }
+        }];
         // Store properties
         self.friendship = friendship;
         self.friendStatus = @(NOT_FRIEND);
@@ -172,12 +172,12 @@
     // Otherwise, update friendship status in the database
     self.friendship.hasFriended = self.friendStatus;
     [self.friendship saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-                         if (error) {
-                         NSLog(@"Error posting: %@", error.localizedDescription);
-                         } else {
-                         NSLog(@"Successfully saved friendship!");
-                         }
-                     }];
+        if (error) {
+            NSLog(@"Error posting: %@", error.localizedDescription);
+        } else {
+            NSLog(@"Successfully saved friendship!");
+        }
+    }];
 } /* updateFriendship */
 
 - (void)updateRequest {
@@ -186,12 +186,12 @@
         // Update friendship in the backend
         self.request.hasFriended = self.requestStatus;
         [self.request saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-                          if (error) {
-                          NSLog(@"Error posting: %@", error.localizedDescription);
-                          } else {
-                          NSLog(@"Request saved successfully! Status:%@", self.requestStatus);
-                          }
-                      }];
+            if (error) {
+                NSLog(@"Error posting: %@", error.localizedDescription);
+            } else {
+                NSLog(@"Request saved successfully! Status:%@", self.requestStatus);
+            }
+        }];
         return;
     }
 }
@@ -228,29 +228,29 @@
     UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction *_Nonnull action) {
-                                                             // Update statuses
-                                                             self.requestStatus = @(FRIENDED);
-                                                             self.friendStatus = @(FRIENDED);
-                                                             // Update database
-                                                             [self updateFriendship];
-                                                             [self updateRequest];
-                                                             // Update button UI
-                                                             [self updateButton];
-                                                         }];
+        // Update statuses
+        self.requestStatus = @(FRIENDED);
+        self.friendStatus = @(FRIENDED);
+        // Update database
+        [self updateFriendship];
+        [self updateRequest];
+        // Update button UI
+        [self updateButton];
+    }];
     [alert addAction:acceptAction];
     // Create a reject action
     UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *_Nonnull action) {
-                                                             // Update statuses
-                                                             self.requestStatus = @(NOT_FRIEND);
-                                                             self.friendStatus = @(NOT_FRIEND);
-                                                             // Update database
-                                                             [self updateFriendship];
-                                                             [self updateRequest];
-                                                             // Update button UI
-                                                             [self updateButton];
-                                                         }];
+        // Update statuses
+        self.requestStatus = @(NOT_FRIEND);
+        self.friendStatus = @(NOT_FRIEND);
+        // Update database
+        [self updateFriendship];
+        [self updateRequest];
+        // Update button UI
+        [self updateButton];
+    }];
     [alert addAction:rejectAction];
     // Cancel action
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"

@@ -33,7 +33,7 @@
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
-        kCLLocationAccuracyNearestTenMeters;
+    kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     // Ask for authentication
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
@@ -43,7 +43,7 @@
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
     GMSCameraPosition *camera =
-        [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     [self fetchMarkers];
     self.view = self.mapView;
@@ -79,15 +79,15 @@
     [query whereKey:@"author" equalTo:self.user];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-               if (pins != nil) {
-               // Store the posts, update count
-               NSLog(@"Successfully fetched markers!");
-               self.markerArr = (NSMutableArray *)pins;
-               [self loadMarkers];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 
 - (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
@@ -143,7 +143,7 @@
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin.count!=0) {
+        if (imagesFromPin.count != 0) {
             [markerView.pinImageView setImage:imagesFromPin[0]];
         }
         // Set place name
@@ -196,15 +196,15 @@
     [query whereKey:@"pinId" equalTo:pinId];
     NSArray *imageObjs = [query findObjects];
     NSMutableArray *images = [[NSMutableArray alloc] init];
-    for(Image *imageObject in imageObjs) {
+    for (Image *imageObject in imageObjs) {
         [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                       if (!error) {
-                       UIImage *image = [UIImage imageWithData:imageData];
-                           [images addObject:image];
-                       }
-                   }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [images addObject:image];
+            }
+        }];
     }
-    return (NSArray*) images;
+    return (NSArray *)images;
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker

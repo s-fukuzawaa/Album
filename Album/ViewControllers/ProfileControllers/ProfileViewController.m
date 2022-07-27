@@ -40,15 +40,15 @@
     self.friendsCollectionView.dataSource = self;
     // Fetch friends
     [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-                                                               if (friendArr != nil) {
-                                                               self.friendsArray = friendArr;
-                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                               [self.friendsCollectionView reloadData];
-                                                               });
-                                                               } else {
-                                                               NSLog(@"%@", error.localizedDescription);
-                                                               }
-                                                           }];
+        if (friendArr != nil) {
+            self.friendsArray = friendArr;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.friendsCollectionView reloadData];
+            });
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     // Load profile image
     [self setProfile];
 } /* viewDidLoad */
@@ -90,23 +90,23 @@
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                  if (!error) {
-                  UIImage *image = [UIImage imageWithData:imageData];
-                  [self.profileImageView setImage:image];
-                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                  self.profileImageView.layer.masksToBounds = YES;
-                  }
-              }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.profileImageView setImage:image];
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                self.profileImageView.layer.masksToBounds = YES;
+            }
+        }];
     }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
-        NSIndexPath *)indexPath {
-    int totalwidth = self.friendsCollectionView.bounds.size.width;
-    int numberOfCellsPerRow = 3;
-    int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
-    return CGSizeMake(dimensions, dimensions);
-}
+                                                                                                                                          NSIndexPath *)indexPath {
+                                                                                                                                              int totalwidth = self.friendsCollectionView.bounds.size.width;
+                                                                                                                                              int numberOfCellsPerRow = 3;
+                                                                                                                                              int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
+                                                                                                                                              return CGSizeMake(dimensions, dimensions);
+                                                                                                                                          }
 
 
 #pragma mark - Navigation

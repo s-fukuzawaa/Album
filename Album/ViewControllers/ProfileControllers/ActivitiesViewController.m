@@ -47,18 +47,18 @@
     [query whereKey:@"hasFriended" equalTo:@(PENDING)];
     [query orderByDescending:@"updatedAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-               if (friendships != nil) {
-               for (PFObject *friendship in friendships) {
+        if (friendships != nil) {
+            for (PFObject *friendship in friendships) {
                 PFQuery *query = [PFUser query];
                 [query whereKey:@"objectId" equalTo:friendship[@"requesterId"]];
                 PFUser *user = [query findObjects][0];
                 [self.requests addObject:user];
-               }
-               [self.tableView reloadData];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+            }
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* fetchRequests */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.requests.count;

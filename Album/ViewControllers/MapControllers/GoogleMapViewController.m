@@ -39,6 +39,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 @implementation GoogleMapViewController
 
+#pragma mark - UIViewController
 - (void)loadView {
     [super loadView];
     // Initialize the location manager
@@ -87,6 +88,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [self setMarkerCircle:mapCenter];
     [self fetchMarkers];
 } /* viewDidLoad */
+
+#pragma mark - UIView
 
 - (void)setFormatter {
     // Set the date formatter
@@ -148,6 +151,38 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         marker.map = self.mapView;
     }
 }
+
+- (void)animate {
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+}
+
+#pragma mark - IBAction
+
+- (IBAction)switchControl:(id)sender {
+    [self.mapView clear];
+    [self recenterView:self.radius];
+}
+
+- (IBAction)searchPlaceButton:(id)sender {
+    GMSAutocompleteViewController *acController = [[GMSAutocompleteViewController alloc] init];
+    acController.delegate = self;
+    
+    // Specify the place data types to return.
+    GMSPlaceField fields = (GMSPlaceFieldName | GMSPlaceFieldPlaceID | GMSPlaceFieldCoordinate);
+    acController.placeFields = fields;
+    
+    // Specify a filter.
+    self.filter = [[GMSAutocompleteFilter alloc] init];
+    self.filter.type = kGMSPlacesAutocompleteTypeFilterNoFilter;
+    acController.autocompleteFilter = _filter;
+    
+    // Display the autocomplete view controller.
+    [self presentViewController:acController animated:YES completion:nil];
+}
+
+#pragma mark - Parse API
+
 - (void)fetchMarkers {
     NSInteger index = self.segmentedControl.selectedSegmentIndex;
     if (index == 0) {
@@ -213,11 +248,16 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [query includeKey:@"objectId"];
                 double earthR = 6378137;
                 double dLat = (double)(self.radius) / earthR;
-                double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+                double dLon = (double)(self.radius) /
+                (earthR * cos(M_PI * self.coordinate.latitude / 180));
+                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude +
+                 dLat * 180 / M_PI)];
+                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude -
+                 dLat * 180 / M_PI)];
+                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude +
+                 dLon * 180 / M_PI)];
+                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude
+                 - dLon * 180 / M_PI)];
                 [query
                  findObjectsInBackgroundWithBlock
                  :^(NSArray *pins,
@@ -272,7 +312,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-}
+} /* fetchGlobal */
 
 - (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
     // Fetch pins with specific coordinate
@@ -301,6 +341,30 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     return pins;
 } /* fetchPinsFromCoord */
 
+- (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
+        NSMutableArray *images = [[NSMutableArray alloc] init];
+        if (imageObjs != nil) {
+            for (Image *imageObject in imageObjs) {
+                [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                    if (!error) {
+                        UIImage *image = [UIImage imageWithData:imageData];
+                        [images addObject:image];
+                    }
+                }];
+            }
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+        block(images, error);
+    }];
+} /* imagesFromPin */
+
+#pragma mark - GMSMapViewDelegate
+
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
         [self.mapView animateToZoom:self.mapView.camera.zoom + 1];
@@ -308,15 +372,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
     return NO;
 }
-- (void)animate {
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
-}
-- (IBAction)switchControl:(id)sender {
-    [self.mapView clear];
-    [self recenterView:self.radius];
-}
-
 
 - (void)         mapView:(GMSMapView *)mapView
     didTapPOIWithPlaceID:(NSString *)placeID
@@ -359,7 +414,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     // Check if exisitng pins exist from this coordinate
     if (pinsFromCoord && pinsFromCoord.count > 0) {
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+        UIActivityIndicatorView *indicator =
+        [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
         indicator.hidesWhenStopped = YES;
         indicator.frame = CGRectMake(35, 15, 30, 30);
         indicator.center = markerView.center;
@@ -374,8 +430,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         }
         [self.placeToPins[firstPin[@"placeName"]] addObject:firstPin];
         // Save images of the specific pin to the cache data structure
-        [self imagesFromPin:firstPin.objectId withBlock:^(NSArray * _Nullable images, NSError * _Nullable error) {
-            if(images != nil) {
+        [self imagesFromPin:firstPin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+            if (images != nil) {
                 [self.pinImages setObject:images forKey:firstPin.objectId];
                 // Set image of the info window to first in the array
                 NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
@@ -391,7 +447,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [markerView.pinImageView setHidden:NO];
                 [markerView.placeNameLabel setHidden:NO];
                 [markerView.dateLabel setHidden:NO];
-            }else{
+            } else {
                 NSLog(@"%@", error.localizedDescription);
             }
         }];
@@ -404,29 +460,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     return infoWindow;
 } /* mapView */
 
-- (void)imagesFromPin:(NSString *)pinId withBlock: (PFQueryArrayResultBlock) block{
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable imageObjs, NSError * _Nullable error) {
-        NSMutableArray *images = [[NSMutableArray alloc] init];
-        if(imageObjs != nil) {
-            for (Image *imageObject in imageObjs) {
-                [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                    if (!error) {
-                        UIImage *image = [UIImage imageWithData:imageData];
-                        [images addObject:image];
-                    }
-                }];
-            }
-        }else{
-            NSLog(@"%@", error.localizedDescription);
-        }
-        block(images,error);
-    }];
-    
-}
-
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
@@ -436,6 +469,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         [self performSegueWithIdentifier:@"composeSegue" sender:self];
     }
 }
+
+#pragma mark - ComposeViewControllerDelegate
 
 - (void)didPost {
     // Place marker after composing pin at the location
@@ -448,22 +483,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)searchPlaceButton:(id)sender {
-    GMSAutocompleteViewController *acController = [[GMSAutocompleteViewController alloc] init];
-    acController.delegate = self;
-    
-    // Specify the place data types to return.
-    GMSPlaceField fields = (GMSPlaceFieldName | GMSPlaceFieldPlaceID | GMSPlaceFieldCoordinate);
-    acController.placeFields = fields;
-    
-    // Specify a filter.
-    self.filter = [[GMSAutocompleteFilter alloc] init];
-    self.filter.type = kGMSPlacesAutocompleteTypeFilterNoFilter;
-    acController.autocompleteFilter = _filter;
-    
-    // Display the autocomplete view controller.
-    [self presentViewController:acController animated:YES completion:nil];
-}
+#pragma mark - GMSAutocompleteViewControllerDelegate
 
 - (void)      viewController:(GMSAutocompleteViewController *)viewController
     didAutocompleteWithPlace:(GMSPlace *)place {
@@ -488,8 +508,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void)wasCancelled:(GMSAutocompleteViewController *)viewController {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-
 
 #pragma mark - Navigation
 

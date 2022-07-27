@@ -27,15 +27,15 @@
     self.friendCollectionView.dataSource = self;
     // Fetch friends
     [self.apiHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-                                                        if (friendArr != nil) {
-                                                        self.friendsArray = friendArr;
-                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                        [self.friendCollectionView reloadData];
-                                                        });
-                                                        } else {
-                                                        NSLog(@"%@", error.localizedDescription);
-                                                        }
-                                                    }];
+        if (friendArr != nil) {
+            self.friendsArray = friendArr;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.friendCollectionView reloadData];
+            });
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     [self.friendCollectionView reloadData];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -59,12 +59,12 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
-        NSIndexPath *)indexPath {
-    int totalwidth = self.friendCollectionView.bounds.size.width;
-    int numberOfCellsPerRow = 3;
-    int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
-    return CGSizeMake(dimensions, dimensions);
-}
+                                                                                                                                          NSIndexPath *)indexPath {
+                                                                                                                                              int totalwidth = self.friendCollectionView.bounds.size.width;
+                                                                                                                                              int numberOfCellsPerRow = 3;
+                                                                                                                                              int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
+                                                                                                                                              return CGSizeMake(dimensions, dimensions);
+                                                                                                                                          }
 
 #pragma mark - Navigation
 
