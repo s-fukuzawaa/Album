@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (weak, nonatomic) IBOutlet UILabel *isPublicLabel;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -42,6 +43,8 @@
     [self fetchFriendStatus];
     // Update button UI
     [self updateButton];
+    // Update isPublic status
+    [self setIsPublicLabel];
 }
 - (IBAction)viewSwitchControl:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
@@ -56,7 +59,13 @@
         }];
     }
 }
-
+- (void) setIsPublicLabel {
+    if(self.user[@"isPublic"]) {
+        [self.isPublicLabel setText: @"Public Account"];
+    }else{
+        [self.isPublicLabel setText: @"Private Account"];
+    }
+}
 - (void)fetchProfile {
     PFUser *user = self.user;
     if (user[@"profileImage"]) {

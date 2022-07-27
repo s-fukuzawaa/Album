@@ -154,8 +154,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // Used for switch control animation
 - (void)animate {
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
 }
 
 #pragma mark - IBAction
@@ -305,7 +305,14 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
-            self.markerArr = (NSMutableArray *)pins;
+            NSMutableArray *publicPins = [[NSMutableArray alloc] init];
+            for (PFObject *pin in pins) {
+                PFUser *author = pin[@"author"];
+                if((BOOL)author[@"isPublic"] == YES) {
+                    [publicPins addObject:pin];
+                }
+            }
+            self.markerArr = publicPins;
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);

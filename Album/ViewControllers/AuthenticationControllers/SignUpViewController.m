@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
+@property (nonatomic) BOOL isPublic;
 @end
 
 @implementation SignUpViewController
@@ -33,6 +34,14 @@
     [self.profileImageView setUserInteractionEnabled:YES];
     // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
+}
+- (IBAction)isPublicSwitch:(id)sender {
+    UISwitch *mySwitch = (UISwitch *)sender;
+    if ([mySwitch isOn]) {
+        self.isPublic = NO;
+    } else {
+        self.isPublic = YES;
+    }
 }
 
 - (IBAction)signUpButton:(id)sender {
@@ -52,6 +61,7 @@
     newUser.password = self.pwField.text;
     newUser[@"profileImage"] = self.profileImageView.file;
     newUser[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
+    newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
         UIAlertController *alert =

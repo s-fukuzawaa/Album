@@ -19,8 +19,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
+@property (weak, nonatomic) IBOutlet UISwitch *isPublicSwitch;
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
+@property (nonatomic) BOOL isPublic;
 @end
 
 @implementation SettingsViewController
@@ -62,6 +64,12 @@
     self.emailField.text = user.email;
     self.pwField.text = user.password;
     self.pwField.placeholder = @"Please enter non-empty password";
+    if ((BOOL)user[@"isPublic"] == YES) {
+        [self.isPublicSwitch setOn: NO];
+    }else{
+        [self.isPublicSwitch setOn: YES];
+    }
+    self.isPublic = user[@"isPublic"];
 } /* setCurrentView */
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
@@ -162,6 +170,7 @@
     if (![hexString isEqualToString:user[@"colorHexString"]]) {
         user[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
     }
+    user[@"isPublic"] = @(self.isPublic);
     // Update user properties when necessary
     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
               if (error != nil) {
@@ -184,6 +193,14 @@
     // Do not send nil for block
     [PFUser logOutInBackgroundWithBlock:^(NSError *_Nullable error) {
             }];
+}
+- (IBAction)isPublicSwitch:(id)sender {
+    UISwitch *mySwitch = (UISwitch *)sender;
+    if ([mySwitch isOn]) {
+        self.isPublic = NO;
+    } else {
+        self.isPublic = YES;
+    }
 }
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
