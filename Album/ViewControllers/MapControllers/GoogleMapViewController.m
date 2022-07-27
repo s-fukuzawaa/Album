@@ -106,8 +106,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.circ.map = self.mapView;
 }
 - (void)setButton {
-    // Set button
-    
+    // Set button: 3 radius limiting options
     UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self recenterView:1000];
@@ -129,6 +128,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
 } /* setButton */
 
+// Recenter the view with a fixed radius
 - (void)recenterView:(int)radius {
     self.radius = radius;
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(self.mapView.camera.target.latitude,
@@ -152,6 +152,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
 }
 
+// Used for switch control animation
 - (void)animate {
     [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
     [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
@@ -246,18 +247,15 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                  whereKey:@"author"
                  equalTo:friend];
                 [query includeKey:@"objectId"];
+                // Calculate the radius degree based on flat earth calculation
                 double earthR = 6378137;
                 double dLat = (double)(self.radius) / earthR;
                 double dLon = (double)(self.radius) /
                 (earthR * cos(M_PI * self.coordinate.latitude / 180));
-                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude +
-                 dLat * 180 / M_PI)];
-                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude -
-                 dLat * 180 / M_PI)];
-                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude +
-                 dLon * 180 / M_PI)];
-                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude
-                 - dLon * 180 / M_PI)];
+                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
                 [query
                  findObjectsInBackgroundWithBlock
                  :^(NSArray *pins,
@@ -292,6 +290,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [userQuery whereKey:@"objectId" equalTo:userId];
     return [userQuery findObjects];
 }
+// Used to find all markers in database
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query includeKey:@"objectId"];
