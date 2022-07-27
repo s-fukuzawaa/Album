@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ParseAPIHelper : NSObject
+- (void)fetchUser:(NSString *)userId withBlock: (PFQueryArrayResultBlock) block;
 - (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block;
 @end
 

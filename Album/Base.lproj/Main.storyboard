@@ -513,9 +513,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qEs-dh-dld">
-                                <rect key="frame" x="20" y="384" width="374" height="438"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qEs-dh-dld">
+                                <rect key="frame" x="20" y="390" width="374" height="432"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <gestureRecognizers/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gkk-UX-3GQ">
@@ -548,13 +547,24 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mDW-Ls-4Km" customClass="PFImageView">
-                                <rect key="frame" x="132" y="140" width="150" height="144"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mDW-Ls-4Km" customClass="PFImageView">
+                                <rect key="frame" x="132" y="140" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="mDW-Ls-4Km" secondAttribute="height" multiplier="1:1" id="4ei-yz-9Bw"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HZ2-6j-0dT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="qEs-dh-dld" secondAttribute="bottom" constant="-9" id="0Kd-T3-IhD"/>
+                            <constraint firstItem="qEs-dh-dld" firstAttribute="leading" secondItem="YI2-2g-qk1" secondAttribute="leadingMargin" id="9Qb-6h-Pnm"/>
+                            <constraint firstItem="qEs-dh-dld" firstAttribute="top" secondItem="mDW-Ls-4Km" secondAttribute="bottom" constant="100" id="Ai9-AM-xxj"/>
+                            <constraint firstItem="qEs-dh-dld" firstAttribute="centerX" secondItem="mDW-Ls-4Km" secondAttribute="centerX" id="EmX-f5-MGr"/>
+                            <constraint firstItem="mDW-Ls-4Km" firstAttribute="top" secondItem="HZ2-6j-0dT" secondAttribute="top" constant="52" id="Fix-Y2-ovK"/>
+                            <constraint firstItem="mDW-Ls-4Km" firstAttribute="leading" secondItem="HZ2-6j-0dT" secondAttribute="leading" constant="132" id="ZZe-bQ-GPq"/>
+                            <constraint firstItem="HZ2-6j-0dT" firstAttribute="trailing" secondItem="mDW-Ls-4Km" secondAttribute="trailing" constant="132" id="j4U-cH-1KI"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gGn-b3-xOP">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="FXH-gz-Bc6">

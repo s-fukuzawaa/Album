@@ -57,8 +57,11 @@
 
     // Display current user marker color
     if (user[@"colorHexString"]) {
-        UIColor *color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
-        [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIColor *color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
+            self.color = color;
+            [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+        });
     }
     self.usernameField.text = user.username;
     self.emailField.text = user.email;
@@ -179,6 +182,7 @@
               NSLog(@"User updated successfully");
               }
           }];
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 } /* updateButton */
 
 - (IBAction)backButton:(id)sender {

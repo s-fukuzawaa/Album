@@ -195,7 +195,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         // Fetch friends pins
         [self fetchFriends];
     } else {
-        // Fetches pins of all users
+        // Fetches pins of all public users
+        [self fetchFriends];
         [self fetchGlobal];
     }
 }
@@ -227,61 +228,118 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 - (void)fetchFriends {
     // Query to find markers that belong to current user and current user's friend
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr,
-                                                                       NSError *error) {
-        if (friendArr != nil) {
-            // For each friend, find their pins
-            for (Friendship *friendship in
-                 friendArr)
-            {
-                NSString *friendId =
-                friendship[@"recipientId"];
-                PFUser *friend =
-                [self fetchUser:friendId][0];
-                [self.friendsIdSet addObject:
-                 friendId];
-                PFQuery *query =
-                [PFQuery queryWithClassName:
-                 classNamePin];
-                [query
-                 whereKey:@"author"
-                 equalTo:friend];
-                [query includeKey:@"objectId"];
-                // Calculate the radius degree based on flat earth calculation
-                double earthR = 6378137;
-                double dLat = (double)(self.radius) / earthR;
-                double dLon = (double)(self.radius) /
-                (earthR * cos(M_PI * self.coordinate.latitude / 180));
-                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-                [query
-                 findObjectsInBackgroundWithBlock
-                 :^(NSArray *pins,
-                    NSError *error) {
-                    if (pins != nil) {
-                        // Store the pins, update count
-                        NSLog(
-                              @"Successfully fetched pins!");
-                        // Add pins to the marker array
-                        for (PFObject *pin in pins) {
-                            [self.markerArr
-                             addObject:pin];
-                        }
-                        // Reload markers
-                        [self loadMarkers];
-                    } else {
-                        NSLog(@"%@",
-                              error.localizedDescription);
+    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
+    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
+    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
+    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
+        if (friendships != nil) {
+                    // For each friend, find their pins
+                    for (Friendship *friendship in
+                         friendships)
+                    {
+                        NSString *friendId =
+                        friendship[@"recipientId"];
+                        PFUser *friend =
+                        [self fetchUser:friendId][0];
+                        [self.friendsIdSet addObject:
+                         friendId];
+                        PFQuery *query =
+                        [PFQuery queryWithClassName:
+                         classNamePin];
+                        [query
+                         whereKey:@"author"
+                         equalTo:friend];
+                        [query includeKey:@"objectId"];
+                        // Calculate the radius degree based on flat earth calculation
+                        double earthR = 6378137;
+                        double dLat = (double)(self.radius) / earthR;
+                        double dLon = (double)(self.radius) /
+                        (earthR * cos(M_PI * self.coordinate.latitude / 180));
+                        [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+                        [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+                        [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+                        [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+                        [query
+                         findObjectsInBackgroundWithBlock
+                         :^(NSArray *pins,
+                            NSError *error) {
+                            if (pins != nil) {
+                                // Store the pins, update count
+                                NSLog(
+                                      @"Successfully fetched pins!");
+                                // Add pins to the marker array
+                                for (PFObject *pin in pins) {
+                                    [self.markerArr
+                                     addObject:pin];
+                                }
+                                // Reload markers
+                                [self loadMarkers];
+                            } else {
+                                NSLog(@"%@",
+                                      error.localizedDescription);
+                            }
+                        }];
                     }
-                }];
-            }
-        } else {
-            NSLog(@"%@",
-                  error.localizedDescription);
-        }
+                } else {
+                    NSLog(@"%@",
+                          error.localizedDescription);
+                }
     }];
+//    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr,
+//                                                                       NSError *error) {
+//        if (friendArr != nil) {
+//            // For each friend, find their pins
+//            for (Friendship *friendship in
+//                 friendArr)
+//            {
+//                NSString *friendId =
+//                friendship[@"recipientId"];
+//                PFUser *friend =
+//                [self fetchUser:friendId][0];
+//                [self.friendsIdSet addObject:
+//                 friendId];
+//                PFQuery *query =
+//                [PFQuery queryWithClassName:
+//                 classNamePin];
+//                [query
+//                 whereKey:@"author"
+//                 equalTo:friend];
+//                [query includeKey:@"objectId"];
+//                // Calculate the radius degree based on flat earth calculation
+//                double earthR = 6378137;
+//                double dLat = (double)(self.radius) / earthR;
+//                double dLon = (double)(self.radius) /
+//                (earthR * cos(M_PI * self.coordinate.latitude / 180));
+//                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+//                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+//                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+//                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+//                [query
+//                 findObjectsInBackgroundWithBlock
+//                 :^(NSArray *pins,
+//                    NSError *error) {
+//                    if (pins != nil) {
+//                        // Store the pins, update count
+//                        NSLog(
+//                              @"Successfully fetched pins!");
+//                        // Add pins to the marker array
+//                        for (PFObject *pin in pins) {
+//                            [self.markerArr
+//                             addObject:pin];
+//                        }
+//                        // Reload markers
+//                        [self loadMarkers];
+//                    } else {
+//                        NSLog(@"%@",
+//                              error.localizedDescription);
+//                    }
+//                }];
+//            }
+//        } else {
+//            NSLog(@"%@",
+//                  error.localizedDescription);
+//        }
+//    }];
 } /* fetchFriends */
 
 // Used to find specfic user
@@ -308,7 +366,9 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             NSMutableArray *publicPins = [[NSMutableArray alloc] init];
             for (PFObject *pin in pins) {
                 PFUser *author = pin[@"author"];
-                if((BOOL)author[@"isPublic"] == YES) {
+                NSLog(@"%@", author.objectId);
+                PFUser *user = [self fetchUser:author.objectId][0];
+                if(([user[@"isPublic"] isEqual: @(YES)] || [user isEqual:self.currentUser]) && ![self.friendsIdSet containsObject:author.objectId]) {
                     [publicPins addObject:pin];
                 }
             }
