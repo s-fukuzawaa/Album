@@ -22,27 +22,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
+
+#pragma mark - IBAction
+
 - (IBAction)searchButton:(id)sender {
     PFQuery *query = [PFUser query];
     PFUser *currentUser = [PFUser currentUser];
     [query whereKey:@"username" notEqualTo:currentUser.username];
     [query whereKey:@"username" equalTo:self.searchFriendField.text];
     [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
-               if (users != nil) {
-               self.friendsArr = (NSMutableArray *)users;
-               // Set up table view
-               self.tableView.dataSource = self;
-               self.tableView.delegate = self;
-               [self.tableView reloadData];
-               self.tableView.rowHeight = UITableViewAutomaticDimension;
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+        if (users != nil) {
+            self.friendsArr = (NSMutableArray *)users;
+            // Set up table view
+            self.tableView.dataSource = self;
+            self.tableView.delegate = self;
+            [self.tableView reloadData];
+            self.tableView.rowHeight = UITableViewAutomaticDimension;
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.friendsArr.count;

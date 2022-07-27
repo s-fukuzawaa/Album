@@ -27,6 +27,17 @@
     [super viewDidLoad];
     // Set current user
     self.currentUser = [PFUser currentUser];
+    // Set view outlets
+    [self setView];
+    // Photo carousel
+    self.imageCarouselView.delegate = self;
+    self.imageCarouselView.dataSource = self;
+    // Set up like status
+    [self setLikeStatus];
+} /* viewDidLoad */
+
+#pragma mark - UIView
+- (void)setView {
     // Set location
     self.placeNameLabel.text = self.pin.placeName;
     // Set date
@@ -38,11 +49,6 @@
     self.dateLabel.text = date;
     // Set caption
     self.captionTextView.text = self.pin.captionText;
-    // Photo carousel
-    self.imageCarouselView.delegate = self;
-    self.imageCarouselView.dataSource = self;
-    // Set up like status
-    [self setLikeStatus];
     // Set up page control
     self.currentIndex = 0;
     self.pageControl.numberOfPages = 0;
@@ -50,38 +56,37 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLiked:)];
     tapGesture.numberOfTapsRequired = 2;
     [self.likeButton addGestureRecognizer:tapGesture];
-} /* viewDidLoad */
-
+}
 - (void)setLikeStatus {
     PFQuery *likeQuery = [PFQuery queryWithClassName:classNameUserPin];
     [likeQuery whereKey:@"userId" equalTo:self.currentUser.objectId];
     [likeQuery whereKey:@"pinId" equalTo:self.pin.objectId];
     [likeQuery findObjectsInBackgroundWithBlock:^(NSArray *statuses, NSError *error) {
-                   if (statuses != nil) {
-                   NSLog(@"Successfully fetched like statuses!");
-                   // If no like status, create one
-                   if (statuses.count == 0) {
-                   self.likeStatus = [[UserPin alloc] init];
-                   self.likeStatus.userId = self.currentUser.objectId;
-                   self.likeStatus.pinId = self.pin.objectId;
-                   self.likeStatus.hasLiked = NO;
-                   [self.likeStatus saveInBackground];
-                   [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-                   } else {
-                   // Set like button corresponding to the hasLiked field
-                   self.likeStatus = statuses[0];
-                   if (self.likeStatus.hasLiked == YES) {
+        if (statuses != nil) {
+            NSLog(@"Successfully fetched like statuses!");
+            // If no like status, create one
+            if (statuses.count == 0) {
+                self.likeStatus = [[UserPin alloc] init];
+                self.likeStatus.userId = self.currentUser.objectId;
+                self.likeStatus.pinId = self.pin.objectId;
+                self.likeStatus.hasLiked = NO;
+                [self.likeStatus saveInBackground];
+                [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
+            } else {
+                // Set like button corresponding to the hasLiked field
+                self.likeStatus = statuses[0];
+                if (self.likeStatus.hasLiked == YES) {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal];
-                   } else {
+                } else {
                     [self.likeButton setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal];
-                   }
-                   }
-                   NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
-                   [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
-                   } else {
-                   NSLog(@"%@", error.localizedDescription);
-                   }
-               }];
+                }
+            }
+            NSString *formattedString = [NSString stringWithFormat:@"%@ likes", self.pin.likeCount];
+            [self.likeButton setTitle:formattedString forState:UIControlStateNormal];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* setLikeStatus */
 
 - (void)tapLiked:(UITapGestureRecognizer *)sender {
@@ -109,6 +114,12 @@
         [self.likeStatus saveInBackground];
     }
 } /* tapLiked */
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
+    self.pageIndicator.currentPage = self.currentIndex;
+}
+
+#pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (self.imagesFromPin.count == 0) {
@@ -129,10 +140,5 @@
     }
     self.pageControl.numberOfPages = self.imagesFromPin.count;
     return photoCell;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
 }
 @end

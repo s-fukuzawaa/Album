@@ -29,6 +29,8 @@
 
 @implementation ProfileViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Set API helper
@@ -40,22 +42,43 @@
     self.friendsCollectionView.dataSource = self;
     // Fetch friends
     [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-                                                               if (friendArr != nil) {
-                                                               self.friendsArray = friendArr;
-                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                               [self.friendsCollectionView reloadData];
-                                                               });
-                                                               } else {
-                                                               NSLog(@"%@", error.localizedDescription);
-                                                               }
-                                                           }];
+        if (friendArr != nil) {
+            self.friendsArray = friendArr;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.friendsCollectionView reloadData];
+            });
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     // Load profile image
     [self setProfile];
 } /* viewDidLoad */
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.friendsCollectionView reloadData];
 }
+
+#pragma mark - Parse API
+- (void)setProfile {
+    PFUser *user = [PFUser currentUser];
+    if (user[@"profileImage"]) {
+        PFFileObject *file = user[@"profileImage"];
+        [self.profileImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.profileImageView setImage:image];
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                self.profileImageView.layer.masksToBounds = YES;
+            }
+        }];
+    }
+}
+
+#pragma mark - IBAction
+
 - (IBAction)activitiesButton:(id)sender {
     [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
 }
@@ -69,6 +92,8 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.friendsArray.count;
 }
+
+#pragma mark - UICollectionViewDataSource
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *profileCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"profileCell" forIndexPath:indexPath];
@@ -84,30 +109,14 @@
     return profileCell;
 }
 
-- (void)setProfile {
-    PFUser *user = [PFUser currentUser];
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.profileImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                  if (!error) {
-                  UIImage *image = [UIImage imageWithData:imageData];
-                  [self.profileImageView setImage:image];
-                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                  self.profileImageView.layer.masksToBounds = YES;
-                  }
-              }];
-    }
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
-        NSIndexPath *)indexPath {
+- (CGSize)  collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     int totalwidth = self.friendsCollectionView.bounds.size.width;
     int numberOfCellsPerRow = 3;
     int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
     return CGSizeMake(dimensions, dimensions);
 }
-
 
 #pragma mark - Navigation
 
@@ -124,6 +133,4 @@
         friendVC.user = self.friendsArray[indexPath.row];
     }
 }
-
-
 @end

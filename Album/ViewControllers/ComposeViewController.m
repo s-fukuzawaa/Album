@@ -28,6 +28,8 @@ PHPickerViewControllerDelegate>
 
 @implementation ComposeViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Set caption view properties
@@ -64,6 +66,8 @@ PHPickerViewControllerDelegate>
     [super viewWillAppear:animated];
     [self.imageCarouselView reloadData];
 }
+
+#pragma mark - UIView
 
 - (void)didTapImage:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -108,6 +112,13 @@ PHPickerViewControllerDelegate>
     }
 } /* didTapImage */
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
+    self.pageIndicator.currentPage = self.currentIndex;
+}
+
+#pragma mark - PHPickerViewControllerDelegate
+
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results {
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.photos removeAllObjects];
@@ -127,7 +138,9 @@ PHPickerViewControllerDelegate>
             }
         }];
     }
-} /* picker */
+}
+
+#pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
@@ -151,11 +164,10 @@ PHPickerViewControllerDelegate>
     return newImage;
 }
 
-- (void)returnMap {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+#pragma mark - IBAction
+
 - (IBAction)crossButton:(id)sender {
-    [self returnMap];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)postButton:(id)sender {
@@ -186,8 +198,15 @@ PHPickerViewControllerDelegate>
         }
     }];
     
-    [self returnMap];
+    [self dismissViewControllerAnimated:YES completion:nil];
 } /* postButton */
+
+- (IBAction)tapped:(id)sender {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - UICollectionViewDataSource
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (self.photos.count == 0) {
         return 1;
@@ -208,13 +227,4 @@ PHPickerViewControllerDelegate>
     }
     return photoCell;
 }
-- (IBAction)tapped:(id)sender {
-    [self.view endEditing:YES];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
-}
-
 @end

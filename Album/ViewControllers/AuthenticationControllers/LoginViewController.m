@@ -18,10 +18,8 @@
 
 @implementation LoginViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+#pragma mark - IBAction
+
 - (IBAction)loginButton:(id)sender {
     NSString *username = self.usernameField.text;
     NSString *password = self.pwField.text;
@@ -34,7 +32,7 @@
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
         [alert addAction:cancelAction];
-
+        
         // Create an OK action
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
@@ -44,17 +42,26 @@
     }
     // Ask Parse to login
     [PFUser logInWithUsernameInBackground:username password:password block:^(PFUser *user, NSError *error) {
-                                                                         if (error != nil) {
-                                                                         NSLog(@"User log in failed: %@", error.localizedDescription);
-                                                                         // Present auth error alert
-                                                                         [self authError];
-                                                                         } else {
-                                                                         NSLog(@"User logged in successfully");
-                                                                         // Segue to main home view
-                                                                         [self performSegueWithIdentifier:@"loginSegue" sender:nil];
-                                                                         }
-                                                                     }];
-} /* loginButton */
+        if (error != nil) {
+            NSLog(@"User log in failed: %@", error.localizedDescription);
+            // Present auth error alert
+            [self authError];
+        } else {
+            NSLog(@"User logged in successfully");
+            // Segue to main home view
+            [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+        }
+    }];
+}
+- (IBAction)signUpButton:(id)sender {
+    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
+}
+
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - UIAlert
 
 - (void)authError {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"No such user exist!"
@@ -64,7 +71,7 @@
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
     [alert addAction:cancelAction];
-
+    
     // Create an OK action
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                        style:UIAlertActionStyleDefault
@@ -72,11 +79,5 @@
     [alert addAction:okAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
-- (IBAction)signUpButton:(id)sender {
-    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
-}
 
-- (IBAction)tap:(id)sender {
-    [self.view endEditing:YES];
-}
 @end

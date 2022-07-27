@@ -17,6 +17,8 @@
 @end
 
 @implementation ActivitiesViewController
+
+#pragma mark - UIViewController
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self fetchActivities];
@@ -30,10 +32,14 @@
     self.requests = [[NSMutableArray alloc] init];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
+
+#pragma mark - IBAction
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Parse API
 - (void)fetchActivities {
     [self fetchRequests];
 }
@@ -47,19 +53,22 @@
     [query whereKey:@"hasFriended" equalTo:@(PENDING)];
     [query orderByDescending:@"updatedAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-               if (friendships != nil) {
-               for (PFObject *friendship in friendships) {
+        if (friendships != nil) {
+            for (PFObject *friendship in friendships) {
                 PFQuery *query = [PFUser query];
                 [query whereKey:@"objectId" equalTo:friendship[@"requesterId"]];
                 PFUser *user = [query findObjects][0];
                 [self.requests addObject:user];
-               }
-               [self.tableView reloadData];
-               } else {
-               NSLog(@"%@", error.localizedDescription);
-               }
-           }];
+            }
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 } /* fetchRequests */
+
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.requests.count;
 }
@@ -70,9 +79,13 @@
     return cell;
 }
 
+#pragma mark - ActivityCellDelegate
+
 - (void)activityCell:(ActivityCell *)activityCell didTap:(PFUser *)user {
     [self fetchActivities];
 }
+
+#pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(ActivityCell *)sender];
