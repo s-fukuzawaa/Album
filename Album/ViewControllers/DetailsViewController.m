@@ -10,6 +10,7 @@
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
+
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;

@@ -148,6 +148,7 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+
 }
 
 #pragma mark - IBAction
@@ -218,5 +219,4 @@
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 @end

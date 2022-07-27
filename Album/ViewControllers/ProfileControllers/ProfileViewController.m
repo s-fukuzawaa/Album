@@ -17,7 +17,6 @@
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
-
 @interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
