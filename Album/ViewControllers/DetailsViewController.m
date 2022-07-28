@@ -9,11 +9,7 @@
 #import "AlbumConstants.h"
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
-<<<<<<< HEAD
 #import "PhotoCollectionCell.h"
-=======
-
->>>>>>> main
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
