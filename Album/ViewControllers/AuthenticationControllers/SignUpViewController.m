@@ -26,7 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     // Tap profile to change configuration
     UITapGestureRecognizer *profileTapGestureRecognizer =
         [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
@@ -45,6 +44,7 @@
 }
 
 - (IBAction)signUpButton:(id)sender {
+    // Sign up user to Parse backend
     [self registerUser];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -202,5 +202,4 @@
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 @end

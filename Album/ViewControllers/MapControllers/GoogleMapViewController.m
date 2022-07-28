@@ -47,7 +47,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.locationManager.desiredAccuracy =
     kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
-    // Ask for authentication
+    // Ask for location permission
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         [self.locationManager requestWhenInUseAuthorization];
         [self.locationManager startUpdatingLocation];
@@ -217,8 +217,9 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
-            NSLog(@"Count %lu", pins.count);
+            // Save resulting pins
             self.markerArr = (NSMutableArray *)pins;
+            // Add markers to map
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);

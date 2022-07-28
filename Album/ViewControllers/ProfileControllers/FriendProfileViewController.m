@@ -33,6 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Initial view to friend map view
     self.friendMapContainer.alpha = 0.0;
     self.friendsGridContainer.alpha = 1.0;
     // Set user profile image view
@@ -46,8 +47,10 @@
     // Update isPublic status
     [self setIsPublicLabel];
 }
-- (IBAction)viewSwitchControl:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 0) {
+
+- (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
+    // Switch from map or album
+    if(sender.selectedSegmentIndex == 0){
         [UIView animateWithDuration:0.5 animations:^{
             self.friendsGridContainer.alpha = 1.0;
             self.friendMapContainer.alpha = 0.0;

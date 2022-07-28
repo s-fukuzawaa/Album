@@ -190,7 +190,6 @@
 }
 - (IBAction)logoutButton:(id)sender {
     SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
-
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     myDelegate.window.rootViewController = loginViewController;
@@ -228,5 +227,4 @@
 - (IBAction)tap:(id)sender {
     [self.view endEditing:YES];
 }
-
 @end

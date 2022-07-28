@@ -159,6 +159,7 @@ PHPickerViewControllerDelegate>
 }
 
 - (IBAction)postButton:(id)sender {
+    // Post new Pin
     Pin *newPin = [Pin new];
     newPin.author = [PFUser currentUser];
     newPin.captionText = self.captionTextView.text;
@@ -185,7 +186,7 @@ PHPickerViewControllerDelegate>
             [self.delegate didPost];
         }
     }];
-    
+    // Return to map view
     [self returnMap];
 } /* postButton */
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -216,5 +217,6 @@ PHPickerViewControllerDelegate>
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
     self.pageIndicator.currentPage = self.currentIndex;
 }
+
 
 @end
