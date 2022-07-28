@@ -286,61 +286,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                           error.localizedDescription);
                 }
     }];
-//    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr,
-//                                                                       NSError *error) {
-//        if (friendArr != nil) {
-//            // For each friend, find their pins
-//            for (Friendship *friendship in
-//                 friendArr)
-//            {
-//                NSString *friendId =
-//                friendship[@"recipientId"];
-//                PFUser *friend =
-//                [self fetchUser:friendId][0];
-//                [self.friendsIdSet addObject:
-//                 friendId];
-//                PFQuery *query =
-//                [PFQuery queryWithClassName:
-//                 classNamePin];
-//                [query
-//                 whereKey:@"author"
-//                 equalTo:friend];
-//                [query includeKey:@"objectId"];
-//                // Calculate the radius degree based on flat earth calculation
-//                double earthR = 6378137;
-//                double dLat = (double)(self.radius) / earthR;
-//                double dLon = (double)(self.radius) /
-//                (earthR * cos(M_PI * self.coordinate.latitude / 180));
-//                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-//                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-//                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-//                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-//                [query
-//                 findObjectsInBackgroundWithBlock
-//                 :^(NSArray *pins,
-//                    NSError *error) {
-//                    if (pins != nil) {
-//                        // Store the pins, update count
-//                        NSLog(
-//                              @"Successfully fetched pins!");
-//                        // Add pins to the marker array
-//                        for (PFObject *pin in pins) {
-//                            [self.markerArr
-//                             addObject:pin];
-//                        }
-//                        // Reload markers
-//                        [self loadMarkers];
-//                    } else {
-//                        NSLog(@"%@",
-//                              error.localizedDescription);
-//                    }
-//                }];
-//            }
-//        } else {
-//            NSLog(@"%@",
-//                  error.localizedDescription);
-//        }
-//    }];
 } /* fetchFriends */
 
 // Used to find specfic user
