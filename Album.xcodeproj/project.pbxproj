@@ -47,6 +47,8 @@
 		AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */; };
 		AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0C928764C520033DCB0 /* custom_pin.png */; };
 		AF6574FB2892078000804593 /* SocialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6574FA2892078000804593 /* SocialViewController.m */; };
+		AF6574FE2892F90700804593 /* CloseFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6574FD2892F90700804593 /* CloseFriendCell.m */; };
+		AF6575012892FA4D00804593 /* CloseFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6575002892FA4D00804593 /* CloseFriendViewController.m */; };
 		AFCC30E3287C9B8900521733 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCC30E2287C9B8900521733 /* CoreLocation.framework */; };
 		AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCC30EC287CAA3400521733 /* InfoPOIView.m */; };
 		AFCC30EF287CCFF000521733 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFCC30EE287CCFF000521733 /* InfoWindow.xib */; };
@@ -150,6 +152,10 @@
 		AF60C0C928764C520033DCB0 /* custom_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom_pin.png; path = "../../../Downloads/maps-platform-101-objc-master/starter/StarterApp/custom_pin.png"; sourceTree = "<group>"; };
 		AF6574F92892078000804593 /* SocialViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocialViewController.h; sourceTree = "<group>"; };
 		AF6574FA2892078000804593 /* SocialViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocialViewController.m; sourceTree = "<group>"; };
+		AF6574FC2892F90700804593 /* CloseFriendCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CloseFriendCell.h; sourceTree = "<group>"; };
+		AF6574FD2892F90700804593 /* CloseFriendCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CloseFriendCell.m; sourceTree = "<group>"; };
+		AF6574FF2892FA4D00804593 /* CloseFriendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CloseFriendViewController.h; sourceTree = "<group>"; };
+		AF6575002892FA4D00804593 /* CloseFriendViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CloseFriendViewController.m; sourceTree = "<group>"; };
 		AFCC30E2287C9B8900521733 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		AFCC30EB287CAA3400521733 /* InfoPOIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoPOIView.h; sourceTree = "<group>"; };
 		AFCC30EC287CAA3400521733 /* InfoPOIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoPOIView.m; sourceTree = "<group>"; };
@@ -239,6 +245,8 @@
 				AF2D666B288A089D0055AD77 /* FriendGridViewController.m */,
 				AF6574F92892078000804593 /* SocialViewController.h */,
 				AF6574FA2892078000804593 /* SocialViewController.m */,
+				AF6574FF2892FA4D00804593 /* CloseFriendViewController.h */,
+				AF6575002892FA4D00804593 /* CloseFriendViewController.m */,
 			);
 			path = ProfileControllers;
 			sourceTree = "<group>";
@@ -370,6 +378,8 @@
 				AF15585128789C1B00C3FD82 /* ActivityCell.m */,
 				AF15585328789D1500C3FD82 /* FriendCell.h */,
 				AF15585428789D1500C3FD82 /* FriendCell.m */,
+				AF6574FC2892F90700804593 /* CloseFriendCell.h */,
+				AF6574FD2892F90700804593 /* CloseFriendCell.m */,
 				AFCC30EB287CAA3400521733 /* InfoPOIView.h */,
 				AFCC30EC287CAA3400521733 /* InfoPOIView.m */,
 				AF0D2D67287F43B8000A3870 /* InfoMarkerView.h */,
@@ -695,6 +705,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF6575012892FA4D00804593 /* CloseFriendViewController.m in Sources */,
 				AF1FE84B288780D300C5E0A5 /* ColorConvertHelper.m in Sources */,
 				AFCC30F6287DD5CF00521733 /* Pin.m in Sources */,
 				AF6574FB2892078000804593 /* SocialViewController.m in Sources */,
@@ -721,6 +732,7 @@
 				AF2D666C288A089D0055AD77 /* FriendGridViewController.m in Sources */,
 				AF0D2D69287F43B8000A3870 /* InfoMarkerView.m in Sources */,
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
+				AF6574FE2892F90700804593 /* CloseFriendCell.m in Sources */,
 				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,
 				AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */,
 				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,

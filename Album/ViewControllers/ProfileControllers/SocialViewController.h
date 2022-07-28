@@ -10,6 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SocialViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIView *searchUserContainer;
+@property (weak, nonatomic) IBOutlet UIView *searchFriendContainer;
 
 @end
 
