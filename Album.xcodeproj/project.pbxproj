@@ -26,6 +26,10 @@
 		AF1FE7E0288082C100C5E0A5 /* Friendship.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7DF288082C100C5E0A5 /* Friendship.m */; };
 		AF1FE7E4288210EF00C5E0A5 /* AlbumConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E3288210EF00C5E0A5 /* AlbumConstants.m */; };
 		AF1FE7E72885CAD800C5E0A5 /* FriendMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */; };
+		AF1FE84228872AAE00C5E0A5 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */; };
+		AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */; };
+		AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */; };
+		AF1FE84B288780D300C5E0A5 /* ColorConvertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -106,6 +110,13 @@
 		AF1FE7E3288210EF00C5E0A5 /* AlbumConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumConstants.m; sourceTree = "<group>"; };
 		AF1FE7E52885CAD800C5E0A5 /* FriendMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendMapViewController.h; sourceTree = "<group>"; };
 		AF1FE7E62885CAD800C5E0A5 /* FriendMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendMapViewController.m; sourceTree = "<group>"; };
+		AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		AF1FE8432887355C00C5E0A5 /* PhotoCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionCell.h; sourceTree = "<group>"; };
+		AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionCell.m; sourceTree = "<group>"; };
+		AF1FE8462887590C00C5E0A5 /* ColorPickViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorPickViewController.h; sourceTree = "<group>"; };
+		AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorPickViewController.m; sourceTree = "<group>"; };
+		AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorConvertHelper.m; sourceTree = "<group>"; };
+		AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorConvertHelper.h; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -147,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFCC30E3287C9B8900521733 /* CoreLocation.framework in Frameworks */,
+				AF1FE84228872AAE00C5E0A5 /* PhotosUI.framework in Frameworks */,
 				FC036CB500B6F6CC60374357 /* Pods_Album.framework in Frameworks */,
 				AF0D2D66287F401D000A3870 /* Photos.framework in Frameworks */,
 			);
@@ -174,6 +186,7 @@
 		63AA1427AA49B90D43D54A2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AF1FE84128872AAE00C5E0A5 /* PhotosUI.framework */,
 				AF0D2D65287F401D000A3870 /* Photos.framework */,
 				AF0D2D63287F3F0A000A3870 /* AssetsLibrary.framework */,
 				AFCC30E2287C9B8900521733 /* CoreLocation.framework */,
@@ -243,6 +256,15 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		AF1FE8492887804D00C5E0A5 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */,
+				AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		AF60C05D287633920033DCB0 = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +290,7 @@
 		AF60C068287633920033DCB0 /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AF1FE8492887804D00C5E0A5 /* Helper */,
 				AF1FE7E1288210A900C5E0A5 /* Utilities */,
 				AFCC30F0287DCB6800521733 /* Models */,
 				AF60C0C528764B0B0033DCB0 /* APIHelper */,
@@ -314,6 +337,8 @@
 				AF15583528774C4A00C3FD82 /* ProfileControllers */,
 				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
 				AF15583E28774F3300C3FD82 /* ComposeViewController.m */,
+				AF1FE8462887590C00C5E0A5 /* ColorPickViewController.h */,
+				AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */,
 				AF15584028774F4000C3FD82 /* DetailsViewController.h */,
 				AF15584128774F4000C3FD82 /* DetailsViewController.m */,
 			);
@@ -333,6 +358,8 @@
 				AF0D2D68287F43B8000A3870 /* InfoMarkerView.m */,
 				AFCC30EE287CCFF000521733 /* InfoWindow.xib */,
 				AF0D2D61287F3A1D000A3870 /* InfoExistWindow.xib */,
+				AF1FE8432887355C00C5E0A5 /* PhotoCollectionCell.h */,
+				AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -648,6 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF1FE84B288780D300C5E0A5 /* ColorConvertHelper.m in Sources */,
 				AFCC30F6287DD5CF00521733 /* Pin.m in Sources */,
 				AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */,
 				AF15583128774BC500C3FD82 /* ProfileViewController.m in Sources */,
@@ -655,6 +683,7 @@
 				AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */,
 				AF60C07C287633930033DCB0 /* main.m in Sources */,
 				AF1558282876702B00C3FD82 /* LoginViewController.m in Sources */,
+				AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */,
 				AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */,
 				AF1FE7E4288210EF00C5E0A5 /* AlbumConstants.m in Sources */,
 				AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */,
@@ -662,6 +691,7 @@
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */,
 				AFCC30F9287DDB9200521733 /* Image.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
 				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,

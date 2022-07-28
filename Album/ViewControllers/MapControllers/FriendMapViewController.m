@@ -7,6 +7,7 @@
 
 #import "FriendMapViewController.h"
 #import "LocationGenerator.h"
+#import "ColorConvertHelper.h"
 #import "DetailsViewCOntroller.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
@@ -15,21 +16,23 @@
 #import <Parse/PFImageView.h>
 #import "Pin.h"
 
-@interface FriendMapViewController () <GMSMapViewDelegate,GMSIndoorDisplayDelegate, CLLocationManagerDelegate, InfoPOIViewDelegate>
+@interface FriendMapViewController () <GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
+@property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @end
 
 @implementation FriendMapViewController
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.colorHelper = [[ColorConvertHelper alloc] init];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
-        kCLLocationAccuracyNearestTenMeters;
+    kCLLocationAccuracyNearestTenMeters;
     self.locationManager.delegate = self;
     // Ask for authentication
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
@@ -51,75 +54,72 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
+} /* viewDidLoad */
 
-}
-- (void) loadMarkers {
+- (void)loadMarkers {
     // Place markers on initial map view
-    int i=0;
-    while(i<self.markerArr.count) {
-        Pin *pin=self.markerArr[i];
+    int i = 0;
+    while (i < self.markerArr.count) {
+        Pin *pin = self.markerArr[i];
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         marker.title = pin.placeName;
+        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.user[@"colorHexString"]]];
         marker.snippet = pin.placeID;
         marker.map = self.mapView;
         i++;
     }
 }
 
-- (void) fetchMarkers {
+- (void)fetchMarkers {
     // Query to find markers that belong to specific user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query whereKey:@"author" equalTo:self.user];
-    [query includeKey: @"objectId"];
+    [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-             if (pins != nil) {
-             // Store the posts, update count
-             NSLog(@"Successfully fetched markers!");
-             self.markerArr = (NSMutableArray *)pins;
-             [self loadMarkers];
-         } else {
-             NSLog(@"%@", error.localizedDescription);
-         }
-     }];
+        if (pins != nil) {
+            // Store the posts, update count
+            NSLog(@"Successfully fetched markers!");
+            self.markerArr = (NSMutableArray *)pins;
+            [self loadMarkers];
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
 }
 
-- (NSArray *) fetchPinsFromCoord: (CLLocationCoordinate2D) coordinate {
+- (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
     // Fetch pins with specific coordinate
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query whereKey:@"author" equalTo:self.user];
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
     [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
-    [query includeKey: @"objectId"];
+    [query includeKey:@"objectId"];
     [query orderByDescending:(@"traveledOn")];
     return [query findObjects];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
-        [self.mapView animateToZoom:self.mapView.camera.zoom +1];
+        [self.mapView animateToZoom:self.mapView.camera.zoom + 1];
         return YES;
     }
     self.circ = [GMSCircle circleWithPosition:marker.position radius:800];
-    self.circ.fillColor = [UIColor colorWithRed: 0.67 green: 0.67 blue: 0.67 alpha: 0.5];
+    self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
     self.circ.map = self.mapView;
     return NO;
 }
 
-- (void)mapView:(GMSMapView *)mapView
-        didTapPOIWithPlaceID:(NSString *)placeID
-        name:(NSString *)name
-        location:(CLLocationCoordinate2D)location {
+- (void)         mapView:(GMSMapView *)mapView
+    didTapPOIWithPlaceID:(NSString *)placeID
+                    name:(NSString *)name
+                location:(CLLocationCoordinate2D)location {
     self.infoMarker = [GMSMarker markerWithPosition:location];
     self.infoMarker.snippet = placeID;
     self.infoMarker.title = name;
     self.infoMarker.opacity = 0;
+    self.infoMarker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.user[@"colorHexString"]]];
     CGPoint pos = self.infoMarker.infoWindowAnchor;
     pos.y = 1;
     self.infoMarker.infoWindowAnchor = pos;
@@ -127,23 +127,23 @@
     mapView.selectedMarker = self.infoMarker;
 }
 
-- (UIView*) mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
+- (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
     // If cached data exists (if this coordinate has existing pins)
-    if(self.placeToPins[marker.title]) {
+    if (self.placeToPins[marker.title]) {
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
-        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
+        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
         [markerView.pinImageView setFile:imageFile];
         [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                 if (!error) {
-                 UIImage *image = [UIImage imageWithData:imageData];
-                 [markerView.pinImageView setImage:image];
-             }
-         }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [markerView.pinImageView setImage:image];
+            }
+        }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -154,33 +154,33 @@
     // Array of pins from the specific coordinate
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
     // Check if exisitng pins exist from this coordinate
-    if(pinsFromCoord && pinsFromCoord.count > 0) {
+    if (pinsFromCoord && pinsFromCoord.count > 0) {
         PFObject *firstPin = pinsFromCoord[0];
-        int i=0;
-        while(i<pinsFromCoord.count) {
+        int i = 0;
+        while (i < pinsFromCoord.count) {
             PFObject *pin = pinsFromCoord[i];
             // Save pins into cache data structure
-            if(!self.placeToPins[pin[@"placeName"]]) {
+            if (!self.placeToPins[pin[@"placeName"]]) {
                 [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:pin[@"placeName"]];
             }
             [self.placeToPins[pin[@"placeName"]] addObject:pin];
             // Save images of the specific pin to the cache data structure
-            NSArray* imagesFromPin = [self imagesFromPin:pin.objectId];
+            NSArray *imagesFromPin = [self imagesFromPin:pin.objectId];
             [self.pinImages setObject:imagesFromPin forKey:pin.objectId];
             i++;
         }
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
         // Set image of the info window to first in the array
-        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin && imagesFromPin.count > 0) {
+        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
+        if (imagesFromPin && imagesFromPin.count > 0) {
             PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
             [markerView.pinImageView setFile:imageFile];
             [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                     if (!error) {
-                     UIImage *image = [UIImage imageWithData:imageData];
-                     [markerView.pinImageView setImage:image];
-                 }
-             }];
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
@@ -193,9 +193,9 @@
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-}
+} /* mapView */
 
-- (NSArray*) imagesFromPin: (NSString*) pinId {
+- (NSArray *)imagesFromPin:(NSString *)pinId {
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
@@ -205,35 +205,21 @@
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
-    if(self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+    if (self.placeToPins[marker.title]) {
+        [self performSegueWithIdentifier:segueDetails sender:marker];
     }
-
 }
 
-- (void)didPost {
-    // Place marker after composing pin at the location
-    GMSMarker *marker = [[GMSMarker alloc] init];
-    marker.position = CLLocationCoordinate2DMake(self.infoMarker.position.latitude, self.infoMarker.position.longitude);
-    marker.title = self.infoMarker.title;
-    marker.snippet = self.infoMarker.snippet;
-    marker.map = self.mapView;
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-}
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-   if([segue.identifier isEqual:@"detailsSegue"]) {
+    if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
-        GMSMarker *marker=sender;
+        GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
-        NSArray* imagesFromPin = self.pinImages[firstPin.objectId];
-        if(imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            detailsVC.pinImage = imageFile;
-        }
+        detailsVC.imagesFromPin = self.pinImages[firstPin.objectId];
         // Set place name
         detailsVC.placeName = firstPin[@"placeName"];
         // Set date
@@ -243,14 +229,4 @@
         detailsVC.caption = [@"Caption: " stringByAppendingString:firstPin[@"captionText"]];
     }
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 @end
