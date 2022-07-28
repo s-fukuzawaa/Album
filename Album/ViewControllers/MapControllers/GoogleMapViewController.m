@@ -35,6 +35,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic, strong) GMSAutocompleteFilter *filter;
 @property (nonatomic) int radius;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
+
 @end
 
 @implementation GoogleMapViewController
@@ -217,9 +218,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
-            // Save resulting pins
             self.markerArr = (NSMutableArray *)pins;
-            // Add markers to map
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);
