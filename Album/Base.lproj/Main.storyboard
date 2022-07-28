@@ -9,21 +9,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Google Map View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="GoogleMapViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-25" y="102"/>
-        </scene>
         <!--Compose View Controller-->
         <scene sceneID="axf-gX-6xb">
             <objects>
@@ -626,11 +611,17 @@
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="uOR-8c-kZ9" customClass="AddFriendViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ttn-OC-ok0">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="798"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Find a friend" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XVe-WP-qMH">
+                                <rect key="frame" x="48" y="13" width="252" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEl-Mb-EnO">
-                                <rect key="frame" x="319" y="122" width="46" height="31"/>
+                                <rect key="frame" x="321" y="13" width="46" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="magnifyingglass" catalog="system" title=""/>
@@ -639,7 +630,7 @@
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="4mb-TO-gUu">
-                                <rect key="frame" x="0.0" y="208" width="414" height="688"/>
+                                <rect key="frame" x="0.0" y="60" width="414" height="748"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -689,12 +680,6 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Find a friend" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XVe-WP-qMH">
-                                <rect key="frame" x="67" y="120" width="252" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bhn-d1-Rbb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -713,7 +698,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nbB-Q9-9E4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4934.7826086956529" y="1749.7767857142856"/>
+            <point key="canvasLocation" x="5781" y="1748"/>
         </scene>
         <!--Activities View Controller-->
         <scene sceneID="dFV-XB-SDK">
@@ -857,7 +842,7 @@
                     <navigationItem key="navigationItem" id="aqP-wT-cP6">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Pv4-mi-j4U">
-                            <rect key="frame" x="138.5" y="6" width="137" height="32"/>
+                            <rect key="frame" x="93" y="6" width="203" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="" image="person.circle.fill" catalog="system"/>
@@ -873,7 +858,7 @@
                                 <rect key="frame" x="302" y="6.5" width="92" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="magnifyingglass" catalog="system"/>
+                                <buttonConfiguration key="configuration" style="plain" image="magnifyingglass" catalog="system" title=""/>
                                 <connections>
                                     <action selector="searchPlaceButton:" destination="eIU-cF-QCQ" eventType="touchUpInside" id="x2M-E3-bmA"/>
                                 </connections>
@@ -974,12 +959,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="uOR-8c-kZ9" kind="relationship" relationship="rootViewController" id="eOK-tq-hlP"/>
+                        <segue destination="aAS-5g-z1M" kind="relationship" relationship="rootViewController" id="KWl-Of-MKO"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5JK-CH-gX3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3825" y="1750"/>
+            <point key="canvasLocation" x="3825" y="1702"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="nwb-Z7-VhV">
@@ -1153,17 +1138,17 @@
             <objects>
                 <viewController id="M2k-nZ-AUg" customClass="FriendProfileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3pN-hL-cC4">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="744"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-ZC-55u" customClass="PFImageView">
-                                <rect key="frame" x="130" y="119" width="154" height="151"/>
+                                <rect key="frame" x="130" y="75" width="154" height="151"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="151" id="qej-h8-IYi"/>
                                 </constraints>
                             </imageView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
-                                <rect key="frame" x="0.0" y="451" width="414" height="445"/>
+                                <rect key="frame" x="0.0" y="451" width="414" height="293"/>
                                 <connections>
                                     <segue destination="v8b-bp-BxU" kind="embed" identifier="friendGridSegue" id="sPz-9s-BLv"/>
                                 </connections>
@@ -1179,7 +1164,7 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
-                                <rect key="frame" x="0.0" y="452" width="414" height="444"/>
+                                <rect key="frame" x="0.0" y="452" width="414" height="292"/>
                                 <connections>
                                     <segue destination="Wk6-GE-gYZ" kind="embed" identifier="friendMapSegue" id="9uL-R6-ZQy"/>
                                 </connections>
@@ -1236,7 +1221,52 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DdU-yc-0Ab" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6292.753623188406" y="1749.7767857142856"/>
+            <point key="canvasLocation" x="7123" y="1950"/>
+        </scene>
+        <!--Social View Controller-->
+        <scene sceneID="hGu-4L-wwJ">
+            <objects>
+                <viewController id="aAS-5g-z1M" customClass="SocialViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qwI-TT-Tbp">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MBo-CM-cCr">
+                                <rect key="frame" x="0.0" y="98" width="414" height="798"/>
+                                <connections>
+                                    <segue destination="uOR-8c-kZ9" kind="embed" id="bGG-Jw-1sj"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="A8U-oc-1rd"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="MBo-CM-cCr" firstAttribute="top" secondItem="A8U-oc-1rd" secondAttribute="top" constant="10" id="4mx-df-zh6"/>
+                            <constraint firstAttribute="bottom" secondItem="MBo-CM-cCr" secondAttribute="bottom" id="DAU-00-bpX"/>
+                            <constraint firstItem="MBo-CM-cCr" firstAttribute="trailing" secondItem="A8U-oc-1rd" secondAttribute="trailing" id="Ur9-Hc-6i3"/>
+                            <constraint firstItem="MBo-CM-cCr" firstAttribute="leading" secondItem="A8U-oc-1rd" secondAttribute="leading" id="iGN-tF-73d"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="GCV-0Y-MZ9">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="arrow.left" catalog="system" id="HfQ-Co-UrO">
+                            <connections>
+                                <action selector="backButton:" destination="aAS-5g-z1M" id="ob1-4d-byJ"/>
+                            </connections>
+                        </barButtonItem>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="7or-hu-BxT">
+                            <rect key="frame" x="66" y="5.5" width="282" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="" image="magnifyingglass" catalog="system"/>
+                                <segment title="" image="star" catalog="system"/>
+                            </segments>
+                        </segmentedControl>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iTG-AK-KVq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4934.7826086956529" y="1748.4375"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="s8v-dP-5KU">
@@ -1261,11 +1291,11 @@
             <objects>
                 <viewController id="v8b-bp-BxU" customClass="FriendGridViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NgE-ou-ek6">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="445"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="293"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="l3Z-u2-WvE">
-                                <rect key="frame" x="8" y="8" width="398" height="429"/>
+                                <rect key="frame" x="8" y="8" width="398" height="277"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LYn-4P-fL0">
                                     <size key="itemSize" width="128" height="128"/>
@@ -1317,7 +1347,7 @@
             <objects>
                 <viewController id="Wk6-GE-gYZ" customClass="FriendMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="paT-Fk-Ubi">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="292"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="oPZ-mX-8zT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1348,8 +1378,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="uKO-Ma-Qmc"/>
-        <segue reference="nli-5v-IW8"/>
+        <segue reference="e1z-Yy-nf6"/>
+        <segue reference="6G8-5k-QRm"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="98"/>
@@ -1366,6 +1396,7 @@
         <image name="person.circle.fill" catalog="system" width="128" height="121"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="star" catalog="system" width="128" height="116"/>
         <image name="suit.heart" catalog="system" width="128" height="109"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
