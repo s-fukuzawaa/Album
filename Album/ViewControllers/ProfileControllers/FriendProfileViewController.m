@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *isPublicLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *closeFriendStarView;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -46,6 +47,8 @@
     [self updateButton];
     // Update isPublic status
     [self setIsPublicLabel];
+    // Set close friend star to be invisible in general
+    [self.closeFriendStarView setHidden:YES];
 }
 
 - (IBAction)viewSwitchControl:(UISegmentedControl*)sender {
@@ -93,18 +96,27 @@
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Received Request";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     } else if ([self.friendStatus intValue] == FRIENDED) {
         friendshipButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
         friendshipButtonText = @"Friended";
         friendshipButtonTitleColor = [UIColor whiteColor];
+        [self.closeFriendStarView setHidden:NO];
+        if(self.friendship.isClose) {
+            [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star.fill"]];
+        }else{
+            [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star"]];
+        }
     } else if ([self.friendStatus intValue] == PENDING) {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Pending";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     } else {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Request Friend?";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];

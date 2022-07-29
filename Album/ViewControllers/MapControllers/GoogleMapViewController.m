@@ -90,6 +90,21 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [self fetchMarkers];
 } /* viewDidLoad */
 
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if(manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        GMSCameraUpdate *locationCam = [GMSCameraUpdate setTarget:manager.location.coordinate zoom:12];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.coordinate = manager.location.coordinate;
+            [self.mapView animateWithCameraUpdate:locationCam];
+            [self.mapView clear];
+            [self setMarkerCircle:manager.location.coordinate];
+            [self fetchMarkers];
+        });
+    }
+}
+
+
 #pragma mark - UIView
 
 - (void)setFormatter {

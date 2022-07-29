@@ -19,6 +19,7 @@ PHPickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UIDatePicker *traveledDate;
+@property (weak, nonatomic) IBOutlet UIButton *closeFriendPostButton;
 @property (strong, nonatomic) PHPickerConfiguration *config;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (nonatomic) int currentIndex;
@@ -58,6 +59,8 @@ PHPickerViewControllerDelegate>
     self.currentIndex = 0;
     // Set up page control
     self.pageControl.numberOfPages = self.photos.count;
+    // Set up close friend post button
+    
 } /* viewDidLoad */
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -133,10 +136,7 @@ PHPickerViewControllerDelegate>
     // Get the image captured by the UIImagePickerController
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
     originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
-    [self.pinImageView setImage:originalImage];
-    // TODO: Get date and set it to date picker default
-    NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
-    // Dismiss UIImagePickerController to go back to your original view controller
+    [self.photos addObject:originalImage];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

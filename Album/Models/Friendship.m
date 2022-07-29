@@ -13,6 +13,7 @@
 @dynamic requesterId;
 @dynamic recipientId;
 @dynamic hasFriended;
+@dynamic isClose;
 
 + (nonnull NSString *)parseClassName {
     return classNameFriendship;

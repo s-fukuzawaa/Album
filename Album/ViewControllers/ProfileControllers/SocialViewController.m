@@ -6,6 +6,7 @@
 //
 
 #import "SocialViewController.h"
+#import "CloseFriendViewController.h"
 
 @interface SocialViewController ()
 
@@ -15,6 +16,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.searchUserContainer.alpha = 1.0;
+    self.searchFriendContainer.alpha = 0.0;
     // Do any additional setup after loading the view.
 }
 - (IBAction)backButton:(id)sender {
@@ -40,8 +43,10 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"searchFriendSegue"]) {
+        CloseFriendViewController *closeFriendVC = [segue destinationViewController];
+        closeFriendVC.user = [PFUser currentUser];
+    }
 }
 
 
