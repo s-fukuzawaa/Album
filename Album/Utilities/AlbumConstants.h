@@ -14,6 +14,7 @@
 extern NSString *const classNameFriendship;
 extern NSString *const classNamePin;
 extern NSString *const classNameImage;
+extern NSString *const classNameUserPin;
 extern NSString *const segueLogin;
 extern NSString *const segueSignup;
 extern NSString *const segueColorPick;

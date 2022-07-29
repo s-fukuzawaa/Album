@@ -1,5 +1,6 @@
 ${PODS_ROOT}/Target Support Files/Pods-Album-AlbumUITests/Pods-Album-AlbumUITests-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework
+${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework
 ${BUILT_PRODUCTS_DIR}/Parse/Parse.framework
 ${BUILT_PRODUCTS_DIR}/UITextView+Placeholder/UITextView_Placeholder.framework
 ${BUILT_PRODUCTS_DIR}/iOS-Color-Picker/iOS_Color_Picker.framework

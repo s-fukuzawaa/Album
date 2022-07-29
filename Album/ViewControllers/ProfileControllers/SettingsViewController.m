@@ -18,16 +18,17 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
-@property (weak, nonatomic) IBOutlet PFImageView *colorView;
+@property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @end
 
 @implementation SettingsViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     [self setCurrentView];
     // Tap gesture added to change profile pic
     UITapGestureRecognizer *profileTapGestureRecognizer =
@@ -37,6 +38,9 @@
     // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
 }
+
+#pragma mark - UIView
+
 - (void)setCurrentView {
     // Fetch current user's profile and set it
     PFUser *user = [PFUser currentUser];
@@ -113,6 +117,8 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+#pragma mark - UIImagePickerControllerDelegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
@@ -146,7 +152,35 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
 
+#pragma mark - IBAction
+
+- (IBAction)backButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)logoutButton:(id)sender {
+    SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    myDelegate.window.rootViewController = loginViewController;
+    // Do not send nil for block
+    [PFUser logOutInBackgroundWithBlock:^(NSError *_Nullable error) {
+    }];
+}
+
+- (IBAction)colorPickButton:(id)sender {
+    // Show color picker
+    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
+    colorPicker.color = self.color;
+    colorPicker.delegate = self;
+    
+    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentViewController:colorPicker animated:YES completion:nil];
+}
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
 }
 
 - (IBAction)updateButton:(id)sender {
@@ -177,17 +211,7 @@
     }];
 } /* updateButton */
 
-- (IBAction)backButton:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-- (IBAction)logoutButton:(id)sender {
-    SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
-    
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-    myDelegate.window.rootViewController = loginViewController;
-    [PFUser logOutInBackgroundWithBlock:nil];
-}
+#pragma mark - FCColorPickerViewControllerDelegate
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
     [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
@@ -198,16 +222,4 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)colorPickButton:(id)sender {
-    // Show color picker
-    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
-    colorPicker.color = self.color;
-    colorPicker.delegate = self;
-    
-    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
-    [self presentViewController:colorPicker animated:YES completion:nil];
-}
-- (IBAction)tap:(id)sender {
-    [self.view endEditing:YES];
-}
 @end

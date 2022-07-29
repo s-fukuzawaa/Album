@@ -7,13 +7,14 @@
 //
 #import <UIKit/UIKit.h>
 @interface ColorConvertHelper : NSObject
-// Creates a square that shows which color has been selected
-- (UIColor *)colorFromHexString:(NSString *)hexString;
 
 // Creates color based on hex string color code
-- (NSString *)hexStringForColor:(UIColor *)color;
+- (UIColor *)colorFromHexString:(NSString *)hexString;
 
 // Creates hex string based on color
+- (NSString *)hexStringForColor:(UIColor *)color;
+
+// Creates a square that shows which color has been selected
 - (UIImage *)createImageWithColor:(UIColor *)color;
 
 @end

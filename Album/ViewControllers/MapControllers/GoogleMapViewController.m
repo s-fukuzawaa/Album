@@ -11,6 +11,7 @@
 #import "ComposeViewController.h"
 #import "DetailsViewCOntroller.h"
 #import "Friendship.h"
+#import "ParseAPIHelper.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
 #import "AlbumConstants.h"
@@ -25,6 +26,7 @@ ComposeViewControllerDelegate>
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
+@property (nonatomic, strong) ParseAPIHelper *apiHelper;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
 @property (nonatomic, weak) PFUser *currentUser;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
@@ -32,8 +34,20 @@ ComposeViewControllerDelegate>
 
 @implementation GoogleMapViewController
 
+#pragma mark - UIViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
+                                                                  _mapView.camera.target.longitude);
+    GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
+    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+    marker.map = self.mapView;
+}
 - (void)loadView {
     [super loadView];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
     self.colorHelper = [[ColorConvertHelper alloc] init];
     // Set user
     self.currentUser = [PFUser currentUser];
@@ -64,7 +78,11 @@ ComposeViewControllerDelegate>
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
     self.friendsIdSet = [[NSMutableSet alloc] init];
-} /* viewDidLoad */
+    // Add animation when change segmentedControl
+    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
+}
+
+#pragma mark - UILoad
 
 - (void)loadMarkers {
     // Place markers on initial map view
@@ -79,6 +97,15 @@ ComposeViewControllerDelegate>
         marker.map = self.mapView;
     }
 }
+#pragma mark - IBAction
+
+- (IBAction)switchControl:(id)sender {
+    [self.mapView clear];
+    [self loadView];
+}
+
+#pragma mark - Parse API
+
 - (void)fetchMarkers {
     NSInteger index = self.segmentedControl.selectedSegmentIndex;
     if (index == 0) {
@@ -114,14 +141,10 @@ ComposeViewControllerDelegate>
 
 - (void)fetchFriends {
     // Query to find markers that belong to current user and current user's friend
-    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
-    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
-    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
-    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-        if (friendships != nil) {
-            NSLog(@"Successfully fetched friendships!");
+    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+        if (friendArr != nil) {
             // For each friend, find their pins
-            for (Friendship *friendship in friendships) {
+            for (Friendship *friendship in friendArr) {
                 NSString *friendId = friendship[@"recipientId"];
                 PFUser *friend = [self fetchUser:friendId][0];
                 [self.friendsIdSet addObject:friendId];
@@ -147,7 +170,7 @@ ComposeViewControllerDelegate>
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchFriends */
+}
 
 // Used to find specfic user
 - (NSArray *)fetchUser:(NSString *)userId {
@@ -155,7 +178,6 @@ ComposeViewControllerDelegate>
     [userQuery whereKey:@"objectId" equalTo:userId];
     return [userQuery findObjects];
 }
-
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query includeKey:@"objectId"];
@@ -178,7 +200,6 @@ ComposeViewControllerDelegate>
     if (index == 0) {
         [query whereKey:@"author" equalTo:self.currentUser];
     }
-    
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
     [query whereKey:@"longitude" equalTo:@(coordinate.longitude)];
     [query includeKey:@"objectId"];
@@ -198,15 +219,14 @@ ComposeViewControllerDelegate>
     }
     return pins;
 } /* fetchPinsFromCoord */
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
-                                                                  _mapView.camera.target.longitude);
-    GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
-    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
-    marker.map = self.mapView;
+- (NSArray *)imagesFromPin:(NSString *)pinId {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    return [query findObjects];
 }
+
+#pragma mark - GMSMapViewDelegate
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
@@ -219,10 +239,9 @@ ComposeViewControllerDelegate>
     self.circ.map = self.mapView;
     return NO;
 }
-
-- (IBAction)switchControl:(id)sender {
-    [self.mapView clear];
-    [self loadView];
+- (void)animate {
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
 }
 
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
@@ -255,14 +274,16 @@ ComposeViewControllerDelegate>
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-        [markerView.pinImageView setFile:imageFile];
-        [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [markerView.pinImageView setImage:image];
-            }
-        }];
+        if (imagesFromPin[0][@"imageFile"]) {
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            [markerView.pinImageView setFile:imageFile];
+            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
+        }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -309,13 +330,6 @@ ComposeViewControllerDelegate>
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-} /* mapView */
-
-- (NSArray *)imagesFromPin:(NSString *)pinId {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
@@ -328,6 +342,8 @@ ComposeViewControllerDelegate>
     }
 }
 
+#pragma mark - ComposeViewControllerDelegate
+
 - (void)didPost {
     // Place marker after composing pin at the location
     GMSMarker *marker = [[GMSMarker alloc] init];
@@ -338,6 +354,7 @@ ComposeViewControllerDelegate>
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -365,15 +382,10 @@ ComposeViewControllerDelegate>
                 }
             }];
         }
+        // Save pin
+        detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;
-        // Set place name
-        detailsVC.placeName = firstPin[@"placeName"];
-        // Set date
-        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
-        detailsVC.date = date;
-        // Set caption
-        detailsVC.caption = [@"Caption: " stringByAppendingString:firstPin[@"captionText"]];
     }
-} /* prepareForSegue */
+}
 @end
 

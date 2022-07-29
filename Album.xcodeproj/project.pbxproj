@@ -30,6 +30,9 @@
 		AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8442887355C00C5E0A5 /* PhotoCollectionCell.m */; };
 		AF1FE8482887590C00C5E0A5 /* ColorPickViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */; };
 		AF1FE84B288780D300C5E0A5 /* ColorConvertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */; };
+		AF2D66692889B2CD0055AD77 /* ParseAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */; };
+		AF2D666C288A089D0055AD77 /* FriendGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2D666B288A089D0055AD77 /* FriendGridViewController.m */; };
+		AF2D666F288B0EF30055AD77 /* UserPin.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2D666E288B0EF30055AD77 /* UserPin.m */; };
 		AF60C06B287633920033DCB0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06A287633920033DCB0 /* AppDelegate.m */; };
 		AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C06D287633920033DCB0 /* SceneDelegate.m */; };
 		AF60C074287633920033DCB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF60C072287633920033DCB0 /* Main.storyboard */; };
@@ -117,6 +120,12 @@
 		AF1FE8472887590C00C5E0A5 /* ColorPickViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorPickViewController.m; sourceTree = "<group>"; };
 		AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorConvertHelper.m; sourceTree = "<group>"; };
 		AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorConvertHelper.h; sourceTree = "<group>"; };
+		AF2D66672889B2CD0055AD77 /* ParseAPIHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParseAPIHelper.h; sourceTree = "<group>"; };
+		AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParseAPIHelper.m; sourceTree = "<group>"; };
+		AF2D666A288A089D0055AD77 /* FriendGridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendGridViewController.h; sourceTree = "<group>"; };
+		AF2D666B288A089D0055AD77 /* FriendGridViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendGridViewController.m; sourceTree = "<group>"; };
+		AF2D666D288B0EF30055AD77 /* UserPin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserPin.h; sourceTree = "<group>"; };
+		AF2D666E288B0EF30055AD77 /* UserPin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserPin.m; sourceTree = "<group>"; };
 		AF60C066287633920033DCB0 /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF60C069287633920033DCB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AF60C06A287633920033DCB0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -223,6 +232,8 @@
 				AF15583B28774DF600C3FD82 /* AddFriendViewController.m */,
 				AF15584A2877AA5700C3FD82 /* FriendProfileViewController.h */,
 				AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */,
+				AF2D666A288A089D0055AD77 /* FriendGridViewController.h */,
+				AF2D666B288A089D0055AD77 /* FriendGridViewController.m */,
 			);
 			path = ProfileControllers;
 			sourceTree = "<group>";
@@ -261,6 +272,8 @@
 			children = (
 				AF1FE84A288780D300C5E0A5 /* ColorConvertHelper.m */,
 				AF1FE84C288780F800C5E0A5 /* ColorConvertHelper.h */,
+				AF2D66672889B2CD0055AD77 /* ParseAPIHelper.h */,
+				AF2D66682889B2CD0055AD77 /* ParseAPIHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -393,6 +406,8 @@
 				AFCC30F8287DDB9200521733 /* Image.m */,
 				AF1FE7DE288082C100C5E0A5 /* Friendship.h */,
 				AF1FE7DF288082C100C5E0A5 /* Friendship.m */,
+				AF2D666D288B0EF30055AD77 /* UserPin.h */,
+				AF2D666E288B0EF30055AD77 /* UserPin.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -691,10 +706,13 @@
 				AF60C06E287633920033DCB0 /* SceneDelegate.m in Sources */,
 				AF15582B2876704000C3FD82 /* SignUpViewController.m in Sources */,
 				AF15583428774C1900C3FD82 /* SettingsViewController.m in Sources */,
+				AF2D666F288B0EF30055AD77 /* UserPin.m in Sources */,
+				AF2D66692889B2CD0055AD77 /* ParseAPIHelper.m in Sources */,
 				AF1FE8452887355C00C5E0A5 /* PhotoCollectionCell.m in Sources */,
 				AFCC30F9287DDB9200521733 /* Image.m in Sources */,
 				AF15583928774D4000C3FD82 /* ActivitiesViewController.m in Sources */,
 				AFCC30ED287CAA3400521733 /* InfoPOIView.m in Sources */,
+				AF2D666C288A089D0055AD77 /* FriendGridViewController.m in Sources */,
 				AF0D2D69287F43B8000A3870 /* InfoMarkerView.m in Sources */,
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
 				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,

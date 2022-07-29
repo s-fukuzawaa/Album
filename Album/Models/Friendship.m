@@ -7,6 +7,7 @@
 
 #import "Friendship.h"
 #import "AlbumConstants.h"
+
 @implementation Friendship
 @dynamic objectId;
 @dynamic requesterId;

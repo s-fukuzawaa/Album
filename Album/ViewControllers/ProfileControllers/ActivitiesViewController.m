@@ -18,6 +18,8 @@
 @end
 
 @implementation ActivitiesViewController
+
+#pragma mark - UIViewController
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self fetchActivities];
@@ -31,10 +33,14 @@
     self.friendRequests = [[NSMutableArray alloc] init];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
+
+#pragma mark - IBAction
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Parse API
 - (void)fetchActivities {
     [self fetchFriendRequests];
 }
@@ -60,7 +66,10 @@
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchFriendRequests */
+}
+
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.friendRequests.count;
 }
@@ -71,9 +80,13 @@
     return cell;
 }
 
+#pragma mark - ActivityCellDelegate
+
 - (void)activityCell:(ActivityCell *)activityCell didTap:(PFUser *)user {
     [self fetchActivities];
 }
+
+#pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(ActivityCell *)sender];

@@ -7,11 +7,17 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "Pin.h"
 #import <Parse/Parse.h>
 @import GoogleMaps;
 @import GoogleMapsUtils;
-NS_ASSUME_NONNULL_BEGIN
 
+NS_ASSUME_NONNULL_BEGIN
+@protocol FriendMapViewControllerDelegate
+
+- (void)didTapWindow: (Pin*) pin imagesFromPin:(NSArray*) imageFiles;
+
+@end
 @interface FriendMapViewController : UIViewController
 @property (nonatomic, strong) PFUser *user;
 @property (nonatomic, strong) CLLocationManager *locationManager;
@@ -20,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) GMUClusterManager *clusterManager;
 @property (nonatomic, strong) GMSCircle *circ;
 @property (nonatomic, strong) GMSMarker *infoMarker;
+@property (nonatomic, weak) id<FriendMapViewControllerDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END
