@@ -17,7 +17,7 @@
 @dynamic longitude;
 @dynamic latitude;
 @dynamic traveledOn;
-
+@dynamic isCloseFriendPin;
 
 + (nonnull NSString *)parseClassName {
     return @"Pin";

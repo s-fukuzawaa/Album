@@ -102,9 +102,12 @@
                                 <color key="tintColor" systemColor="opaqueSeparatorColor"/>
                             </pageControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bjl-rz-ogl">
-                                <rect key="frame" x="327" y="20" width="67" height="31"/>
+                                <rect key="frame" x="347" y="20" width="47" height="31"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="star" catalog="system"/>
+                                <connections>
+                                    <action selector="makeCloseFriendPin:" destination="5aD-Wf-izb" eventType="touchUpInside" id="HZn-c6-g0Y"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="FeV-Nq-dzP"/>
@@ -113,7 +116,6 @@
                         <constraints>
                             <constraint firstItem="FeV-Nq-dzP" firstAttribute="trailing" secondItem="I2G-zH-Wfi" secondAttribute="trailing" constant="226" id="5gC-UX-72E"/>
                             <constraint firstItem="I2G-zH-Wfi" firstAttribute="top" secondItem="rEV-xF-PgP" secondAttribute="bottom" constant="10" id="7hY-3e-Cmg"/>
-                            <constraint firstItem="bjl-rz-ogl" firstAttribute="leading" secondItem="rEV-xF-PgP" secondAttribute="trailing" constant="236" id="Csr-hA-DDe"/>
                             <constraint firstItem="rMv-yH-VtJ" firstAttribute="top" secondItem="DRn-2p-PRc" secondAttribute="bottom" constant="12" id="GbM-ur-J4e"/>
                             <constraint firstItem="FeV-Nq-dzP" firstAttribute="trailing" secondItem="bjl-rz-ogl" secondAttribute="trailing" constant="20" id="IiK-S3-A7Z"/>
                             <constraint firstItem="rMv-yH-VtJ" firstAttribute="leading" secondItem="jEu-tw-YE2" secondAttribute="leadingMargin" id="IwL-Mv-S1G"/>
@@ -140,7 +142,7 @@
                     </view>
                     <connections>
                         <outlet property="captionTextView" destination="rMv-yH-VtJ" id="r3J-D9-gxf"/>
-                        <outlet property="closeFriendPostButton" destination="bjl-rz-ogl" id="Xeg-Py-cTs"/>
+                        <outlet property="closeFriendPinButton" destination="bjl-rz-ogl" id="l7l-u2-hsM"/>
                         <outlet property="imageCarouselView" destination="VgM-aR-CZC" id="hBc-IP-RmY"/>
                         <outlet property="locationLabel" destination="rEV-xF-PgP" id="STQ-Yy-bSm"/>
                         <outlet property="pageControl" destination="DRn-2p-PRc" id="wJM-VD-2N9"/>

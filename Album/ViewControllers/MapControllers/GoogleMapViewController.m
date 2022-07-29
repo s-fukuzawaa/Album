@@ -284,8 +284,13 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                                       @"Successfully fetched pins!");
                                 // Add pins to the marker array
                                 for (PFObject *pin in pins) {
-                                    [self.markerArr
-                                     addObject:pin];
+                                    Pin *tempPin = (Pin*)pin;
+                                    if(tempPin.isCloseFriendPin && !friendship.isClose){
+                                        continue;
+                                    }else{
+                                        [self.markerArr
+                                         addObject:pin];
+                                    }
                                 }
                                 // Reload markers
                                 [self loadMarkers];

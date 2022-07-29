@@ -90,7 +90,7 @@
         closeFriendButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
         closeFriendButtonText = @"Close Friended";
         dispatch_async(dispatch_get_main_queue(), ^{
-            [cell.closeFriendButton.imageView setImage:[UIImage systemImageNamed:@"checkmark"]];
+            [cell.closeFriendButton setImage:[UIImage systemImageNamed:@"checkmark"] forState:UIControlStateNormal];
         });
         closeFriendButtonTitleColor = [UIColor whiteColor];
     }else {
