@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIImageView *closeFriendPost;
 @property (nonatomic) int currentIndex;
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) UserPin *likeStatus;
@@ -50,6 +51,12 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLiked:)];
     tapGesture.numberOfTapsRequired = 2;
     [self.likeButton addGestureRecognizer:tapGesture];
+    // Set close friend status
+    if(self.pin.isCloseFriendPin) {
+        [self.closeFriendPost setImage:[UIImage systemImageNamed:@"star.fill"]];
+    }else{
+        [self.closeFriendPost setHidden:YES];
+    }
 } /* viewDidLoad */
 
 - (void)setLikeStatus {
