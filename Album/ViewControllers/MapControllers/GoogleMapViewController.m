@@ -284,7 +284,6 @@ ComposeViewControllerDelegate>
                 }
             }];
         }
-        
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -337,9 +336,9 @@ ComposeViewControllerDelegate>
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+        [self performSegueWithIdentifier:segueDetails sender:marker];
     } else {
-        [self performSegueWithIdentifier:@"composeSegue" sender:self];
+        [self performSegueWithIdentifier:segueCompose sender:self];
     }
 }
 
@@ -360,13 +359,13 @@ ComposeViewControllerDelegate>
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"composeSegue"]) {
+    if ([segue.identifier isEqual:segueCompose]) {
         ComposeViewController *composeVC = [segue destinationViewController];
         composeVC.placeName = self.infoMarker.title;
         composeVC.coordinate = self.infoMarker.position;
         composeVC.placeID = self.infoMarker.snippet;
         composeVC.delegate = self;
-    } else if ([segue.identifier isEqual:@"detailsSegue"]) {
+    } else if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];

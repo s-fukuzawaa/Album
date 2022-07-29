@@ -127,7 +127,6 @@
 }
 
 #pragma mark - GMSMapViewDelegate
-
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {

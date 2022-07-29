@@ -14,9 +14,15 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
             startingLineNumber = "159"
             endingLineNumber = "159"
             landmarkName = "-fetchFriends"
+=======
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "-fetchMarkers"
+>>>>>>> main
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -30,8 +36,27 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
             startingLineNumber = "486"
             endingLineNumber = "486">
+=======
+            startingLineNumber = "492"
+            endingLineNumber = "492">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E40C4D41-1124-4C82-A526-2B92D309BCDE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "462"
+            endingLineNumber = "462">
+>>>>>>> main
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -51,6 +76,41 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
+=======
+            uuid = "569FB324-1D30-424F-8F16-13909F76B15D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
+            landmarkName = "-mapView:markerInfoWindow:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "97E5F9F8-E3CD-45E4-8973-F4788B207CA5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
+            landmarkName = "-mapView:markerInfoWindow:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+>>>>>>> main
             uuid = "F54AAE71-67CB-4A2C-BD0B-2AC24DB9013C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -58,9 +118,15 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
             startingLineNumber = "184"
             endingLineNumber = "184"
             landmarkName = "-fetchGlobal"
+=======
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "-fetchPersonal"
+>>>>>>> main
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,6 +140,7 @@
             filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
             startingLineNumber = "186"
             endingLineNumber = "186"
             landmarkName = "-fetchGlobal"
@@ -92,6 +159,10 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "166"
             endingLineNumber = "166"
+=======
+            startingLineNumber = "115"
+            endingLineNumber = "115"
+>>>>>>> main
             landmarkName = "-fetchFriends"
             landmarkType = "7">
          </BreakpointContent>

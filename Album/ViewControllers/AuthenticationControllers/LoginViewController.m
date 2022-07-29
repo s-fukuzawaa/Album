@@ -7,6 +7,7 @@
 
 #import "LoginViewController.h"
 #import "SignUpViewController.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 
 @interface LoginViewController ()
@@ -79,5 +80,4 @@
     [alert addAction:okAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
-
 @end
