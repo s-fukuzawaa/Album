@@ -10,6 +10,7 @@
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
+
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
@@ -28,6 +29,17 @@
     [super viewDidLoad];
     // Set current user
     self.currentUser = [PFUser currentUser];
+    // Set view outlets
+    [self setView];
+    // Photo carousel
+    self.imageCarouselView.delegate = self;
+    self.imageCarouselView.dataSource = self;
+    // Set up like status
+    [self setLikeStatus];
+} /* viewDidLoad */
+
+#pragma mark - UIView
+- (void)setView {
     // Set location
     self.placeNameLabel.text = self.pin.placeName;
     // Set date
@@ -39,11 +51,6 @@
     self.dateLabel.text = date;
     // Set caption
     self.captionTextView.text = self.pin.captionText;
-    // Photo carousel
-    self.imageCarouselView.delegate = self;
-    self.imageCarouselView.dataSource = self;
-    // Set up like status
-    [self setLikeStatus];
     // Set up page control
     self.currentIndex = 0;
     self.pageControl.numberOfPages = 0;
@@ -116,6 +123,12 @@
         [self.likeStatus saveInBackground];
     }
 } /* tapLiked */
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
+    self.pageIndicator.currentPage = self.currentIndex;
+}
+
+#pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (self.imagesFromPin.count == 0) {
@@ -136,10 +149,5 @@
     }
     self.pageControl.numberOfPages = self.imagesFromPin.count;
     return photoCell;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
 }
 @end

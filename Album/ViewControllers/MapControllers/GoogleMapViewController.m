@@ -21,8 +21,8 @@
 #import "Pin.h"
 @import GooglePlaces;
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate,
-ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
+@interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate, ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
+
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
@@ -41,6 +41,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @implementation GoogleMapViewController
 
 #pragma mark - UIViewController
+
 - (void)loadView {
     [super loadView];
     // Initialize the location manager
@@ -81,7 +82,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Add animation when change segmentedControl
     [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
-    
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
     self.coordinate = self.locationManager.location.coordinate;
@@ -239,7 +239,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchPersonal */
+}
 
 - (void)fetchFriends {
     // Query to find markers that belong to current user and current user's friend
@@ -305,7 +305,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                           error.localizedDescription);
                 }
     }];
-} /* fetchFriends */
+}
 
 // Used to find specfic user
 - (NSArray *)fetchUser:(NSString *)userId {
@@ -344,7 +344,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         }
     }];
 } /* fetchGlobal */
-
 - (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
     // Fetch pins with specific coordinate
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
@@ -371,7 +370,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
     return pins;
 } /* fetchPinsFromCoord */
-
 - (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
@@ -404,6 +402,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     return NO;
 }
 
+
 - (void)         mapView:(GMSMapView *)mapView
     didTapPOIWithPlaceID:(NSString *)placeID
                     name:(NSString *)name
@@ -432,7 +431,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (imagesFromPin.count != 0) {
             [markerView.pinImageView setImage:imagesFromPin[0]];
         }
-        
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -489,15 +487,15 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-} /* mapView */
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+        [self performSegueWithIdentifier:segueDetails sender:marker];
     } else {
-        [self performSegueWithIdentifier:@"composeSegue" sender:self];
+        [self performSegueWithIdentifier:segueCompose sender:self];
     }
 }
 
@@ -544,13 +542,13 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"composeSegue"]) {
+    if ([segue.identifier isEqual:segueCompose]) {
         ComposeViewController *composeVC = [segue destinationViewController];
         composeVC.placeName = self.infoMarker.title;
         composeVC.coordinate = self.infoMarker.position;
         composeVC.placeID = self.infoMarker.snippet;
         composeVC.delegate = self;
-    } else if ([segue.identifier isEqual:@"detailsSegue"]) {
+    } else if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
@@ -560,6 +558,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;
     }
-} /* prepareForSegue */
+}
 @end
 

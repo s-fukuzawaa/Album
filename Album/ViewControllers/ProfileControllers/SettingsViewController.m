@@ -27,18 +27,22 @@
 
 @implementation SettingsViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     [self setCurrentView];
     // Tap gesture added to change profile pic
     UITapGestureRecognizer *profileTapGestureRecognizer =
-        [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
+    [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
     // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
 }
+
+#pragma mark - UIView
+
 - (void)setCurrentView {
     // Fetch current user's profile and set it
     PFUser *user = [PFUser currentUser];
@@ -46,15 +50,15 @@
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
         [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                  if (!error) {
-                  UIImage *image = [UIImage imageWithData:imageData];
-                  [self.profileImageView setImage:image];
-                  self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                  self.profileImageView.layer.masksToBounds = YES;
-                  }
-              }];
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.profileImageView setImage:image];
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                self.profileImageView.layer.masksToBounds = YES;
+            }
+        }];
     }
-
+    
     // Display current user marker color
     if (user[@"colorHexString"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -77,39 +81,7 @@
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
-                                                                preferredStyle:(UIAlertControllerStyleAlert)];
-        // Take photo action
-        UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
-                                                              style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction *_Nonnull action) {
-                                                                UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-                                                                imagePickerVC.delegate = self;
-                                                                imagePickerVC.allowsEditing = YES;
-                                                                imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-                                                                [self presentViewController:imagePickerVC animated:YES completion:nil];
-                                                            }];
-        // Add the take photo action to the alertController
-        [alert addAction:photoAction];
-        // Create an upload from library action
-        UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *_Nonnull action) {
-                                                                 UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-                                                                 imagePickerVC.delegate = self;
-                                                                 imagePickerVC.allowsEditing = YES;
-                                                                 imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                                                 [self presentViewController:imagePickerVC animated:YES completion:nil];
-                                                             }];
-        // Add the upload from library action to the alert controller
-        [alert addAction:uploadAction];
-        //Cancel
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:nil];
-        // Add the cancel action to the alert controller
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self cameraAlert];
     } else {
         NSLog(@"Camera 🚫 available so we will use photo library instead");
         UIImagePickerController *imagePickerVC = [UIImagePickerController new];
@@ -119,6 +91,44 @@
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
 } /* didTapUserProfile */
+
+- (void) cameraAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Take photo action
+    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the take photo action to the alertController
+    [alert addAction:photoAction];
+    // Create an upload from library action
+    UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the upload from library action to the alert controller
+    [alert addAction:uploadAction];
+    //Cancel
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    // Add the cancel action to the alert controller
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
@@ -155,6 +165,35 @@
     return newImage;
 }
 
+#pragma mark - IBAction
+
+- (IBAction)backButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)logoutButton:(id)sender {
+    SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    myDelegate.window.rootViewController = loginViewController;
+    // Do not send nil for block
+    [PFUser logOutInBackgroundWithBlock:^(NSError *_Nullable error) {
+    }];
+}
+
+- (IBAction)colorPickButton:(id)sender {
+    // Show color picker
+    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
+    colorPicker.color = self.color;
+    colorPicker.delegate = self;
+    
+    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentViewController:colorPicker animated:YES completion:nil];
+}
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
+}
+
 - (IBAction)updateButton:(id)sender {
     PFUser *user = [PFUser currentUser];
     if (![self.usernameField.text isEqualToString:user.username]) {
@@ -185,18 +224,6 @@
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 } /* updateButton */
 
-- (IBAction)backButton:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-- (IBAction)logoutButton:(id)sender {
-    SceneDelegate *myDelegate = (SceneDelegate *)self.view.window.windowScene.delegate;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-    myDelegate.window.rootViewController = loginViewController;
-    // Do not send nil for block
-    [PFUser logOutInBackgroundWithBlock:^(NSError *_Nullable error) {
-            }];
-}
 - (IBAction)isPublicSwitch:(id)sender {
     UISwitch *mySwitch = (UISwitch *)sender;
     if ([mySwitch isOn]) {
@@ -205,6 +232,8 @@
         self.isPublic = YES;
     }
 }
+
+#pragma mark - FCColorPickerViewControllerDelegate
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
     [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
@@ -213,18 +242,5 @@
 
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)colorPickButton:(id)sender {
-    // Show color picker
-    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
-    colorPicker.color = self.color;
-    colorPicker.delegate = self;
-
-    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
-    [self presentViewController:colorPicker animated:YES completion:nil];
-}
-- (IBAction)tap:(id)sender {
-    [self.view endEditing:YES];
 }
 @end

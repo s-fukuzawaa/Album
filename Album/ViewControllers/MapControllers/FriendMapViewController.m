@@ -26,6 +26,8 @@
 
 @implementation FriendMapViewController
 
+#pragma mark - UIViewController
+
 - (void)loadView {
     [super loadView];
     // Initialize color converting helper class
@@ -56,7 +58,9 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
-} /* loadView */
+}
+
+#pragma mark - UILoad
 
 - (void)loadMarkers {
     // Place markers on initial map view
@@ -72,6 +76,8 @@
         i++;
     }
 }
+
+#pragma mark - Parse API
 
 - (void)fetchMarkers {
     // Query to find markers that belong to specific user
@@ -101,11 +107,14 @@
     return [query findObjects];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+- (NSArray *)imagesFromPin:(NSString *)pinId {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    return [query findObjects];
 }
 
+#pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
@@ -189,23 +198,6 @@
     infoWindow.placeName.text = marker.title;
     return infoWindow;
 } /* mapView */
-
-- (NSArray *)imagesFromPin:(NSString *)pinId {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    NSArray *imageObjs = [query findObjects];
-    NSMutableArray *images = [[NSMutableArray alloc] init];
-    for (Image *imageObject in imageObjs) {
-        [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [images addObject:image];
-            }
-        }];
-    }
-    return (NSArray *)images;
-}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {

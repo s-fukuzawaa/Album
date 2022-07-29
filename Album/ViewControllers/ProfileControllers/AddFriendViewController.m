@@ -22,6 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
+
+#pragma mark - IBAction
+
 - (IBAction)searchButton:(id)sender {
     // Search user by username
     PFQuery *query = [PFUser query];
@@ -44,6 +47,8 @@
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.friendsArr.count;

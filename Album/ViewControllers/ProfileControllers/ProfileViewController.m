@@ -79,13 +79,13 @@
 #pragma mark - IBAction
 
 - (IBAction)activitiesButton:(id)sender {
-    [self performSegueWithIdentifier:@"activitiesSegue" sender:nil];
+    [self performSegueWithIdentifier:segueActivities sender:nil];
 }
 - (IBAction)addFriendButton:(id)sender {
-    [self performSegueWithIdentifier:@"addFriendSegue" sender:nil];
+    [self performSegueWithIdentifier:segueAddFriend sender:nil];
 }
 - (IBAction)settingsButton:(id)sender {
-    [self performSegueWithIdentifier:@"settingsSegue" sender:nil];
+    [self performSegueWithIdentifier:segueSettings sender:nil];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
