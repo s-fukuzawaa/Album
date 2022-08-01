@@ -35,9 +35,9 @@
 
 - (NSString *)hexStringForColor:(UIColor *)color {
     const CGFloat *components = CGColorGetComponents(color.CGColor);
-    int r = (int)components[0] * 255;
-    int g = (int)components[1] * 255;
-    int b = (int)components[2] * 255;
+    int r = (int)(components[0] * 255.0);
+    int g = (int)(components[1] * 255.0);
+    int b = (int)(components[2] * 255.0);
     NSString *hexString = [NSString stringWithFormat:@"%02X%02X%02X", r, g, b];
     return hexString;
 }

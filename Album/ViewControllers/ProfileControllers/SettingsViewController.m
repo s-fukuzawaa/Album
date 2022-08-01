@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
-@property (weak, nonatomic) IBOutlet UITextField *pwField;
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (weak, nonatomic) IBOutlet UISwitch *isPublicSwitch;
 @property (nonatomic, strong) UIColor *color;
@@ -69,14 +68,13 @@
     }
     self.usernameField.text = user.username;
     self.emailField.text = user.email;
-    self.pwField.text = user.password;
-    self.pwField.placeholder = @"Please enter non-empty password";
-    if ((BOOL)user[@"isPublic"] == YES) {
+    if ([user[@"isPublic"] isEqual: @(YES)]) {
         [self.isPublicSwitch setOn: NO];
+        self.isPublic = YES;
     }else{
         [self.isPublicSwitch setOn: YES];
+        self.isPublic = NO;
     }
-    self.isPublic = user[@"isPublic"];
 } /* setCurrentView */
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
@@ -195,33 +193,61 @@
 }
 
 - (IBAction)updateButton:(id)sender {
+    // Check for empty fields
+    if ([self.usernameField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
+        UIAlertController *alert =
+        [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
+         @"Username or Password or Email is empty!"
+                                     preferredStyle:(UIAlertControllerStyleAlert)];
+        // Create a cancel action
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        [alert addAction:cancelAction];
+        
+        // Create an OK action
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
     PFUser *user = [PFUser currentUser];
+    BOOL diff = NO;
     if (![self.usernameField.text isEqualToString:user.username]) {
         user.username = self.usernameField.text;
-    }
-    if (![self.pwField.text isEqualToString:user.password] && ![self.pwField.text isEqualToString:@""]) {
-        user.password = self.pwField.text;
+        diff = YES;
     }
     if (![self.emailField.text isEqualToString:user.email]) {
         user.email = self.emailField.text;
+        diff = YES;
     }
     if (![self.profileImageView.file isEqual:user[@"profileImage"]]) {
         user[@"profileImage"] = self.profileImageView.file;
+        diff = YES;
     }
-    NSString *hexString = [self.colorHelper hexStringForColor:self.color];
-    if (![hexString isEqualToString:user[@"colorHexString"]]) {
-        user[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
+    NSString *colorHexString = [self.colorHelper hexStringForColor:self.color];
+    if (![colorHexString isEqualToString:user[@"colorHexString"]]) {
+        user[@"colorHexString"] = colorHexString;
+        diff = YES;
     }
-    user[@"isPublic"] = @(self.isPublic);
+    if (![user[@"isPublic"] isEqual:@(self.isPublic)]) {
+        user[@"isPublic"] = @(self.isPublic);
+        diff = YES;
+    }
     // Update user properties when necessary
-    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-              if (error != nil) {
-              NSLog(@"Error: %@", error.localizedDescription);
-              } else {
-              NSLog(@"User updated successfully");
-              }
-          }];
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    if(diff == YES) {
+        [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
+                  if (error != nil) {
+                  NSLog(@"Error: %@", error.localizedDescription);
+                  } else {
+                  NSLog(@"User updated successfully");
+                  }
+              }];
+    }
+    [self.delegate didUpdate];
+    [self dismissViewControllerAnimated:YES completion:nil];
 } /* updateButton */
 
 - (IBAction)isPublicSwitch:(id)sender {

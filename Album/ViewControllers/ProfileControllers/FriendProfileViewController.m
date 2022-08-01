@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *isPublicLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *closeFriendStarView;
+@property (weak, nonatomic) IBOutlet UIImageView *lockImageView;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -35,15 +36,13 @@
 #pragma mark - UIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Initial view to friend map view
-    self.friendMapContainer.alpha = 0.0;
-    self.friendsGridContainer.alpha = 1.0;
     // Set user profile image view
     [self fetchProfile];
     // Set request statuses
     [self fetchRequestStatus];
     // Set friend statuses
     [self fetchFriendStatus];
+    
     // Update button UI
     [self updateButton];
     // Update isPublic status
@@ -53,7 +52,7 @@
 }
 
 - (void) setIsPublicLabel {
-    if(self.user[@"isPublic"]) {
+    if([self.user[@"isPublic"] isEqual:@(YES)]) {
         [self.isPublicLabel setText: @"Public Account"];
     }else{
         [self.isPublicLabel setText: @"Private Account"];
@@ -172,6 +171,19 @@
                 self.friendStatus = self.friendship.hasFriended;
                 // Update button UI
                 [self updateButton];
+                // If private account and not friend, do not display anything
+                if ([self.friendStatus intValue] == NOT_FRIEND && [self.user[@"isPublic"] isEqual:@(NO)]) {
+                    // Initial view to lock view
+                    self.friendMapContainer.alpha = 0.0;
+                    self.friendsGridContainer.alpha = 0.0;
+                    [self.lockImageView setHidden:NO];
+                    [self.segmentedControl setEnabled:NO];
+                }else{
+                    // Initial view to friend map view
+                    self.friendMapContainer.alpha = 0.0;
+                    self.friendsGridContainer.alpha = 1.0;
+                    [self.lockImageView setHidden:YES];
+                }
             }
         } else {
             NSLog(@"%@", error.localizedDescription);

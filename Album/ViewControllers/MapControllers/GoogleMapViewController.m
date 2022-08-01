@@ -21,12 +21,14 @@
 #import "Pin.h"
 @import GooglePlaces;
 
-@interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate, ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
+@interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate,
+ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
+@property (nonatomic, strong) NSMutableDictionary *pinIdToUsername;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic, strong) ParseAPIHelper *apiHelper;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
@@ -79,6 +81,7 @@
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
     self.friendsIdSet = [[NSMutableSet alloc] init];
+    self.pinIdToUsername = [[NSMutableDictionary alloc] init];
     
     // Add animation when change segmentedControl
     [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
@@ -90,9 +93,10 @@
     [self fetchMarkers];
 } /* viewDidLoad */
 
+
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
-    if(manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+    if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
         GMSCameraUpdate *locationCam = [GMSCameraUpdate setTarget:manager.location.coordinate zoom:12];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.coordinate = manager.location.coordinate;
@@ -212,6 +216,7 @@
         [self fetchFriends];
     } else {
         // Fetches pins of all public users
+        [self fetchPersonal];
         [self fetchFriends];
         [self fetchGlobal];
     }
@@ -220,14 +225,9 @@
 - (void)fetchPersonal {
     // Query to find markers that belong to current user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+    [query orderByDescending:(@"traveledOn")];
     [query whereKey:@"author" equalTo:self.currentUser];
-    double earthR = 6378137;
-    double dLat = (double)(self.radius) / earthR;
-    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+    [self constructQuery:query];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
@@ -248,65 +248,68 @@
     [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
     [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
         if (friendships != nil) {
-                    // For each friend, find their pins
-                    for (Friendship *friendship in
-                         friendships)
-                    {
-                        NSString *friendId =
-                        friendship[@"recipientId"];
-                        PFUser *friend =
-                        [self fetchUser:friendId][0];
-                        [self.friendsIdSet addObject:
-                         friendId];
-                        PFQuery *query =
-                        [PFQuery queryWithClassName:
-                         classNamePin];
-                        [query
-                         whereKey:@"author"
-                         equalTo:friend];
-                        [query includeKey:@"objectId"];
-                        // Calculate the radius degree based on flat earth calculation
-                        double earthR = 6378137;
-                        double dLat = (double)(self.radius) / earthR;
-                        double dLon = (double)(self.radius) /
-                        (earthR * cos(M_PI * self.coordinate.latitude / 180));
-                        [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-                        [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-                        [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-                        [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-                        [query
-                         findObjectsInBackgroundWithBlock
-                         :^(NSArray *pins,
-                            NSError *error) {
-                            if (pins != nil) {
-                                // Store the pins, update count
-                                NSLog(
-                                      @"Successfully fetched pins!");
-                                // Add pins to the marker array
-                                for (PFObject *pin in pins) {
-                                    Pin *tempPin = (Pin*)pin;
-                                    if(tempPin.isCloseFriendPin && !friendship.isClose){
-                                        continue;
-                                    }else{
-                                        [self.markerArr
-                                         addObject:pin];
-                                    }
-                                }
-                                // Reload markers
-                                [self loadMarkers];
+            // For each friend, find their pins
+            for (Friendship *friendship in
+                 friendships)
+            {
+                NSString *friendId =
+                friendship[@"recipientId"];
+                PFUser *friend =
+                [self fetchUser:friendId][0];
+                [self.friendsIdSet addObject:
+                 friendId];
+                PFQuery *query =
+                [PFQuery queryWithClassName:
+                 classNamePin];
+                [query
+                 whereKey:@"author"
+                 equalTo:friend];
+                [query orderByDescending:(@"traveledOn")];
+                [query includeKey:@"objectId"];
+                [self constructQuery:query];
+                [query
+                 findObjectsInBackgroundWithBlock
+                 :^(NSArray *pins,
+                    NSError *error) {
+                    if (pins != nil) {
+                        // Store the pins, update count
+                        NSLog(
+                              @"Successfully fetched pins!");
+                        // Add pins to the marker array
+                        for (PFObject *pin in pins) {
+                            Pin *tempPin = (Pin *)pin;
+                            if (tempPin.isCloseFriendPin && !friendship.isClose) {
+                                continue;
                             } else {
-                                NSLog(@"%@",
-                                      error.localizedDescription);
+                                [self.markerArr
+                                 addObject:pin];
+                                [self.pinIdToUsername setObject:friend.username forKey:pin.objectId];
                             }
-                        }];
+                        }
+                        // Reload markers
+                        [self loadMarkers];
+                    } else {
+                        NSLog(@"%@",
+                              error.localizedDescription);
                     }
-                } else {
-                    NSLog(@"%@",
-                          error.localizedDescription);
-                }
+                }];
+            }
+        } else {
+            NSLog(@"%@",
+                  error.localizedDescription);
+        }
     }];
+} /* fetchFriends */
+- (void)constructQuery:(PFQuery *)query {
+    [query orderByDescending:(@"traveledOn")];
+    [query includeKey:@"objectId"];
+    double dLat = (double)(self.radius) / earthR;
+    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
 }
-
 // Used to find specfic user
 - (NSArray *)fetchUser:(NSString *)userId {
     PFQuery *userQuery = [PFUser query];
@@ -316,14 +319,9 @@
 // Used to find all markers in database
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+    [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
-    double earthR = 6378137;
-    double dLat = (double)(self.radius) / earthR;
-    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+    [self constructQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
@@ -333,8 +331,11 @@
                 PFUser *author = pin[@"author"];
                 NSLog(@"%@", author.objectId);
                 PFUser *user = [self fetchUser:author.objectId][0];
-                if(([user[@"isPublic"] isEqual: @(YES)] || [user isEqual:self.currentUser]) && ![self.friendsIdSet containsObject:author.objectId]) {
+                if (([user[@"isPublic"] isEqual:@(YES)] || [user isEqual:self.currentUser]) &&
+                    ![self.friendsIdSet containsObject:author.objectId])
+                {
                     [publicPins addObject:pin];
+                    [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
                 }
             }
             self.markerArr = publicPins;
@@ -374,6 +375,7 @@
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
+    [query orderByAscending:(@"traveledOn")];
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
         NSMutableArray *images = [[NSMutableArray alloc] init];
         if (imageObjs != nil) {
@@ -425,7 +427,7 @@
     // If cached data exists (if this coordinate has existing pins)
     if (self.placeToPins[marker.title]) {
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        Pin *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin.count != 0) {
@@ -433,6 +435,13 @@
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
+        // Set username
+        if ([firstPin.author.objectId isEqualToString:self.currentUser.objectId]) {
+            [markerView.usernameLabel setText:[@"@" stringByAppendingString:self.currentUser.username]];
+        } else {
+            [markerView.usernameLabel setText:[@"@" stringByAppendingString:self.pinIdToUsername[firstPin.objectId]]];
+        }
+        
         // Set date
         NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
         [markerView.dateLabel setText:date];
@@ -451,6 +460,7 @@
         [indicator startAnimating];
         [markerView addSubview:indicator];
         [markerView.pinImageView setHidden:YES];
+        [markerView.usernameLabel setHidden:YES];
         [markerView.placeNameLabel setText:@"Loading..."];
         [markerView.dateLabel setHidden:YES];
         PFObject *firstPin = pinsFromCoord[0];
@@ -487,7 +497,7 @@
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-}
+} /* mapView */
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
@@ -557,6 +567,8 @@
         // Save pin
         detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;
+        // Save username
+        detailsVC.username = [self fetchUser:detailsVC.pin.author.objectId][0][@"username"];
     }
 }
 @end

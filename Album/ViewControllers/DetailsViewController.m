@@ -50,7 +50,9 @@
     NSString *date = [formatter stringFromDate:self.pin.traveledOn];
     self.dateLabel.text = date;
     // Set caption
-    self.captionTextView.text = self.pin.captionText;
+    NSString* captionBegin =[@"@" stringByAppendingString:self.username];
+    captionBegin = [captionBegin stringByAppendingString:@": "];
+    self.captionTextView.text = [captionBegin stringByAppendingString:self.pin.captionText];
     // Set up page control
     self.currentIndex = 0;
     self.pageControl.numberOfPages = 0;

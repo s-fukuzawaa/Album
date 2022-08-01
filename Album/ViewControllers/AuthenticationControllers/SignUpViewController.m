@@ -65,6 +65,9 @@
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
 }
+- (IBAction)cancelButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 #pragma mark - Parse API
 
@@ -75,7 +78,7 @@
     newUser.username = self.usernameField.text;
     newUser.email = self.emailField.text;
     newUser.password = self.pwField.text;
-    newUser[@"profileImage"] = self.profileImageView.file;
+    newUser[@"profileImage"] = [self getPFFileFromImage:self.profileImageView.image];
     newUser[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
     newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
