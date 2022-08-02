@@ -14,10 +14,20 @@
 @end
 @implementation ParseAPIHelper
 // Used to find specfic user
-- (NSArray *)fetchUser:(NSString *)userId {
+- (void)fetchUser:(NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
     PFQuery *userQuery = [PFUser query];
     [userQuery whereKey:@"objectId" equalTo:userId];
-    return [userQuery findObjects];
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable users, NSError * _Nullable error) {
+        NSArray *usersArr = [[NSArray alloc] init];
+        if (users != nil) {
+            NSLog(@"Successfully fetched users!");
+            // For each friend, find their pins
+            usersArr = users;
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+        block(usersArr,error);
+    }];
 }
 
 - (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
@@ -32,8 +42,14 @@
             // For each friend, find their pins
             for (Friendship *friendship in friendships) {
                 NSString *friendId = friendship[@"recipientId"];
-                PFUser *friend = [self fetchUser:friendId][0];
-                [friendArr addObject:friend];
+                [self fetchUser:friendId withBlock:^(NSArray * _Nullable friends, NSError * _Nullable error) {
+                    if(friends != nil) {
+                        NSLog(@"Successfully fetched friends!");
+                        [friendArr addObject:friends[0]];
+                    }else {
+                        NSLog(@"%@", error.localizedDescription);
+                    }
+                }];
             }
         } else {
             NSLog(@"%@", error.localizedDescription);
@@ -41,4 +57,5 @@
         block(friendArr,error);
     }];
 } /* fetchFriends */
+
 @end

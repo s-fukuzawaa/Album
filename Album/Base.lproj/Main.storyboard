@@ -814,7 +814,7 @@
                     <navigationItem key="navigationItem" id="aqP-wT-cP6">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Pv4-mi-j4U">
-                            <rect key="frame" x="39" y="5.5" width="336" height="33"/>
+                            <rect key="frame" x="138.5" y="6" width="137" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="" image="person.circle.fill" catalog="system"/>
@@ -825,6 +825,17 @@
                                 <action selector="switchControl:" destination="eIU-cF-QCQ" eventType="valueChanged" id="ctq-O3-a0f"/>
                             </connections>
                         </segmentedControl>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="eG1-sZ-x8f">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="nFr-9z-irH">
+                                <rect key="frame" x="302" y="6.5" width="92" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="magnifyingglass" catalog="system"/>
+                                <connections>
+                                    <action selector="searchPlaceButton:" destination="eIU-cF-QCQ" eventType="touchUpInside" id="x2M-E3-bmA"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="segmentedControl" destination="Pv4-mi-j4U" id="lCF-f4-WMs"/>
@@ -1273,7 +1284,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="A5b-Dk-dpW"/>
-        <segue reference="nli-5v-IW8"/>
+        <segue reference="6G8-5k-QRm"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="98"/>

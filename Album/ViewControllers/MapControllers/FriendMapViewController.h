@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @protocol FriendMapViewControllerDelegate
 
-- (void)didTapWindow: (Pin*) pin imagesFromPin:(NSArray*) imageFiles;
+- (void)didTapWindow: (Pin*) pin imagesFromPin:(NSArray*) images;
 
 @end
 @interface FriendMapViewController : UIViewController

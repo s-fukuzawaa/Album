@@ -24,6 +24,7 @@ PODS:
   - GoogleMaps/Base (7.0.0)
   - GoogleMaps/Maps (7.0.0):
     - GoogleMaps/Base
+  - GooglePlaces (7.0.0)
   - iOS-Color-Picker (1.2)
   - IQKeyboardManager (6.5.10)
   - Parse (1.19.3):
@@ -37,6 +38,7 @@ PODS:
 DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - GooglePlaces (= 7.0.0)
   - iOS-Color-Picker
   - IQKeyboardManager
   - Parse
@@ -48,6 +50,7 @@ SPEC REPOS:
     - Bolts
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - GooglePlaces
     - iOS-Color-Picker
     - IQKeyboardManager
     - Parse
@@ -57,11 +60,12 @@ SPEC CHECKSUMS:
   Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
+  GooglePlaces: 8dba710bed6160a2e4b85e84aaafdbcc0b4010d8
   iOS-Color-Picker: 4284a4d744a7cafe9d22d4b66eefc45342b80f1d
   IQKeyboardManager: 45a1fa55c1a5b02c61ac0fd7fd5b62bb4ad20d97
   Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 39c66bf56b2a633d5cab1f9a67944ed4496b426c
+PODFILE CHECKSUM: a0c1a7f034dd3a44d353aa408c027f82afd32be6
 
 COCOAPODS: 1.11.3

@@ -10,6 +10,7 @@
 #import "ColorConvertHelper.h"
 #import "InfoPOIView.h"
 #import "InfoMarkerView.h"
+#import "Image.h"
 #import "AlbumConstants.h"
 #import "Parse/Parse.h"
 #import <Parse/PFImageView.h>
@@ -119,13 +120,6 @@
     return [query findObjects];
 }
 
-- (NSArray *)imagesFromPin:(NSString *)pinId {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
-}
-
 #pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
@@ -225,6 +219,23 @@
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
+} /* mapView */
+
+- (NSArray *)imagesFromPin:(NSString *)pinId {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    NSArray *imageObjs = [query findObjects];
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    for (Image *imageObject in imageObjs) {
+        [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [images addObject:image];
+            }
+        }];
+    }
+    return (NSArray *)images;
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker

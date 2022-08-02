@@ -13,6 +13,7 @@ target 'Album' do
   pod 'Parse/UI'
   pod 'iOS-Color-Picker'
   pod 'IQKeyboardManager'
+  pod 'GooglePlaces', '7.0.0'
   target 'AlbumTests' do
     inherit! :search_paths
     # Pods for testing
