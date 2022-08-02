@@ -11,23 +11,22 @@
 @interface ColorConvertHelper ()
 
 @end
-
 @implementation ColorConvertHelper
 
 - (UIImage *)createImageWithColor:(UIColor *)color {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 57, 57);
+    const CGRect rect = CGRectMake(0.0f, 0.0f, 57, 57);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, rect);
 
-    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *const rectangleFilledImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return theImage;
+    return rectangleFilledImage;
 }
 
 - (UIColor *)colorFromHexString:(NSString *)hexString {
-    unsigned rgbValue = 0;
+    unsigned int rgbValue = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     [scanner scanHexInt:&rgbValue];
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >>
@@ -36,10 +35,10 @@
 
 - (NSString *)hexStringForColor:(UIColor *)color {
     const CGFloat *components = CGColorGetComponents(color.CGColor);
-    CGFloat r = components[0];
-    CGFloat g = components[1];
-    CGFloat b = components[2];
-    NSString *hexString = [NSString stringWithFormat:@"%02X%02X%02X", (int)(r * 255), (int)(g * 255), (int)(b * 255)];
+    int r = (int)components[0] * 255;
+    int g = (int)components[1] * 255;
+    int b = (int)components[2] * 255;
+    NSString *hexString = [NSString stringWithFormat:@"%02X%02X%02X", r, g, b];
     return hexString;
 }
 @end

@@ -23,6 +23,7 @@
 
 @interface GoogleMapViewController ()<GMSMapViewDelegate, GMSIndoorDisplayDelegate, CLLocationManagerDelegate,
 ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
+
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
@@ -40,6 +41,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @implementation GoogleMapViewController
 
 #pragma mark - UIViewController
+
 - (void)loadView {
     [super loadView];
     // Initialize the location manager
@@ -79,8 +81,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.friendsIdSet = [[NSMutableSet alloc] init];
     
     // Add animation when change segmentedControl
-    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
-    
+    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];    
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
     self.coordinate = self.locationManager.location.coordinate;
@@ -180,6 +181,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Display the autocomplete view controller.
     [self presentViewController:acController animated:YES completion:nil];
+
 }
 
 #pragma mark - Parse API
@@ -216,7 +218,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
-            NSLog(@"Count %lu", pins.count);
             self.markerArr = (NSMutableArray *)pins;
             [self loadMarkers];
         } else {
@@ -272,17 +273,15 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                         // Reload markers
                         [self loadMarkers];
                     } else {
-                        NSLog(@"%@",
-                              error.localizedDescription);
+                        NSLog(@"%@", error.localizedDescription);
                     }
                 }];
             }
         } else {
-            NSLog(@"%@",
-                  error.localizedDescription);
+            NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchFriends */
+}
 
 // Used to find specfic user
 - (NSArray *)fetchUser:(NSString *)userId {
@@ -311,7 +310,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchGlobal */
+}
 
 - (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
     // Fetch pins with specific coordinate
@@ -397,10 +396,16 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if (imagesFromPin.count != 0) {
-            [markerView.pinImageView setImage:imagesFromPin[0]];
+        if (imagesFromPin[0][@"imageFile"]) {
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            [markerView.pinImageView setFile:imageFile];
+            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
         }
-        
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -426,6 +431,17 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         PFObject *firstPin = pinsFromCoord[0];
         if (!self.placeToPins[firstPin[@"placeName"]]) {
             [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:firstPin[@"placeName"]];
+        // Set image of the info window to first in the array
+        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
+        if (imagesFromPin && imagesFromPin.count > 0) {
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            [markerView.pinImageView setFile:imageFile];
+            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }
+            }];
         }
         [self.placeToPins[firstPin[@"placeName"]] addObject:firstPin];
         // Save images of the specific pin to the cache data structure
@@ -457,15 +473,15 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-} /* mapView */
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
     if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:@"detailsSegue" sender:marker];
+        [self performSegueWithIdentifier:segueDetails sender:marker];
     } else {
-        [self performSegueWithIdentifier:@"composeSegue" sender:self];
+        [self performSegueWithIdentifier:segueCompose sender:self];
     }
 }
 
@@ -512,22 +528,33 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqual:@"composeSegue"]) {
+    if ([segue.identifier isEqual:segueCompose]) {
         ComposeViewController *composeVC = [segue destinationViewController];
         composeVC.placeName = self.infoMarker.title;
         composeVC.coordinate = self.infoMarker.position;
         composeVC.placeID = self.infoMarker.snippet;
         composeVC.delegate = self;
-    } else if ([segue.identifier isEqual:@"detailsSegue"]) {
+    } else if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Images array
-        NSMutableArray *pinImages = self.pinImages[firstPin.objectId];
+        NSArray *imageObjs = self.pinImages[firstPin.objectId];
+        NSMutableArray *pinImages = [[NSMutableArray alloc] init];
+        // For each image object, get the image file and convert to UIImage
+        for (PFObject *imageObj in imageObjs) {
+            PFFileObject *file = imageObj[@"imageFile"];
+            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [pinImages addObject:image];
+                }
+            }];
+        }
         // Save pin
         detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;
     }
-} /* prepareForSegue */
+}
 @end
 

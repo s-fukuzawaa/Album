@@ -30,6 +30,7 @@
 
 @implementation FriendProfileViewController
 
+#pragma mark - UIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.friendMapContainer.alpha = 0.0;
@@ -43,36 +44,8 @@
     // Update button UI
     [self updateButton];
 }
-- (IBAction)viewSwitchControl:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 0) {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.friendsGridContainer.alpha = 1.0;
-            self.friendMapContainer.alpha = 0.0;
-        }];
-    } else { // Album View case
-        [UIView animateWithDuration:0.5 animations:^{
-            self.friendMapContainer.alpha = 1.0;
-            self.friendsGridContainer.alpha = 0.0;
-        }];
-    }
-}
 
-- (void)fetchProfile {
-    PFUser *user = self.user;
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.userImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.userImageView setImage:image];
-                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
-                self.userImageView.layer.masksToBounds = YES;
-            }
-        }];
-    }
-}
-
+#pragma mark - UIView
 - (void)updateButton {
     UIColor *friendshipButtonBackgroundColor;
     NSString *friendshipButtonText;
@@ -100,6 +73,63 @@
         [self.friendButton setBackgroundColor:friendshipButtonBackgroundColor];
     });
 } /* updateButton */
+
+- (void)requestAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"FRIEND REQUEST" message:@"Choose"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Create a accept action
+    UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        // Update statuses
+        self.requestStatus = @(FRIENDED);
+        self.friendStatus = @(FRIENDED);
+        // Update database
+        [self updateFriendship];
+        [self updateRequest];
+        // Update button UI
+        [self updateButton];
+    }];
+    [alert addAction:acceptAction];
+    // Create a reject action
+    UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        // Update statuses
+        self.requestStatus = @(NOT_FRIEND);
+        self.friendStatus = @(NOT_FRIEND);
+        // Update database
+        [self updateFriendship];
+        [self updateRequest];
+        // Update button UI
+        [self updateButton];
+    }];
+    [alert addAction:rejectAction];
+    // Cancel action
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+} /* requestAlert */
+
+#pragma mark - Parse API
+
+- (void)fetchProfile {
+    PFUser *user = self.user;
+    if (user[@"profileImage"]) {
+        PFFileObject *file = user[@"profileImage"];
+        [self.userImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.userImageView setImage:image];
+                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
+                self.userImageView.layer.masksToBounds = YES;
+            }
+        }];
+    }
+}
 
 - (void)fetchFriendStatus {
     // Query to fetch friend status
@@ -196,6 +226,22 @@
     }
 }
 
+#pragma mark - IBAction
+
+- (IBAction)viewSwitchControl:(UISegmentedControl *)sender {
+    if (sender.selectedSegmentIndex == 0) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.friendsGridContainer.alpha = 1.0;
+            self.friendMapContainer.alpha = 0.0;
+        }];
+    } else { // Album View case
+        [UIView animateWithDuration:0.5 animations:^{
+            self.friendMapContainer.alpha = 1.0;
+            self.friendsGridContainer.alpha = 0.0;
+        }];
+    }
+}
+
 - (IBAction)friendButton:(id)sender {
     if ([self.friendStatus intValue] == PENDING) {
         // If pending friendStatus, no action
@@ -221,57 +267,12 @@
     [self updateButton];
 } /* friendButton */
 
-- (void)requestAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"FRIEND REQUEST" message:@"Choose"
-                                                            preferredStyle:(UIAlertControllerStyleAlert)];
-    // Create a accept action
-    UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept"
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction *_Nonnull action) {
-        // Update statuses
-        self.requestStatus = @(FRIENDED);
-        self.friendStatus = @(FRIENDED);
-        // Update database
-        [self updateFriendship];
-        [self updateRequest];
-        // Update button UI
-        [self updateButton];
-    }];
-    [alert addAction:acceptAction];
-    // Create a reject action
-    UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:@"Reject"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *_Nonnull action) {
-        // Update statuses
-        self.requestStatus = @(NOT_FRIEND);
-        self.friendStatus = @(NOT_FRIEND);
-        // Update database
-        [self updateFriendship];
-        [self updateRequest];
-        // Update button UI
-        [self updateButton];
-    }];
-    [alert addAction:rejectAction];
-    // Cancel action
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:nil];
-    [alert addAction:cancel];
-    [self presentViewController:alert animated:YES completion:nil];
-} /* requestAlert */
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NULL;
-}
+#pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqual:@"friendMapSegue"]) {
+    if ([segue.identifier isEqual:segueFriendMap]) {
         FriendMapViewController *friendMapVC = [segue destinationViewController];
         friendMapVC.user = self.user;
         friendMapVC.delegate = self;
@@ -284,10 +285,23 @@
         detailsVC.imagesFromPin = self.imagesToDetail;
     }
 }
+#pragma mark - FriendMapViewControllerDelegate
 
-- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)images {
+- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)imageFiles {
     self.pin = pin;
-    self.imagesToDetail = images;
+    // Set Images array
+    NSMutableArray *pinImages = [[NSMutableArray alloc] init];
+    // For each image object, get the image file and convert to UIImage
+    for (PFObject *imageObj in imageFiles) {
+        PFFileObject *file = imageObj[@"imageFile"];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [pinImages addObject:image];
+            }
+        }];
+    }
+    self.imagesToDetail = pinImages;
     [self performSegueWithIdentifier:@"friendProfileDetailsSegue" sender:nil];
 }
 @end

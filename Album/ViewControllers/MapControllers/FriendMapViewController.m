@@ -26,6 +26,8 @@
 
 @implementation FriendMapViewController
 
+#pragma mark - UIViewController
+
 - (void)loadView {
     [super loadView];
     // Initialize color converting helper class
@@ -56,7 +58,9 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
-} /* loadView */
+}
+
+#pragma mark - UILoad
 
 - (void)loadMarkers {
     // Place markers on initial map view
@@ -73,6 +77,8 @@
     }
 }
 
+#pragma mark - Parse API
+
 - (void)fetchMarkers {
     // Query to find markers that belong to specific user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
@@ -86,8 +92,21 @@
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);
+            [self alertError: error.localizedDescription];
         }
     }];
+}
+
+- (void) alertError: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
@@ -101,11 +120,7 @@
     return [query findObjects];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
+#pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
@@ -143,9 +158,16 @@
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if (imagesFromPin.count != 0) {
-            [markerView.pinImageView setImage:imagesFromPin[0]];
-        }
+        PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+        [markerView.pinImageView setFile:imageFile];
+        [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [markerView.pinImageView setImage:image];
+            }else {
+                [self alertError:error.localizedDescription];
+            }
+        }];
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -175,7 +197,16 @@
         // Set image of the info window to first in the array
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin && imagesFromPin.count > 0) {
-            [markerView.pinImageView setImage:imagesFromPin[0]];
+            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
+            [markerView.pinImageView setFile:imageFile];
+            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [markerView.pinImageView setImage:image];
+                }else {
+                    [self alertError:error.localizedDescription];
+                }
+            }];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];

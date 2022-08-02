@@ -15,6 +15,7 @@
 
 @interface ComposeViewController () <UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,
 PHPickerViewControllerDelegate>
+
 @property (weak, nonatomic) IBOutlet UIImageView *pinImageView;
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -28,31 +29,21 @@ PHPickerViewControllerDelegate>
 
 @implementation ComposeViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Set caption view properties
-    self.captionTextView.delegate = self;
-    self.captionTextView.layer.cornerRadius = 8;
-    self.captionTextView.layer.borderWidth = 1.0f;
-    self.captionTextView.placeholder = @"Add a caption...";
-    self.captionTextView.placeholderColor = [UIColor lightGrayColor];
-    self.captionTextView.layer.borderColor = [[UIColor systemBlueColor] CGColor];
-    
-    // Tap placeholder image to upload image
-    UITapGestureRecognizer *imageTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapImage:)];
-    [self.imageCarouselView addGestureRecognizer:imageTapGestureRecognizer];
-    [self.imageCarouselView setUserInteractionEnabled:YES];
+    [self setCaptionTextView];
+    // Set image carousel
+    [self setImageCarouselView];
     // Set location label
     self.locationLabel.text = [self.locationLabel.text stringByAppendingString:self.placeName];
     // Config PHPicker
     self.config = [[PHPickerConfiguration alloc] init];
     self.config.selectionLimit = 10;
     self.config.filter = [PHPickerFilter imagesFilter];
-    // Photo carousel
-    self.imageCarouselView.delegate = self;
-    self.imageCarouselView.dataSource = self;
-    self.imageCarouselView.layer.borderWidth = 1.0f;
-    self.imageCarouselView.layer.borderColor = [[UIColor blackColor] CGColor];
+    
     // Set up photos array
     self.photos = [[NSMutableArray alloc] init];
     self.currentIndex = 0;
@@ -65,6 +56,28 @@ PHPickerViewControllerDelegate>
     [self.imageCarouselView reloadData];
 }
 
+#pragma mark - UIView
+
+- (void)setCaptionTextView {
+    self.captionTextView.delegate = self;
+    self.captionTextView.layer.cornerRadius = 8;
+    self.captionTextView.layer.borderWidth = 1.0f;
+    self.captionTextView.placeholder = @"Add a caption...";
+    self.captionTextView.placeholderColor = [UIColor lightGrayColor];
+    self.captionTextView.layer.borderColor = [[UIColor systemBlueColor] CGColor];
+}
+
+- (void)setImageCarouselView {
+    // Tap placeholder image to upload image
+    UITapGestureRecognizer *imageTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapImage:)];
+    [self.imageCarouselView addGestureRecognizer:imageTapGestureRecognizer];
+    [self.imageCarouselView setUserInteractionEnabled:YES];
+    // Photo carousel
+    self.imageCarouselView.delegate = self;
+    self.imageCarouselView.dataSource = self;
+    self.imageCarouselView.layer.borderWidth = 1.0f;
+    self.imageCarouselView.layer.borderColor = [[UIColor blackColor] CGColor];
+}
 - (void)didTapImage:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
@@ -108,6 +121,13 @@ PHPickerViewControllerDelegate>
     }
 } /* didTapImage */
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
+    self.pageIndicator.currentPage = self.currentIndex;
+}
+
+#pragma mark - PHPickerViewControllerDelegate
+
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results {
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.photos removeAllObjects];
@@ -127,13 +147,14 @@ PHPickerViewControllerDelegate>
             }
         }];
     }
-} /* picker */
+}
+
+#pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
-    UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
-    originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
-    [self.pinImageView setImage:originalImage];
+    [self.pinImageView setImage:[self resizeImage:info[UIImagePickerControllerOriginalImage]
+                                         withSize:self.pinImageView.image.size]];
     // TODO: Get date and set it to date picker default
     NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
     // Dismiss UIImagePickerController to go back to your original view controller
@@ -151,11 +172,10 @@ PHPickerViewControllerDelegate>
     return newImage;
 }
 
-- (void)returnMap {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+#pragma mark - IBAction
+
 - (IBAction)crossButton:(id)sender {
-    [self returnMap];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)postButton:(id)sender {
@@ -177,8 +197,10 @@ PHPickerViewControllerDelegate>
                 [Image postImage:image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError *_Nullable error) {
                     if (error) {
                         NSLog(@"Error saving image: %@", error.localizedDescription);
+                        [self imageAlert:NO];
                     } else {
                         NSLog(@"Successfully saved image");
+                        [self imageAlert:YES];
                     }
                 } ];
             }
@@ -186,35 +208,43 @@ PHPickerViewControllerDelegate>
         }
     }];
     
-    [self returnMap];
+    [self dismissViewControllerAnimated:YES completion:nil];
 } /* postButton */
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (self.photos.count == 0) {
-        return 1;
+
+- (IBAction)tapped:(id)sender {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (void)imageAlert:(BOOL)saved {
+    UIAlertController *alert;
+    if (!saved) {
+        alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Couldn't save image"
+                                             preferredStyle:(UIAlertControllerStyleAlert)];
+    } else {
+        alert = [UIAlertController alertControllerWithTitle:@"Success!" message:@"Image was saved"
+                                             preferredStyle:(UIAlertControllerStyleAlert)];
     }
-    return self.photos.count;
+    //OK
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK"
+                                                 style:UIAlertActionStyleDefault
+                                               handler:nil];
+    // Add the OK action to the alert controller
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.photos.count == 0 ? 1 : self.photos.count;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
     // Add placeholder image cell when there are no images
-    if (self.photos.count == 0) {
-        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-        photoCell.photoImageView.image = [UIImage imageNamed:@"image_placeholder"];
-    } else {
-        photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-        photoCell.photoImageView.image = self.photos[indexPath.row];
-    }
+    photoCell.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+    photoCell.photoImageView.image = self.photos.count == 0 ? [UIImage imageNamed:@"image_placeholder"] : self.photos[indexPath.row];
     return photoCell;
-}
-- (IBAction)tapped:(id)sender {
-    [self.view endEditing:YES];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
 }
 
 @end
