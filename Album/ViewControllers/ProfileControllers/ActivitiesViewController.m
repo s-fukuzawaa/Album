@@ -10,13 +10,16 @@
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 #import "AlbumConstants.h"
+
 @interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSMutableArray *requests;
+@property (strong, nonatomic) NSMutableArray *friendRequests;
 
 @end
 
 @implementation ActivitiesViewController
+
+#pragma mark - UIViewController
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self fetchActivities];
@@ -27,20 +30,24 @@
     // Assign tableview data source and delegate
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.requests = [[NSMutableArray alloc] init];
+    self.friendRequests = [[NSMutableArray alloc] init];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
+
+#pragma mark - IBAction
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Parse API
 - (void)fetchActivities {
-    [self fetchRequests];
+    [self fetchFriendRequests];
 }
 
-- (void)fetchRequests {
+- (void)fetchFriendRequests {
     // Query to find pending friend requests for this user
-    self.requests = [[NSMutableArray alloc] init];
+    self.friendRequests = [[NSMutableArray alloc] init];
     PFQuery *query = [PFQuery queryWithClassName:classNameFriendship];
     PFUser *currentUser = [PFUser currentUser];
     [query whereKey:@"recipientId" equalTo:currentUser.objectId];
@@ -52,31 +59,38 @@
                 PFQuery *query = [PFUser query];
                 [query whereKey:@"objectId" equalTo:friendship[@"requesterId"]];
                 PFUser *user = [query findObjects][0];
-                [self.requests addObject:user];
+                [self.friendRequests addObject:user];
             }
             [self.tableView reloadData];
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchRequests */
+}
+
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.requests.count;
+    return self.friendRequests.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActivityCell"];
-    cell.user = self.requests[indexPath.row];
+    cell.user = self.friendRequests[indexPath.row];
     return cell;
 }
+
+#pragma mark - ActivityCellDelegate
 
 - (void)activityCell:(ActivityCell *)activityCell didTap:(PFUser *)user {
     [self fetchActivities];
 }
 
+#pragma mark - Navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(ActivityCell *)sender];
     FriendProfileViewController *friendProfVC = [segue destinationViewController];
-    friendProfVC.user = self.requests[indexPath.row];
+    friendProfVC.user = self.friendRequests[indexPath.row];
 }
 @end

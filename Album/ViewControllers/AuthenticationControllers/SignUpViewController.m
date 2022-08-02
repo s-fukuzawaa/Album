@@ -23,17 +23,20 @@
 
 @implementation SignUpViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     // Tap profile to change configuration
     UITapGestureRecognizer *profileTapGestureRecognizer =
-        [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
+    [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
     // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
 }
+
+#pragma mark - IBAction
 
 - (IBAction)signUpButton:(id)sender {
     [self registerUser];
@@ -43,6 +46,18 @@
 - (IBAction)didTap:(id)sender {
     [self.view endEditing:YES];
 }
+
+- (IBAction)colorPickButton:(id)sender {
+    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
+    colorPicker.color = self.color;
+    colorPicker.delegate = self;
+    
+    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentViewController:colorPicker animated:YES completion:nil];
+}
+
+#pragma mark - Parse API
+
 - (void)registerUser {
     // Initialize a user object
     PFUser *newUser = [PFUser user];
@@ -55,15 +70,15 @@
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
         UIAlertController *alert =
-            [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
-             @"Username or Password or Email is empty!"
-                                         preferredStyle:(UIAlertControllerStyleAlert)];
+        [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
+         @"Username or Password or Email is empty!"
+                                     preferredStyle:(UIAlertControllerStyleAlert)];
         // Create a cancel action
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
         [alert addAction:cancelAction];
-
+        
         // Create an OK action
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
@@ -74,23 +89,23 @@
     }
     // Call sign up function on the object
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                 if (error != nil) {
-                 NSLog(@"Error: %@", error.localizedDescription);
-                 UIAlertController *alert =
-                 [UIAlertController  alertControllerWithTitle:@"Error" message:
-                 @"Error signing up! Please try again."
-                                              preferredStyle:(UIAlertControllerStyleAlert)];
-                 // Create an OK action
-                 UIAlertAction *uploadAction = [UIAlertAction      actionWithTitle:@"OK"
+        if (error != nil) {
+            NSLog(@"Error: %@", error.localizedDescription);
+            UIAlertController *alert =
+            [UIAlertController  alertControllerWithTitle:@"Error" message:
+             @"Error signing up! Please try again."
+                                          preferredStyle:(UIAlertControllerStyleAlert)];
+            // Create an OK action
+            UIAlertAction *uploadAction = [UIAlertAction      actionWithTitle:@"OK"
                                                                         style:UIAlertActionStyleDefault
                                                                       handler:nil];
-                 [alert addAction:uploadAction];
-                 [self presentViewController:alert animated:YES completion:nil];
-                 } else {
-                 NSLog(@"User registered successfully");
-                 }
-             }];
-} /* registerUser */
+            [alert addAction:uploadAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        } else {
+            NSLog(@"User registered successfully");
+        }
+    }];
+}
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -100,24 +115,24 @@
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction *_Nonnull action) {
-                                                                UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-                                                                imagePickerVC.delegate = self;
-                                                                imagePickerVC.allowsEditing = YES;
-                                                                imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-                                                                [self presentViewController:imagePickerVC animated:YES completion:nil];
-                                                            }];
+            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+            imagePickerVC.delegate = self;
+            imagePickerVC.allowsEditing = YES;
+            imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:imagePickerVC animated:YES completion:nil];
+        }];
         // Add the take photo action to the alertController
         [alert addAction:photoAction];
         // Create an upload from library action
         UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *_Nonnull action) {
-                                                                 UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-                                                                 imagePickerVC.delegate = self;
-                                                                 imagePickerVC.allowsEditing = YES;
-                                                                 imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                                                 [self presentViewController:imagePickerVC animated:YES completion:nil];
-                                                             }];
+            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+            imagePickerVC.delegate = self;
+            imagePickerVC.allowsEditing = YES;
+            imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:imagePickerVC animated:YES completion:nil];
+        }];
         // Add the upload from library action to the alert controller
         [alert addAction:uploadAction];
         //Cancel
@@ -135,7 +150,8 @@
         imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
-} /* didTapUserProfile */
+
+}
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
@@ -170,14 +186,6 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
-}
-- (IBAction)colorPickButton:(id)sender {
-    FCColorPickerViewController *colorPicker = [FCColorPickerViewController colorPicker];
-    colorPicker.color = self.color;
-    colorPicker.delegate = self;
-
-    [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
-    [self presentViewController:colorPicker animated:YES completion:nil];
 }
 
 #pragma mark - FCColorPickerViewControllerDelegate Methods

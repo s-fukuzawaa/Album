@@ -18,6 +18,8 @@
 
 @implementation FriendGridViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Set API helper
@@ -42,9 +44,13 @@
     [super viewWillAppear:animated];
     [self.friendCollectionView reloadData];
 }
+
+#pragma mark - UICollectionDataSource
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.friendsArray.count;
 }
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PhotoCollectionCell *profileCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"profileCell" forIndexPath:indexPath];
     if (self.friendsArray.count == 0) {

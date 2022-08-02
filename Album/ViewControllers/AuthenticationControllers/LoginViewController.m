@@ -7,6 +7,7 @@
 
 #import "LoginViewController.h"
 #import "SignUpViewController.h"
+#import "AlbumConstants.h"
 #import "Parse/Parse.h"
 
 @interface LoginViewController ()
@@ -18,10 +19,8 @@
 
 @implementation LoginViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+#pragma mark - IBAction
+
 - (IBAction)loginButton:(id)sender {
     NSString *username = self.usernameField.text;
     NSString *password = self.pwField.text;
@@ -54,7 +53,16 @@
             [self performSegueWithIdentifier:@"loginSegue" sender:nil];
         }
     }];
-} /* loginButton */
+}
+- (IBAction)signUpButton:(id)sender {
+    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
+}
+
+- (IBAction)tap:(id)sender {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - UIAlert
 
 - (void)authError {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"No such user exist!"
@@ -71,12 +79,5 @@
                                                      handler:nil];
     [alert addAction:okAction];
     [self presentViewController:alert animated:YES completion:nil];
-}
-- (IBAction)signUpButton:(id)sender {
-    [self performSegueWithIdentifier:@"signupSegue" sender:nil];
-}
-
-- (IBAction)tap:(id)sender {
-    [self.view endEditing:YES];
 }
 @end

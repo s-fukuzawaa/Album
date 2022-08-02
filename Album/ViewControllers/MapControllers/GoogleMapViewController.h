@@ -9,6 +9,7 @@
 #import <CoreLocation/CoreLocation.h>
 @import GoogleMaps;
 @import GoogleMapsUtils;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GoogleMapViewController : UIViewController
