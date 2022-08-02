@@ -29,7 +29,7 @@
     // Search user by username
     PFQuery *query = [PFUser query];
     PFUser *currentUser = [PFUser currentUser];
-    [query whereKey:@"username" notEqualTo:currentUser.username];
+    [query whereKey:@"objectId" notEqualTo:currentUser.objectId];
     [query whereKey:@"username" equalTo:self.searchFriendField.text];
     [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
         if (users != nil) {

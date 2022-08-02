@@ -34,6 +34,7 @@ PODS:
   - Parse/UI (1.19.3):
     - Parse/Core
   - "UITextView+Placeholder (1.4.0)"
+  - UPCarouselFlowLayout (1.1.2)
 
 DEPENDENCIES:
   - Google-Maps-iOS-Utils
@@ -44,6 +45,7 @@ DEPENDENCIES:
   - Parse
   - Parse/UI
   - "UITextView+Placeholder"
+  - UPCarouselFlowLayout
 
 SPEC REPOS:
   trunk:
@@ -55,6 +57,7 @@ SPEC REPOS:
     - IQKeyboardManager
     - Parse
     - "UITextView+Placeholder"
+    - UPCarouselFlowLayout
 
 SPEC CHECKSUMS:
   Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
@@ -65,7 +68,8 @@ SPEC CHECKSUMS:
   IQKeyboardManager: 45a1fa55c1a5b02c61ac0fd7fd5b62bb4ad20d97
   Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
+  UPCarouselFlowLayout: 4c7d2c43a10ebb1597bde502a53699d378341dad
 
-PODFILE CHECKSUM: a0c1a7f034dd3a44d353aa408c027f82afd32be6
+PODFILE CHECKSUM: c47df61db0ed6917a68bb8e652847b797ae49cd4
 
 COCOAPODS: 1.11.3

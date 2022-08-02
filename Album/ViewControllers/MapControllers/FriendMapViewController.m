@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
+@property (nonatomic) CLLocationCoordinate2D coordinate;
 @end
 
 @implementation FriendMapViewController
@@ -45,7 +46,7 @@
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
     GMSCameraPosition *camera =
-    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:6];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     [self fetchMarkers];
     self.view = self.mapView;
@@ -58,6 +59,19 @@
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        GMSCameraUpdate *locationCam = [GMSCameraUpdate setTarget:manager.location.coordinate zoom:6];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.coordinate = manager.location.coordinate;
+            [self.mapView animateWithCameraUpdate:locationCam];
+            [self.mapView clear];
+            [self fetchMarkers];
+        });
+    }
 }
 
 #pragma mark - UILoad
@@ -107,13 +121,6 @@
     return [query findObjects];
 }
 
-- (NSArray *)imagesFromPin:(NSString *)pinId {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
-}
-
 #pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
@@ -143,13 +150,36 @@
     mapView.selectedMarker = self.infoMarker;
 }
 
+- (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    [query orderByAscending:(@"traveledOn")];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
+        NSMutableArray *images = [[NSMutableArray alloc] init];
+        if (imageObjs != nil) {
+            for (Image *imageObject in imageObjs) {
+                [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                    if (!error) {
+                        UIImage *image = [UIImage imageWithData:imageData];
+                        [images addObject:image];
+                    }
+                }];
+            }
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+        block(images, error);
+    }];
+}
+
 - (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
     // If cached data exists (if this coordinate has existing pins)
     if (self.placeToPins[marker.title]) {
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        Pin *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin.count != 0) {
@@ -157,6 +187,9 @@
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
+        // Set username
+        [markerView.usernameLabel setText:[@"@" stringByAppendingString:self.user.username]];
+        
         // Set date
         NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
         [markerView.dateLabel setText:date];
@@ -166,38 +199,59 @@
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
     // Check if exisitng pins exist from this coordinate
     if (pinsFromCoord && pinsFromCoord.count > 0) {
-        PFObject *firstPin = pinsFromCoord[0];
-        int i = 0;
-        while (i < pinsFromCoord.count) {
-            PFObject *pin = pinsFromCoord[i];
-            // Save pins into cache data structure
-            if (!self.placeToPins[pin[@"placeName"]]) {
-                [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:pin[@"placeName"]];
-            }
-            [self.placeToPins[pin[@"placeName"]] addObject:pin];
-            // Save images of the specific pin to the cache data structure
-            NSArray *imagesFromPin = [self imagesFromPin:pin.objectId];
-            [self.pinImages setObject:imagesFromPin forKey:pin.objectId];
-            i++;
-        }
         InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        // Set image of the info window to first in the array
-        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if (imagesFromPin && imagesFromPin.count > 0) {
-            [markerView.pinImageView setImage:imagesFromPin[0]];
+        UIActivityIndicatorView *indicator =
+        [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+        indicator.hidesWhenStopped = YES;
+        indicator.frame = CGRectMake(35, 15, 30, 30);
+        indicator.center = markerView.center;
+        [indicator startAnimating];
+        [markerView addSubview:indicator];
+        [markerView.pinImageView setHidden:YES];
+        [markerView.usernameLabel setHidden:YES];
+        [markerView.placeNameLabel setText:@"Loading..."];
+        [markerView.dateLabel setHidden:YES];
+        PFObject *firstPin = pinsFromCoord[0];
+        if (!self.placeToPins[firstPin[@"placeName"]]) {
+            [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:firstPin[@"placeName"]];
         }
-        // Set place name
-        [markerView.placeNameLabel setText:firstPin[@"placeName"]];
-        // Set date
-        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
-        [markerView.dateLabel setText:date];
+        [self.placeToPins[firstPin[@"placeName"]] addObject:firstPin];
+        // Save images of the specific pin to the cache data structure
+        [self imagesFromPin:firstPin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+            if (images != nil) {
+                [self.pinImages setObject:images forKey:firstPin.objectId];
+                // Set image of the info window to first in the array
+                NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
+                if (imagesFromPin && imagesFromPin.count > 0) {
+                    PFFileObject *file = imagesFromPin[0][@"imageFile"];
+                    [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                        if (!error) {
+                            UIImage *image = [UIImage imageWithData:imageData];
+                            [markerView.pinImageView setImage:image];
+                        }
+                    }];
+                }
+                // Set place name
+                [markerView.placeNameLabel setText:firstPin[@"placeName"]];
+                // Set date
+                NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
+                [markerView.dateLabel setText:date];
+                [indicator stopAnimating];
+                [markerView.pinImageView setHidden:NO];
+                [markerView.placeNameLabel setHidden:NO];
+                [markerView.dateLabel setHidden:NO];
+            } else {
+                NSLog(@"%@", error.localizedDescription);
+            }
+        }];
+        
         return markerView;
     }
     // If there are no pins existing at this coordinate, present info window that leads to compose view
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-} /* mapView */
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
