@@ -7,81 +7,63 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "12B06000-5C8E-40E6-880C-B2ECD8EBCADD"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "-loadMarkers"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "82AC3D0C-3928-4B59-B697-7A0C28310CE5"
+            uuid = "6CA71D35-0405-4223-A738-36C445FF7B96"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            filePath = "Album/ViewControllers/ProfileControllers/SettingsViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "500"
-            endingLineNumber = "500"
-            landmarkName = "GoogleMapViewController"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F54AAE71-67CB-4A2C-BD0B-2AC24DB9013C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "-fetchPersonal"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "-updateButton:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A3996ACE-614A-477C-8094-218E400860D1"
+            uuid = "456E3416-ED3B-43BD-BF39-F5885ECD6C7F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            filePath = "Album/ViewControllers/ProfileControllers/SettingsViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "-fetchPersonal"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "-updateButton:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7AE4BF8A-4F03-4581-B47F-17904F6EDE8D"
+            uuid = "7CE88E7E-7D80-43B2-BE64-8C321D6DB779"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Album/ViewControllers/ProfileControllers/ProfileViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "-prepareForSegue:sender:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6D188F26-B166-4550-B936-C1A992AD66B6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Album/ViewControllers/MapControllers/GoogleMapViewController.m"
+            filePath = "Album/ViewControllers/ProfileControllers/FriendProfileViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "-fetchMarkers"
-            landmarkType = "7">
+            startingLineNumber = "332"
+            endingLineNumber = "332">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

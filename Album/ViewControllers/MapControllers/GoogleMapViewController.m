@@ -256,10 +256,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
                 [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
                 [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-                [query
-                 findObjectsInBackgroundWithBlock
-                 :^(NSArray *pins,
-                    NSError *error) {
+                [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
                     if (pins != nil) {
                         // Store the pins, update count
                         NSLog(
@@ -272,14 +269,12 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                         // Reload markers
                         [self loadMarkers];
                     } else {
-                        NSLog(@"%@",
-                              error.localizedDescription);
+                        NSLog(@"%@", error.localizedDescription);
                     }
                 }];
             }
         } else {
-            NSLog(@"%@",
-                  error.localizedDescription);
+            NSLog(@"%@", error.localizedDescription);
         }
     }];
 } /* fetchFriends */
@@ -450,7 +445,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 NSLog(@"%@", error.localizedDescription);
             }
         }];
-        
         return markerView;
     }
     // If there are no pins existing at this coordinate, present info window that leads to compose view
