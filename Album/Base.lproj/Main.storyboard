@@ -531,40 +531,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qEs-dh-dld">
-                                <rect key="frame" x="20" y="389" width="374" height="433"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <gestureRecognizers/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gkk-UX-3GQ">
-                                    <size key="itemSize" width="128" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="profileCell" id="520-vC-QAR" customClass="PhotoCollectionCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5eE-xl-NYb">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="7d2-zM-QTL">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <gestureRecognizers/>
-                                                </imageView>
-                                            </subviews>
-                                            <gestureRecognizers/>
-                                        </collectionViewCellContentView>
-                                        <gestureRecognizers/>
-                                        <connections>
-                                            <outlet property="photoImageView" destination="7d2-zM-QTL" id="bCp-Os-Y7C"/>
-                                            <segue destination="M2k-nZ-AUg" kind="show" identifier="friendProfileSegue" id="uKO-Ma-Qmc"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mDW-Ls-4Km" customClass="PFImageView">
                                 <rect key="frame" x="132" y="140" width="150" height="150"/>
                                 <constraints>
@@ -577,19 +543,55 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fU0-pt-XXz">
+                                <rect key="frame" x="20" y="377" width="374" height="408"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uHb-Ng-ZKD">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="profileCell" id="xiC-kr-Hjs" customClass="PhotoCollectionCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="nDZ-to-fQD">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="tyG-pV-eiJ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="tyG-pV-eiJ" secondAttribute="bottom" id="6z4-q4-SGa"/>
+                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="top" secondItem="nDZ-to-fQD" secondAttribute="top" id="KKR-19-BFT"/>
+                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="leading" secondItem="nDZ-to-fQD" secondAttribute="leading" id="KWQ-ev-Phb"/>
+                                                <constraint firstAttribute="trailing" secondItem="tyG-pV-eiJ" secondAttribute="trailing" id="dEa-O1-JPA"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="128" height="128"/>
+                                        <connections>
+                                            <outlet property="photoImageView" destination="tyG-pV-eiJ" id="5GG-51-SVu"/>
+                                            <segue destination="M2k-nZ-AUg" kind="show" id="3iu-cH-Rgq"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HZ2-6j-0dT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="qEs-dh-dld" secondAttribute="bottom" constant="-9" id="0Kd-T3-IhD"/>
-                            <constraint firstItem="qEs-dh-dld" firstAttribute="leading" secondItem="YI2-2g-qk1" secondAttribute="leadingMargin" id="9Qb-6h-Pnm"/>
-                            <constraint firstItem="qEs-dh-dld" firstAttribute="centerX" secondItem="mDW-Ls-4Km" secondAttribute="centerX" id="EmX-f5-MGr"/>
+                            <constraint firstItem="fU0-pt-XXz" firstAttribute="leading" secondItem="HZ2-6j-0dT" secondAttribute="leading" constant="20" id="DqY-T0-kGM"/>
                             <constraint firstItem="mDW-Ls-4Km" firstAttribute="top" secondItem="HZ2-6j-0dT" secondAttribute="top" constant="52" id="Fix-Y2-ovK"/>
-                            <constraint firstItem="qEs-dh-dld" firstAttribute="top" secondItem="bba-3q-kH0" secondAttribute="bottom" constant="48" id="R65-1m-WKa"/>
+                            <constraint firstItem="fU0-pt-XXz" firstAttribute="top" secondItem="bba-3q-kH0" secondAttribute="bottom" constant="36" id="Pt9-aV-OrS"/>
                             <constraint firstItem="bba-3q-kH0" firstAttribute="centerX" secondItem="mDW-Ls-4Km" secondAttribute="centerX" id="Z0m-06-Ftu"/>
                             <constraint firstItem="mDW-Ls-4Km" firstAttribute="leading" secondItem="HZ2-6j-0dT" secondAttribute="leading" constant="132" id="ZZe-bQ-GPq"/>
+                            <constraint firstItem="HZ2-6j-0dT" firstAttribute="bottom" secondItem="fU0-pt-XXz" secondAttribute="bottom" constant="28" id="eUt-9F-5Ze"/>
                             <constraint firstItem="HZ2-6j-0dT" firstAttribute="trailing" secondItem="mDW-Ls-4Km" secondAttribute="trailing" constant="132" id="j4U-cH-1KI"/>
                             <constraint firstItem="bba-3q-kH0" firstAttribute="top" secondItem="mDW-Ls-4Km" secondAttribute="bottom" constant="32" id="knd-ml-E6Y"/>
+                            <constraint firstItem="HZ2-6j-0dT" firstAttribute="trailing" secondItem="fU0-pt-XXz" secondAttribute="trailing" constant="20" id="nj6-ai-mbm"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gGn-b3-xOP">
@@ -639,7 +641,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="friendsCollectionView" destination="qEs-dh-dld" id="J4B-YL-BFF"/>
+                        <outlet property="friendsCollectionView" destination="fU0-pt-XXz" id="iNh-pd-GQV"/>
                         <outlet property="profileImageView" destination="mDW-Ls-4Km" id="OjG-xy-64o"/>
                         <outlet property="usernameLabel" destination="bba-3q-kH0" id="bZu-SG-jSp"/>
                         <segue destination="saq-zQ-LZ7" kind="presentation" identifier="addFriendSegue" modalPresentationStyle="fullScreen" id="c2c-FN-JIr"/>
@@ -649,7 +651,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdM-yP-dxz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2735" y="1750"/>
+            <point key="canvasLocation" x="2734.7826086956525" y="1749.7767857142856"/>
         </scene>
         <!--Search for a friend!-->
         <scene sceneID="eKj-5g-VnX">
@@ -1366,11 +1368,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-hC-HJR">
-                                                    <rect key="frame" x="0.0" y="0.0" width="130" height="128"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-hC-HJR">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                 </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerX" secondItem="oMg-IM-3ht" secondAttribute="centerX" id="7ex-gm-a5I"/>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerY" secondItem="oMg-IM-3ht" secondAttribute="centerY" id="qv7-S3-S52"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
                                             <outlet property="photoImageView" destination="IQL-hC-HJR" id="sBx-Xj-1MD"/>
@@ -1496,7 +1501,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="uKO-Ma-Qmc"/>
+        <segue reference="3iu-cH-Rgq"/>
         <segue reference="6G8-5k-QRm"/>
     </inferredMetricsTieBreakers>
     <resources>

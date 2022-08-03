@@ -37,6 +37,7 @@
     [super viewDidLoad];
     // Set API helper
     self.apiHelper = [[ParseAPIHelper alloc] init];
+    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
     // Store current user
     self.currentUser = [PFUser currentUser];
     // Assign collection view delegate and dataSource
@@ -65,16 +66,8 @@
         if (friendArr != nil) {
             self.friendsArray = friendArr;
             dispatch_async(dispatch_get_main_queue(), ^{
-                CAGradientLayer *grad = [CAGradientLayer layer];
-                grad.frame = self.friendsCollectionView.bounds;
-                UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"8EC5FC"];
-                UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"E0C3FC"];
-                grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
-                grad.startPoint = CGPointMake(0.0, 0.5);
-                grad.endPoint = CGPointMake(1.0, 0.5);
-                [self.friendsCollectionView setBackgroundView:[[UIView alloc] init]];
-                [self.friendsCollectionView.backgroundView.layer insertSublayer:grad atIndex:0];
-                [self.friendsCollectionView.layer setShadowRadius:4];
+                [self.friendsCollectionView.layer setCornerRadius:15];
+                [self.friendsCollectionView.layer setShadowRadius:5];
                 [self.friendsCollectionView.layer setShadowColor:[[UIColor grayColor] CGColor]];
                 [self.friendsCollectionView.layer setShadowOpacity:1];
                 [self.friendsCollectionView.layer setShadowOffset:CGSizeMake(0,0)];
@@ -137,6 +130,12 @@
         PFFileObject *file = self.friendsArray[indexPath.row][@"profileImage"];
         profileCell.photoImageView.image = [UIImage imageWithData:[file getData]];
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
+        profileCell.photoImageView.layer.masksToBounds = YES;
+        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderWidth:1.5];
+    });
     return profileCell;
 }
 
