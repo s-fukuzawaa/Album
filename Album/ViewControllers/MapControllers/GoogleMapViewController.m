@@ -95,6 +95,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.mapView clear];
     [self setButton];
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
@@ -134,6 +135,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
+    [self.navigationItem.leftBarButtonItem setTintColor:[UIColor blackColor]];
 } /* setButton */
 
 - (UIAction *)createRadiusAction:(int)radius {
@@ -221,7 +223,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query orderByDescending:(@"traveledOn")];
     [query whereKey:@"author" equalTo:self.currentUser];
-    [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+//    [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+    [self constructQuery:query];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
@@ -256,7 +259,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                        equalTo:friend];
                 [query orderByDescending:(@"traveledOn")];
                 [query includeKey:@"objectId"];
-                [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+//                [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+                [self constructQuery:query];
                 [query findObjectsInBackgroundWithBlock :^(NSArray *pins, NSError *error) {
                     if (pins != nil) {
                         // Store the pins, update count
@@ -283,23 +287,23 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }];
 } /* fetchFriends */
 
-//- (void)constructQuery:(PFQuery *)query {
-//    [query orderByDescending:(@"traveledOn")];
-//    [query includeKey:@"objectId"];
-//    double dLat = (double)(self.radius) / earthR;
-//    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-//    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-//    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-//    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-//    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-//}
+- (void)constructQuery:(PFQuery *)query {
+    [query orderByDescending:(@"traveledOn")];
+    [query includeKey:@"objectId"];
+    double dLat = (double)(self.radius) / earthR;
+    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+}
 
 // Used to find all markers in database
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
-    [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+    [self constructQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count

@@ -45,13 +45,13 @@
     self.friendship.isClose = !self.friendship.isClose;
     self.otherFriendship.isClose = !self.otherFriendship.isClose;
     if(self.friendship.isClose) {
-        closeFriendButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonBackgroundColor = [UIColor systemIndigoColor];
         closeFriendButtonText = @"Close Friended";
         closeFriendButtonTitleColor = [UIColor whiteColor];
     }else {
         closeFriendButtonBackgroundColor = [UIColor whiteColor];
         closeFriendButtonText = @"Add to Close Friends?";
-        closeFriendButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonTitleColor = [UIColor systemIndigoColor];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.closeFriendButton setTitleColor:closeFriendButtonBackgroundColor forState:UIControlStateNormal];

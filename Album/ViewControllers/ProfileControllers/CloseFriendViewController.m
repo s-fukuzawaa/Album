@@ -8,6 +8,7 @@
 #import "CloseFriendViewController.h"
 #import "FriendProfileViewController.h"
 #import "ParseAPIHelper.h"
+#import "ColorConvertHelper.h"
 #import "CloseFriendCell.h"
 #import "AlbumConstants.h"
 #import "Friendship.h"
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) NSArray *filterFriendsArr;
 @property (strong, nonatomic) NSArray *filterFriendshipArr;
 @property (strong, nonatomic) NSArray *filterOtherFriendshipArr;
+@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @end
 
 @implementation CloseFriendViewController
@@ -31,6 +33,7 @@
     [super viewDidLoad];
     // Set API helper
     self.apiHelper = [[ParseAPIHelper alloc] init];
+    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
     // Assign delegate and dataSource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -94,22 +97,32 @@
     NSString *closeFriendButtonText;
     UIColor *closeFriendButtonTitleColor;
     if(cell.friendship.isClose) {
-        closeFriendButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonBackgroundColor = [UIColor systemIndigoColor];
         closeFriendButtonText = @"Close Friended";
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [cell.closeFriendButton setImage:[UIImage systemImageNamed:@"checkmark"] forState:UIControlStateNormal];
-        });
         closeFriendButtonTitleColor = [UIColor whiteColor];
     }else {
         closeFriendButtonBackgroundColor = [UIColor whiteColor];
         closeFriendButtonText = @"Add to Close Friends?";
-        closeFriendButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonTitleColor = [UIColor systemIndigoColor];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [cell.closeFriendButton setTitleColor:closeFriendButtonBackgroundColor forState:UIControlStateNormal];
         [cell.closeFriendButton setTitle:closeFriendButtonText forState:UIControlStateNormal];
         [cell.closeFriendButton setBackgroundColor:closeFriendButtonTitleColor];
+        [cell.closeFriendButton.layer setCornerRadius:10];
+        [cell.layer setCornerRadius:20];
+        [cell setClipsToBounds:YES];
+        CAGradientLayer *grad = [CAGradientLayer layer];
+        grad.frame = cell.bounds;
+        UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"8BC6EC"];
+        UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"9599E2"];
+        grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
+        grad.startPoint = CGPointMake(0.0, 0.5);
+        grad.endPoint = CGPointMake(1.0, 0.5);
+        [cell setBackgroundView:[[UIView alloc] init]];
+        [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     });
+    
     return cell;
 }
 

@@ -10,6 +10,7 @@
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
 #import "FriendProfileViewController.h"
+#import "ColorConvertHelper.h"
 #import "PhotoCollectionCell.h"
 #import "AlbumConstants.h"
 #import "ParseAPIHelper.h"
@@ -25,6 +26,7 @@
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) ParseAPIHelper *apiHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
+@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @end
 
 @implementation ProfileViewController
@@ -57,6 +59,33 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.currentUser = [PFUser currentUser];
+    // Fetch friends
+    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+        if (friendArr != nil) {
+            self.friendsArray = friendArr;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CAGradientLayer *grad = [CAGradientLayer layer];
+                grad.frame = self.friendsCollectionView.bounds;
+                UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"8EC5FC"];
+                UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"E0C3FC"];
+                grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
+                grad.startPoint = CGPointMake(0.0, 0.5);
+                grad.endPoint = CGPointMake(1.0, 0.5);
+                [self.friendsCollectionView setBackgroundView:[[UIView alloc] init]];
+                [self.friendsCollectionView.backgroundView.layer insertSublayer:grad atIndex:0];
+                [self.friendsCollectionView.layer setShadowRadius:4];
+                [self.friendsCollectionView.layer setShadowColor:[[UIColor grayColor] CGColor]];
+                [self.friendsCollectionView.layer setShadowOpacity:1];
+                [self.friendsCollectionView.layer setShadowOffset:CGSizeMake(0,0)];
+                self.friendsCollectionView.layer.masksToBounds = NO;
+                self.friendsCollectionView.clipsToBounds = NO;
+                [self.friendsCollectionView reloadData];
+            });
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+    }];
     [self.friendsCollectionView reloadData];
 }
 

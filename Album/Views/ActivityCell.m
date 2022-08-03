@@ -18,6 +18,7 @@
     
     // username
     self.usernameLabel.text = [@"@" stringByAppendingString:self.user.username];
+    
     //set profile picture
     [self fetchProfile];
     
