@@ -304,6 +304,19 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 PFUser *user = [self fetchUser:author.objectId][0];
                 [self.markerArr addObject:pin];
                 [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
+                if (!self.placeToPins[pin[@"placeName"]]) {
+                    [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:pin[@"placeName"]];
+                }
+                [self.placeToPins[pin[@"placeName"]] addObject:pin];
+                // Save images of the specific pin to the cache data structure
+                [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+                    if (images != nil) {
+                        // Set image of the info window to first in the array
+                        [self.pinImages setObject:images forKey:pin.objectId];
+                    } else {
+                        NSLog(@"%@", error.localizedDescription);
+                    }
+                }];
             }
             [self loadMarkers];
         } else {
@@ -329,6 +342,15 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [pin.author.objectId isEqual:self.currentUser.objectId] == NO)
             {
                 [pins removeObject:pin];
+            }else{
+                [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+                    if (images != nil) {
+                        // Set image of the info window to first in the array
+                        [self.pinImages setObject:images forKey:pin.objectId];
+                    } else {
+                        NSLog(@"%@", error.localizedDescription);
+                    }
+                }];
             }
         }
     }
@@ -429,43 +451,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
     // Check if exisitng pins exist from this coordinate
     if (pinsFromCoord && pinsFromCoord.count > 0) {
-        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
-        InfoMarkerView *markerView = [self loadingMarkerView:indicator];
-        PFObject *firstPin = pinsFromCoord[0];
-        if (!self.placeToPins[firstPin[@"placeName"]]) {
-            [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:firstPin[@"placeName"]];
-        }
-        [self.placeToPins[firstPin[@"placeName"]] addObject:firstPin];
-        // Save images of the specific pin to the cache data structure
-        [self imagesFromPin:firstPin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
-            if (images != nil) {
-                [self.pinImages setObject:images forKey:firstPin.objectId];
-                // Set image of the info window to first in the array
-                NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-                if (imagesFromPin && imagesFromPin.count > 0) {
-                    PFFileObject *file = imagesFromPin[0][@"imageFile"];
-                    [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                        if (!error) {
-                            UIImage *image = [UIImage imageWithData:imageData];
-                            [markerView.pinImageView setImage:image];
-                        }
-                    }];
-                }
-                // Set place name
-                [markerView.placeNameLabel setText:firstPin[@"placeName"]];
-                // Set date
-                NSString *date = [[self.apiHelper dateFormatter] stringFromDate:firstPin[@"traveledOn"]];
-                [markerView.dateLabel setText:date];
-                [indicator stopAnimating];
-                [markerView.pinImageView setHidden:NO];
-                [markerView.placeNameLabel setHidden:NO];
-                [markerView.dateLabel setHidden:NO];
-            } else {
-                NSLog(@"%@", error.localizedDescription);
-            }
-        }];
-        
-        return markerView;
+        return [self cachedMarkerView:marker.title];
     }
     // If there are no pins existing at this coordinate, present info window that leads to compose view
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
