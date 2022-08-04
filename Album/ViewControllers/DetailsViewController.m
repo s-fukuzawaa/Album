@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIImageView *closeFriendPost;
 @property (nonatomic) int currentIndex;
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) UserPin *likeStatus;
@@ -49,7 +50,9 @@
     NSString *date = [formatter stringFromDate:self.pin.traveledOn];
     self.dateLabel.text = date;
     // Set caption
-    self.captionTextView.text = self.pin.captionText;
+    NSString* captionBegin =[@"@" stringByAppendingString:self.username];
+    captionBegin = [captionBegin stringByAppendingString:@": "];
+    self.captionTextView.text = [captionBegin stringByAppendingString:self.pin.captionText];
     // Set up page control
     self.currentIndex = 0;
     self.pageControl.numberOfPages = 0;
@@ -57,7 +60,14 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLiked:)];
     tapGesture.numberOfTapsRequired = 2;
     [self.likeButton addGestureRecognizer:tapGesture];
-}
+    // Set close friend status
+    if(self.pin.isCloseFriendPin) {
+        [self.closeFriendPost setImage:[UIImage systemImageNamed:@"star.fill"]];
+    }else{
+        [self.closeFriendPost setHidden:YES];
+    }
+} /* viewDidLoad */
+
 - (void)setLikeStatus {
     PFQuery *likeQuery = [PFQuery queryWithClassName:classNameUserPin];
     [likeQuery whereKey:@"userId" equalTo:self.currentUser.objectId];

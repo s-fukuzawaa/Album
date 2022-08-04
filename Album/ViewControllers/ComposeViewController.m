@@ -9,6 +9,7 @@
 #import "PhotoCollectionCell.h"
 #import <UITextView+Placeholder.h>
 #import <PhotosUI/PHPicker.h>
+#import <Photos/PHAsset.h>
 #import "Parse/Parse.h"
 #import "Image.h"
 #import "Pin.h"
@@ -20,9 +21,11 @@ PHPickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *captionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UIDatePicker *traveledDate;
+@property (weak, nonatomic) IBOutlet UIButton *closeFriendPinButton;
 @property (strong, nonatomic) PHPickerConfiguration *config;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (nonatomic) int currentIndex;
+@property (nonatomic) BOOL isClosePost;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
@@ -49,6 +52,11 @@ PHPickerViewControllerDelegate>
     self.currentIndex = 0;
     // Set up page control
     self.pageControl.numberOfPages = self.photos.count;
+    // Set up close friend post button
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.closeFriendPinButton setImage:[UIImage systemImageNamed:@"star"] forState:UIControlStateNormal];
+    });
+    self.isClosePost = NO;
 } /* viewDidLoad */
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -134,18 +142,20 @@ PHPickerViewControllerDelegate>
     self.pageControl.numberOfPages = 0;
     for (PHPickerResult *result in results) {
         // Get UIImage
-        [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object,
-                                                                                   NSError *_Nullable error)
-         {
-            if ([object isKindOfClass:[UIImage class]]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.pageControl.numberOfPages =
-                    self.pageControl.numberOfPages + 1;
-                    [self.photos addObject:(UIImage *)object];
-                    [self.imageCarouselView reloadData];
-                });
-            }
-        }];
+        if([result.itemProvider canLoadObjectOfClass:[UIImage class]]) {
+            [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object,
+                                                                                       NSError *_Nullable error)
+             {
+                if ([object isKindOfClass:[UIImage class]]) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.pageControl.numberOfPages =
+                        self.pageControl.numberOfPages + 1;
+                        [self.photos addObject:(UIImage *)object];
+                        [self.imageCarouselView reloadData];
+                    });
+                }
+            }];
+        }        
     }
 }
 
@@ -153,11 +163,9 @@ PHPickerViewControllerDelegate>
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
-    [self.pinImageView setImage:[self resizeImage:info[UIImagePickerControllerOriginalImage]
-                                         withSize:self.pinImageView.image.size]];
-    // TODO: Get date and set it to date picker default
-    NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
-    // Dismiss UIImagePickerController to go back to your original view controller
+    UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
+    originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
+    [self.photos addObject:originalImage];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -177,8 +185,21 @@ PHPickerViewControllerDelegate>
 - (IBAction)crossButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+- (IBAction)makeCloseFriendPin:(id)sender {
+    self.isClosePost = !self.isClosePost;
+    if(self.isClosePost) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.closeFriendPinButton setImage:[UIImage systemImageNamed:@"star.fill"] forState:UIControlStateNormal];
+        });
+    }else{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.closeFriendPinButton setImage:[UIImage systemImageNamed:@"star"] forState:UIControlStateNormal];
+        });
+    }
+}
 
 - (IBAction)postButton:(id)sender {
+    // Post new Pin
     Pin *newPin = [Pin new];
     newPin.author = [PFUser currentUser];
     newPin.captionText = self.captionTextView.text;
@@ -188,6 +209,7 @@ PHPickerViewControllerDelegate>
     newPin[@"latitude"] = @(self.coordinate.latitude);
     newPin[@"longitude"] = @(self.coordinate.longitude);
     newPin[@"traveledOn"] = self.traveledDate.date;
+    newPin[@"isCloseFriendPin"] = @(self.isClosePost);
     [newPin saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
         if (error) {
             NSLog(@"Error posting: %@", error.localizedDescription);
@@ -207,9 +229,8 @@ PHPickerViewControllerDelegate>
             [self.delegate didPost];
         }
     }];
-    
     [self dismissViewControllerAnimated:YES completion:nil];
-} /* postButton */
+}
 
 - (IBAction)tapped:(id)sender {
     [self.view endEditing:YES];

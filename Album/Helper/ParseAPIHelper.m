@@ -30,6 +30,13 @@
     }];
 }
 
+- (NSDateFormatter *)dateFormatter {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd, YYYY"];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    return dateFormatter;
+}
+
 - (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
@@ -56,6 +63,6 @@
         }
         block(friendArr,error);
     }];
-} /* fetchFriends */
+}
 
 @end

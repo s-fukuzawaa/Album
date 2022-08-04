@@ -26,6 +26,7 @@
 #pragma mark - IBAction
 
 - (IBAction)searchButton:(id)sender {
+    // Search user by username
     PFQuery *query = [PFUser query];
     PFUser *currentUser = [PFUser currentUser];
     [query whereKey:@"username" notEqualTo:currentUser.username];

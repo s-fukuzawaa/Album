@@ -28,7 +28,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
-@property (nonatomic, strong) NSDateFormatter *formatter;
+@property (nonatomic, strong) NSMutableDictionary *pinIdToUsername;
 @property (nonatomic, strong) ParseAPIHelper *apiHelper;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
 @property (nonatomic, weak) PFUser *currentUser;
@@ -36,6 +36,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic, strong) GMSAutocompleteFilter *filter;
 @property (nonatomic) int radius;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
+
 @end
 
 @implementation GoogleMapViewController
@@ -44,25 +45,29 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 - (void)loadView {
     [super loadView];
-    // Initialize the location manager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy =
-    kCLLocationAccuracyNearestTenMeters;
-    self.locationManager.delegate = self;
-    // Ask for authentication
-    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager startUpdatingLocation];
-    }
+    [self setLocationManager];
     // Set the intiial map view position
     CLLocation *curPos = self.locationManager.location;
-    GMSCameraPosition *camera =
-    [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude longitude:curPos.coordinate.longitude zoom:12];
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:curPos.coordinate.latitude
+                                                            longitude:curPos.coordinate.longitude
+                                                                 zoom:12];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     self.view = self.mapView;
     self.mapView.myLocationEnabled = true;
     self.mapView.delegate = self;
-} /* loadView */
+}
+
+- (void)setLocationManager {
+    // Initialize the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    self.locationManager.delegate = self;
+    // Ask for location permission
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager startUpdatingLocation];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -72,16 +77,14 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Set user
     self.currentUser = [PFUser currentUser];
-    
-    // Set date formatter
-    [self setFormatter];
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
     self.friendsIdSet = [[NSMutableSet alloc] init];
+    self.pinIdToUsername = [[NSMutableDictionary alloc] init];
     
     // Add animation when change segmentedControl
-    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];    
+    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
     self.coordinate = self.locationManager.location.coordinate;
@@ -90,14 +93,32 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [self fetchMarkers];
 } /* viewDidLoad */
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self setButton];
+    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
+                                                                  _mapView.camera.target.longitude);
+    [self setMarkerCircle:mapCenter];
+    [self fetchMarkers];
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        GMSCameraUpdate *locationCam = [GMSCameraUpdate setTarget:manager.location.coordinate zoom:12];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.coordinate = manager.location.coordinate;
+            [self.mapView animateWithCameraUpdate:locationCam];
+            [self.mapView clear];
+            [self setMarkerCircle:manager.location.coordinate];
+            [self fetchMarkers];
+        });
+    }
+}
+
+
 #pragma mark - UIView
 
-- (void)setFormatter {
-    // Set the date formatter
-    self.formatter = [[NSDateFormatter alloc] init];
-    [self.formatter setDateFormat:@"MMM dd, YYYY"];
-    [self.formatter setDateStyle:NSDateFormatterMediumStyle];
-}
 - (void)setMarkerCircle:(CLLocationCoordinate2D)mapCenter {
     GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
     marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
@@ -108,26 +129,22 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 }
 - (void)setButton {
     // Set button: 3 radius limiting options
-    UIAction *radius1 = [UIAction actionWithTitle:@"1000m" image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self recenterView:1000];
-        });
-    }];
-    UIAction *radius2 = [UIAction actionWithTitle:@"5000m" image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self recenterView:5000];
-        });
-    }];
-    UIAction *radius3 = [UIAction actionWithTitle:@"10000m" image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self recenterView:10000];
-        });
-    }];
-    NSArray *radiusOptions = [NSArray arrayWithObjects:radius1, radius2, radius3, nil];
+    NSArray *radiusOptions =
+    [NSArray arrayWithObjects:[self createRadiusAction:1000], [self createRadiusAction:5000], [self createRadiusAction:10000], nil];
     UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
 } /* setButton */
+
+- (UIAction *)createRadiusAction:(int)radius {
+    return [UIAction actionWithTitle:[NSString stringWithFormat:@"%d m",
+                                      radius] image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
+        dispatch_async(
+                       dispatch_get_main_queue(), ^{
+                           [self recenterView:radius];
+                       });
+    }];
+}
 
 // Recenter the view with a fixed radius
 - (void)recenterView:(int)radius {
@@ -155,8 +172,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // Used for switch control animation
 - (void)animate {
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
-    [UIView animateWithDuration:1 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
+    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
 }
 
 #pragma mark - IBAction
@@ -181,23 +198,20 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Display the autocomplete view controller.
     [self presentViewController:acController animated:YES completion:nil];
-
 }
 
 #pragma mark - Parse API
 
 - (void)fetchMarkers {
     NSInteger index = self.segmentedControl.selectedSegmentIndex;
-    if (index == 0) {
-        // Fetch current user's pins
-        [self fetchPersonal];
-    } else if (index == 1) {
-        // Fetch current user's pins
-        [self fetchPersonal];
+    // Fetch current user's pins
+    [self fetchPersonal];
+    if (index == 1) {
         // Fetch friends pins
         [self fetchFriends];
-    } else {
-        // Fetches pins of all users
+    } else if (index == 2) {
+        // Fetches pins of all public users
+        [self fetchFriends];
         [self fetchGlobal];
     }
 }
@@ -205,6 +219,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void)fetchPersonal {
     // Query to find markers that belong to current user
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+    [query orderByDescending:(@"traveledOn")];
     [query whereKey:@"author" equalTo:self.currentUser];
     double earthR = 6378137;
     double dLat = (double)(self.radius) / earthR;
@@ -224,48 +239,42 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchPersonal */
-
+}
+- (NSArray *)fetchUser:(NSString *)userId {
+    PFQuery *userQuery = [PFUser query];
+    [userQuery whereKey:@"objectId" equalTo:userId];
+    return [userQuery findObjects];
+}
 - (void)fetchFriends {
     // Query to find markers that belong to current user and current user's friend
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr,
-                                                                       NSError *error) {
-        if (friendArr != nil) {
+    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
+    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
+    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
+    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
+        if (friendships != nil) {
             // For each friend, find their pins
-            for (Friendship *friendship in
-                 friendArr)
-            {
-                NSString *friendId =
-                friendship[@"recipientId"];
-                PFUser *friend =
-                [self fetchUser:friendId][0];
-                [self.friendsIdSet addObject:
-                 friendId];
-                PFQuery *query =
-                [PFQuery queryWithClassName:
-                 classNamePin];
-                [query
-                 whereKey:@"author"
-                 equalTo:friend];
+            for (Friendship *friendship in friendships) {
+                NSString *friendId = friendship[@"recipientId"];
+                PFUser *friend = [self fetchUser:friendId][0];
+                [self.friendsIdSet addObject:friendId];
+                PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+                [query whereKey:@"author"
+                       equalTo:friend];
+                [query orderByDescending:(@"traveledOn")];
                 [query includeKey:@"objectId"];
-                // Calculate the radius degree based on flat earth calculation
-                double earthR = 6378137;
-                double dLat = (double)(self.radius) / earthR;
-                double dLon = (double)(self.radius) /
-                (earthR * cos(M_PI * self.coordinate.latitude / 180));
-                [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-                [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-                [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-                [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-                [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
+                // [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+                [query findObjectsInBackgroundWithBlock :^(NSArray *pins, NSError *error) {
                     if (pins != nil) {
                         // Store the pins, update count
                         NSLog(
                               @"Successfully fetched pins!");
                         // Add pins to the marker array
                         for (PFObject *pin in pins) {
-                            [self.markerArr
-                             addObject:pin];
+                            Pin *tempPin = (Pin *)pin;
+                            if (!tempPin.isCloseFriendPin || friendship.isClose) {
+                                [self.markerArr addObject:pin];
+                                [self.pinIdToUsername setObject:friend.username forKey:pin.objectId];
+                            }
                         }
                         // Reload markers
                         [self loadMarkers];
@@ -275,20 +284,17 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 }];
             }
         } else {
-            NSLog(@"%@", error.localizedDescription);
+            NSLog(@"%@",
+                  error.localizedDescription);
         }
     }];
-}
+} /* fetchFriends */
 
-// Used to find specfic user
-- (NSArray *)fetchUser:(NSString *)userId {
-    PFQuery *userQuery = [PFUser query];
-    [userQuery whereKey:@"objectId" equalTo:userId];
-    return [userQuery findObjects];
-}
+
 // Used to find all markers in database
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+    [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
     double earthR = 6378137;
     double dLat = (double)(self.radius) / earthR;
@@ -301,7 +307,17 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if (pins != nil) {
             // Store the posts, update count
             NSLog(@"Successfully fetched markers!");
-            self.markerArr = (NSMutableArray *)pins;
+            self.markerArr = [[NSMutableArray alloc] init];
+            for (PFObject *pin in pins) {
+                PFUser *author = pin[@"author"];
+                PFUser *user = [self fetchUser:author.objectId][0];
+                if (([user[@"isPublic"] isEqual:@(YES)] || [user isEqual:self.currentUser]) &&
+                    ![self.friendsIdSet containsObject:author.objectId])
+                {
+                    [self.markerArr addObject:pin];
+                    [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
+                }
+            }
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);
@@ -309,11 +325,10 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }];
 }
 
-- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
-    // Fetch pins with specific coordinate
+- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {// Fetch pins with specific coordinate
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    NSInteger index = self.segmentedControl.selectedSegmentIndex;
-    if (index == 0) {
+    NSInteger segmentControlIndex = self.segmentedControl.selectedSegmentIndex;
+    if (segmentControlIndex == 0) {
         [query whereKey:@"author" equalTo:self.currentUser];
     }
     [query whereKey:@"latitude" equalTo:@(coordinate.latitude)];
@@ -321,25 +336,25 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [query includeKey:@"objectId"];
     [query orderByDescending:(@"traveledOn")];
     NSMutableArray *pins = (NSMutableArray *)[query findObjects];
-    if (index == 1) {
-        int i = 0;
-        while (i < pins.count) {
-            Pin *pin = pins[i];
+    if (segmentControlIndex == 1) {
+        for(Pin *pin in pins) {
             if ([self.friendsIdSet containsObject:pin.author.objectId] == NO &&
                 [pin.author.objectId isEqual:self.currentUser.objectId] == NO)
             {
                 [pins removeObject:pin];
             }
-            i++;
         }
     }
     return pins;
-} /* fetchPinsFromCoord */
+}
+
 
 - (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
+    [query orderByAscending:(@"traveledOn")];
+
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
         NSMutableArray *images = [[NSMutableArray alloc] init];
         if (imageObjs != nil) {
@@ -356,7 +371,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         }
         block(images, error);
     }];
-} /* imagesFromPin */
+}
 
 #pragma mark - GMSMapViewDelegate
 
@@ -367,7 +382,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
     return NO;
 }
-
 - (void)         mapView:(GMSMapView *)mapView
     didTapPOIWithPlaceID:(NSString *)placeID
                     name:(NSString *)name
@@ -384,61 +398,55 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     mapView.selectedMarker = self.infoMarker;
 }
 
+- (InfoMarkerView *) loadingMarkerView:(UIActivityIndicatorView *) indicator{
+    InfoMarkerView * loadingMarkerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
+    indicator.hidesWhenStopped = YES;
+    indicator.frame = CGRectMake(35, 15, 30, 30);
+    indicator.center = loadingMarkerView.center;
+    [indicator startAnimating];
+    [loadingMarkerView addSubview:indicator];
+    [loadingMarkerView.pinImageView setHidden:YES];
+    [loadingMarkerView.usernameLabel setHidden:YES];
+    [loadingMarkerView.placeNameLabel setText:@"Loading..."];
+    [loadingMarkerView.dateLabel setHidden:YES];
+    return loadingMarkerView;
+}
+
+- (InfoMarkerView *) cachedMarkerView: (NSString*) title{
+    InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
+    Pin *firstPin = [self.placeToPins[title] lastObject];
+    // Set Image
+    NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
+    if (imagesFromPin.count != 0) {
+        [markerView.pinImageView setImage:imagesFromPin[0]];
+    }
+    // Set place name
+    [markerView.placeNameLabel setText:firstPin[@"placeName"]];
+    // Set username
+    NSString *username = ([firstPin.author.objectId isEqualToString:self.currentUser.objectId])? self.currentUser.username : self.pinIdToUsername[firstPin.objectId];
+    [markerView.usernameLabel setText:[@"@" stringByAppendingString:username]];
+    // Set date
+    NSString *date = [[self.apiHelper dateFormatter] stringFromDate:firstPin[@"traveledOn"]];
+    [markerView.dateLabel setText:date];
+    return markerView;
+}
+
 - (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
     // If cached data exists (if this coordinate has existing pins)
     if (self.placeToPins[marker.title]) {
-        InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
-        // Set Image
-        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if (imagesFromPin[0][@"imageFile"]) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [markerView.pinImageView setImage:image];
-                }
-            }];
-        }
-        // Set place name
-        [markerView.placeNameLabel setText:firstPin[@"placeName"]];
-        // Set date
-        NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
-        [markerView.dateLabel setText:date];
-        return markerView;
+        return [self cachedMarkerView:marker.title];
     }
     // Array of pins from the specific coordinate
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
     // Check if exisitng pins exist from this coordinate
     if (pinsFromCoord && pinsFromCoord.count > 0) {
-        InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-        UIActivityIndicatorView *indicator =
-        [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
-        indicator.hidesWhenStopped = YES;
-        indicator.frame = CGRectMake(35, 15, 30, 30);
-        indicator.center = markerView.center;
-        [indicator startAnimating];
-        [markerView addSubview:indicator];
-        [markerView.pinImageView setHidden:YES];
-        [markerView.placeNameLabel setText:@"Loading..."];
-        [markerView.dateLabel setHidden:YES];
+        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+        InfoMarkerView *markerView = [self loadingMarkerView:indicator];
         PFObject *firstPin = pinsFromCoord[0];
         if (!self.placeToPins[firstPin[@"placeName"]]) {
             [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:firstPin[@"placeName"]];
-        // Set image of the info window to first in the array
-        NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        if (imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [markerView.pinImageView setImage:image];
-                }
-            }];
         }
         [self.placeToPins[firstPin[@"placeName"]] addObject:firstPin];
         // Save images of the specific pin to the cache data structure
@@ -448,12 +456,19 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 // Set image of the info window to first in the array
                 NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
                 if (imagesFromPin && imagesFromPin.count > 0) {
-                    [markerView.pinImageView setImage:imagesFromPin[0]];
+                    PFFileObject *file = imagesFromPin[0][@"imageFile"];
+                    [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                        if (!error) {
+                            UIImage *image = [UIImage imageWithData:imageData];
+                            [markerView.pinImageView setImage:image];
+                        }
+                    }];
                 }
                 // Set place name
                 [markerView.placeNameLabel setText:firstPin[@"placeName"]];
                 // Set date
-                NSString *date = [self.formatter stringFromDate:firstPin[@"traveledOn"]];
+                NSString *date = [[self.apiHelper dateFormatter] stringFromDate:firstPin[@"traveledOn"]];
+
                 [markerView.dateLabel setText:date];
                 [indicator stopAnimating];
                 [markerView.pinImageView setHidden:NO];
@@ -469,7 +484,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
     infoWindow.placeName.text = marker.title;
     return infoWindow;
-}
+} /* mapView */
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
@@ -535,22 +550,12 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         GMSMarker *marker = sender;
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Images array
-        NSArray *imageObjs = self.pinImages[firstPin.objectId];
-        NSMutableArray *pinImages = [[NSMutableArray alloc] init];
-        // For each image object, get the image file and convert to UIImage
-        for (PFObject *imageObj in imageObjs) {
-            PFFileObject *file = imageObj[@"imageFile"];
-            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [pinImages addObject:image];
-                }
-            }];
-        }
+        NSMutableArray *pinImages = self.pinImages[firstPin.objectId];
         // Save pin
         detailsVC.pin = (Pin *)firstPin;
         detailsVC.imagesFromPin = pinImages;
+        // Save username
+        detailsVC.username = [self fetchUser:detailsVC.pin.author.objectId][0][@"username"];
     }
 }
 @end
-

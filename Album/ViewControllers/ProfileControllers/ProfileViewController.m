@@ -17,9 +17,10 @@
 #import "Parse/Parse.h"
 #import "PFImageView.h"
 
-@interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate, SettingsViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendsCollectionView;
 @property (weak, nonatomic) IBOutlet PFImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (strong, nonatomic) NSArray *friendships;
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) ParseAPIHelper *apiHelper;
@@ -62,6 +63,8 @@
 #pragma mark - Parse API
 - (void)setProfile {
     PFUser *user = [PFUser currentUser];
+    [self.usernameLabel setText:@"@"];
+    [self.usernameLabel setText:[self.usernameLabel.text stringByAppendingString:user.username]];
     if (user[@"profileImage"]) {
         PFFileObject *file = user[@"profileImage"];
         [self.profileImageView setFile:file];
@@ -117,15 +120,20 @@
     return CGSizeMake(dimensions, dimensions);
 }
 
+#pragma mark - SettingsViewControllerDelegate
+- (void)didUpdate {
+    self.currentUser = [PFUser currentUser];
+    [self viewDidLoad];
+}
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     if ([segue.identifier isEqualToString:@"settingsSegue"]) {
         UINavigationController *navigationController = [segue destinationViewController];
         SettingsViewController *settingsController = (SettingsViewController *)navigationController.topViewController;
-        //        settingsController.delegate = self; TODO: Add delegate later
+        settingsController.delegate = self;
     } else if ([segue.identifier isEqualToString:@"friendProfileSegue"]) {
         NSIndexPath *indexPath = [self.friendsCollectionView indexPathForCell:(PhotoCollectionCell *)sender];
         FriendProfileViewController *friendVC = [segue destinationViewController];

@@ -92,21 +92,8 @@
             [self loadMarkers];
         } else {
             NSLog(@"%@", error.localizedDescription);
-            [self alertError: error.localizedDescription];
         }
     }];
-}
-
-- (void) alertError: (NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!" message:message
-                                                            preferredStyle:(UIAlertControllerStyleAlert)];
-    
-    // Create an OK action
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:nil];
-    [alert addAction:okAction];
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
@@ -158,16 +145,9 @@
         PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
         // Set Image
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
-        PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-        [markerView.pinImageView setFile:imageFile];
-        [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [markerView.pinImageView setImage:image];
-            }else {
-                [self alertError:error.localizedDescription];
-            }
-        }];
+        if (imagesFromPin.count != 0) {
+            [markerView.pinImageView setImage:imagesFromPin[0]];
+        }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];
         // Set date
@@ -197,16 +177,7 @@
         // Set image of the info window to first in the array
         NSArray *imagesFromPin = self.pinImages[firstPin.objectId];
         if (imagesFromPin && imagesFromPin.count > 0) {
-            PFFileObject *imageFile = imagesFromPin[0][@"imageFile"];
-            [markerView.pinImageView setFile:imageFile];
-            [imageFile getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    [markerView.pinImageView setImage:image];
-                }else {
-                    [self alertError:error.localizedDescription];
-                }
-            }];
+            [markerView.pinImageView setImage:imagesFromPin[0]];
         }
         // Set place name
         [markerView.placeNameLabel setText:firstPin[@"placeName"]];

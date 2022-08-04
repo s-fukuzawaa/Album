@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) PFUser *author;
 @property (nonatomic, strong) NSDate *createdAt;
 @property (nonatomic, strong) NSDate *traveledOn;
+@property (nonatomic) BOOL isCloseFriendPin;
 @end
 
 NS_ASSUME_NONNULL_END

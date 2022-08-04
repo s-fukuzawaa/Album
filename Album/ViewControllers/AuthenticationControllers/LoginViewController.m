@@ -32,6 +32,7 @@
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
+        // add the cancel action to the alertController
         [alert addAction:cancelAction];
         
         // Create an OK action
@@ -54,6 +55,7 @@
         }
     }];
 }
+
 - (IBAction)signUpButton:(id)sender {
     [self performSegueWithIdentifier:@"signupSegue" sender:nil];
 }

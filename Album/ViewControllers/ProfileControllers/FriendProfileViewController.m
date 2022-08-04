@@ -19,6 +19,9 @@
 @property (weak, nonatomic) IBOutlet PFImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIButton *friendButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (weak, nonatomic) IBOutlet UILabel *isPublicLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *closeFriendStarView;
+@property (weak, nonatomic) IBOutlet UIImageView *lockImageView;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -33,18 +36,43 @@
 #pragma mark - UIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.friendMapContainer.alpha = 0.0;
-    self.friendsGridContainer.alpha = 1.0;
     // Set user profile image view
     [self fetchProfile];
     // Set request statuses
     [self fetchRequestStatus];
     // Set friend statuses
     [self fetchFriendStatus];
+    
     // Update button UI
     [self updateButton];
+    // Update isPublic status
+    [self setIsPublicLabel];
+    // Set close friend star to be invisible in general
+    [self.closeFriendStarView setHidden:YES];
 }
 
+- (void) setIsPublicLabel {
+    if([self.user[@"isPublic"] isEqual:@(YES)]) {
+        [self.isPublicLabel setText: @"Public Account"];
+    }else{
+        [self.isPublicLabel setText: @"Private Account"];
+    }
+}
+- (void)fetchProfile {
+    PFUser *user = self.user;
+    if (user[@"profileImage"]) {
+        PFFileObject *file = user[@"profileImage"];
+        [self.userImageView setFile:file];
+        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [self.userImageView setImage:image];
+                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
+                self.userImageView.layer.masksToBounds = YES;
+            }
+        }];
+    }
+}
 #pragma mark - UIView
 - (void)updateButton {
     UIColor *friendshipButtonBackgroundColor;
@@ -54,18 +82,27 @@
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Received Request";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     } else if ([self.friendStatus intValue] == FRIENDED) {
         friendshipButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
         friendshipButtonText = @"Friended";
         friendshipButtonTitleColor = [UIColor whiteColor];
+        [self.closeFriendStarView setHidden:NO];
+        if(self.friendship.isClose) {
+            [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star.fill"]];
+        }else{
+            [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star"]];
+        }
     } else if ([self.friendStatus intValue] == PENDING) {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Pending";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     } else {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Request Friend?";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        [self.closeFriendStarView setHidden:YES];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];
@@ -115,22 +152,6 @@
 
 #pragma mark - Parse API
 
-- (void)fetchProfile {
-    PFUser *user = self.user;
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.userImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.userImageView setImage:image];
-                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
-                self.userImageView.layer.masksToBounds = YES;
-            }
-        }];
-    }
-}
-
 - (void)fetchFriendStatus {
     // Query to fetch friend status
     PFQuery *query = [PFQuery queryWithClassName:classNameFriendship];
@@ -149,6 +170,19 @@
                 self.friendStatus = self.friendship.hasFriended;
                 // Update button UI
                 [self updateButton];
+                // If private account and not friend, do not display anything
+                if ([self.friendStatus intValue] == NOT_FRIEND && [self.user[@"isPublic"] isEqual:@(NO)]) {
+                    // Initial view to lock view
+                    self.friendMapContainer.alpha = 0.0;
+                    self.friendsGridContainer.alpha = 0.0;
+                    [self.lockImageView setHidden:NO];
+                    [self.segmentedControl setEnabled:NO];
+                }else{
+                    // Initial view to friend map view
+                    self.friendMapContainer.alpha = 0.0;
+                    self.friendsGridContainer.alpha = 1.0;
+                    [self.lockImageView setHidden:YES];
+                }
             }
         } else {
             NSLog(@"%@", error.localizedDescription);
@@ -267,6 +301,13 @@
     [self updateButton];
 } /* friendButton */
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NULL;
+}
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *requesterId;
 @property (nonatomic, strong) NSString *recipientId;
 @property (nonatomic, strong) NSNumber *hasFriended;
+@property (nonatomic) BOOL isClose;
 @end
 
 NS_ASSUME_NONNULL_END

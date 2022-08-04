@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
+@property (nonatomic) BOOL isPublic;
 @end
 
 @implementation SignUpViewController
@@ -35,10 +36,19 @@
     // Add color converting helper object
     self.colorHelper = [[ColorConvertHelper alloc] init];
 }
+- (IBAction)isPublicSwitch:(id)sender {
+    UISwitch *mySwitch = (UISwitch *)sender;
+    if ([mySwitch isOn]) {
+        self.isPublic = NO;
+    } else {
+        self.isPublic = YES;
+    }
+}
 
 #pragma mark - IBAction
 
 - (IBAction)signUpButton:(id)sender {
+    // Sign up user to Parse backend
     [self registerUser];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -55,6 +65,9 @@
     [colorPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:colorPicker animated:YES completion:nil];
 }
+- (IBAction)cancelButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 #pragma mark - Parse API
 
@@ -65,8 +78,9 @@
     newUser.username = self.usernameField.text;
     newUser.email = self.emailField.text;
     newUser.password = self.pwField.text;
-    newUser[@"profileImage"] = self.profileImageView.file;
+    newUser[@"profileImage"] = [self getPFFileFromImage:self.profileImageView.image];
     newUser[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
+    newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
         UIAlertController *alert =
@@ -200,5 +214,4 @@
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 @end
