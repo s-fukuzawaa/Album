@@ -95,7 +95,14 @@
                 UIImage *image = [UIImage imageWithData:imageData];
                 [self.profileImageView setImage:image];
                 self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = YES;
+                self.profileImageView.layer.masksToBounds = NO;
+//                [self.profileImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+//                [self.profileImageView.layer setBorderWidth:5];
+                [self.profileImageView.layer setShadowRadius:5];
+                [self.profileImageView.layer setShadowColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+                [self.profileImageView.layer setShadowOpacity:1];
+                [self.profileImageView.layer setShadowOffset:CGSizeMake(0,0)];
+                self.profileImageView.clipsToBounds = NO;
             }
         }];
     }
@@ -133,8 +140,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
         profileCell.photoImageView.layer.masksToBounds = YES;
-        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
-        [profileCell.photoImageView.layer setBorderWidth:1.5];
+        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderWidth:3];
     });
     return profileCell;
 }

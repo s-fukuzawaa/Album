@@ -109,8 +109,8 @@
         [cell.closeFriendButton setTitleColor:closeFriendButtonBackgroundColor forState:UIControlStateNormal];
         [cell.closeFriendButton setTitle:closeFriendButtonText forState:UIControlStateNormal];
         [cell.closeFriendButton setBackgroundColor:closeFriendButtonTitleColor];
-        [cell.closeFriendButton.layer setCornerRadius:10];
-        [cell.layer setCornerRadius:20];
+        [cell.closeFriendButton.layer setCornerRadius:20];
+        [cell.layer setCornerRadius:15];
         [cell setClipsToBounds:YES];
         CAGradientLayer *grad = [CAGradientLayer layer];
         grad.frame = cell.bounds;
