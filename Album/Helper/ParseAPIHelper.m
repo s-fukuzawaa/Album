@@ -37,6 +37,13 @@
     return dateFormatter;
 }
 
+- (NSDateFormatter *)dateFormatter {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd, YYYY"];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    return dateFormatter;
+}
+
 - (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
@@ -49,6 +56,14 @@
             // For each friend, find their pins
             for (Friendship *friendship in friendships) {
                 NSString *friendId = friendship[@"recipientId"];
+//                [self fetchUser:friendId withBlock:^(NSArray * _Nullable friends, NSError * _Nullable error) {
+//                    if(friends != nil) {
+//                        NSLog(@"Successfully fetched friends!");
+//                        [friendArr addObject:friends[0]];
+//                    }else {
+//                        NSLog(@"%@", error.localizedDescription);
+//                    }
+//                }];
                 [friendArr addObject:[self fetchUser:friendId][0]];
             }
         } else {
