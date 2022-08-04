@@ -153,14 +153,30 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.radius = radius;
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(self.mapView.camera.target.latitude,
                                                                   self.mapView.camera.target.longitude);
-    self.coordinate = mapCenter;
     [self.mapView clear];
     [self setMarkerCircle:mapCenter];
-    [self fetchMarkers];
+    // If the center changed, reload 10000 in radius
+    // Otherwise load only markers in radius
+    if(self.coordinate.latitude != mapCenter.latitude || self.coordinate.longitude != mapCenter.longitude) {
+        self.coordinate = mapCenter;
+        [self fetchMarkers];
+    }else {
+        [self loadMarkers];
+    }
+    
 }
 - (void)loadMarkers {
     // Place markers on initial map view
+    double dLat = (double)(self.radius) / earthR;
+    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    double latLowerLimit = self.coordinate.latitude - dLat * 180 / M_PI;
+    double latUpperLimit = self.coordinate.latitude + dLat * 180 / M_PI
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
     for (Pin *pin in self.markerArr) {
+        if(pin.)
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         PFUser *author = pin.author;

@@ -561,20 +561,22 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="tyG-pV-eiJ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                    <rect key="frame" x="14" y="14" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="100" id="MPJ-sW-qzq"/>
+                                                        <constraint firstAttribute="width" constant="100" id="Ucf-aX-D6I"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="tyG-pV-eiJ" secondAttribute="bottom" id="6z4-q4-SGa"/>
-                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="top" secondItem="nDZ-to-fQD" secondAttribute="top" id="KKR-19-BFT"/>
-                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="leading" secondItem="nDZ-to-fQD" secondAttribute="leading" id="KWQ-ev-Phb"/>
-                                                <constraint firstAttribute="trailing" secondItem="tyG-pV-eiJ" secondAttribute="trailing" id="dEa-O1-JPA"/>
+                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="centerY" secondItem="nDZ-to-fQD" secondAttribute="centerY" id="Twb-gi-STJ"/>
+                                                <constraint firstItem="tyG-pV-eiJ" firstAttribute="centerX" secondItem="nDZ-to-fQD" secondAttribute="centerX" id="faJ-0D-6E4"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="128" height="128"/>
                                         <connections>
                                             <outlet property="photoImageView" destination="tyG-pV-eiJ" id="5GG-51-SVu"/>
-                                            <segue destination="M2k-nZ-AUg" kind="show" id="3iu-cH-Rgq"/>
+                                            <segue destination="M2k-nZ-AUg" kind="show" identifier="friendProfileSegue" id="3iu-cH-Rgq"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -1362,19 +1364,25 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="profileCell" id="Vj7-pQ-QqL" customClass="PhotoCollectionCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="oMg-IM-3ht">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-hC-HJR">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-hC-HJR">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="100" id="4E1-ML-vTL"/>
+                                                        <constraint firstAttribute="height" constant="100" id="KDH-2t-wuZ"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerX" secondItem="oMg-IM-3ht" secondAttribute="centerX" id="7ex-gm-a5I"/>
-                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerY" secondItem="oMg-IM-3ht" secondAttribute="centerY" id="qv7-S3-S52"/>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerX" secondItem="oMg-IM-3ht" secondAttribute="centerX" id="Wei-Dy-HhS"/>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="leading" secondItem="oMg-IM-3ht" secondAttribute="leading" id="pFq-Ca-RDf"/>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="top" secondItem="oMg-IM-3ht" secondAttribute="top" id="tFl-LM-wCD"/>
+                                                <constraint firstItem="IQL-hC-HJR" firstAttribute="centerY" secondItem="oMg-IM-3ht" secondAttribute="centerY" id="wdz-nX-hXi"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
