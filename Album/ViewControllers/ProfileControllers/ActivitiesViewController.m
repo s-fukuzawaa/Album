@@ -7,6 +7,7 @@
 
 #import "ActivitiesViewController.h"
 #import "FriendProfileViewController.h"
+#import "ColorConvertHelper.h"
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 #import "AlbumConstants.h"
@@ -14,7 +15,7 @@
 @interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *friendRequests;
-
+@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @end
 
 @implementation ActivitiesViewController
@@ -32,6 +33,8 @@
     self.tableView.dataSource = self;
     self.friendRequests = [[NSMutableArray alloc] init];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
+    
 }
 
 #pragma mark - IBAction
@@ -76,6 +79,31 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActivityCell"];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [cell.layer setCornerRadius:20];
+//        [cell setClipsToBounds:YES];
+//        CAGradientLayer *grad = [CAGradientLayer layer];
+//        grad.frame = cell.bounds;
+//        UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"A9C9FF"];
+//        UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"9599E2"];
+//        grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
+//        grad.startPoint = CGPointMake(0.0, 0.5);
+//        grad.endPoint = CGPointMake(1.0, 0.5);
+//        [cell setBackgroundView:[[UIView alloc] init]];
+//        [cell.backgroundView.layer insertSublayer:grad atIndex:0];
+//    });
+    [cell.layer setCornerRadius:20];
+    [cell setClipsToBounds:YES];
+    CAGradientLayer *grad = [CAGradientLayer layer];
+    grad.frame = cell.bounds;
+    UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"FF9A8B"];
+    UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"FF6A88"];
+    UIColor* thirdColor = [self.colorConvertHelper colorFromHexString:@"FF99AC"];
+    grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], (id)[thirdColor CGColor], nil];
+    grad.startPoint = CGPointMake(0.0, 0.5);
+    grad.endPoint = CGPointMake(1.0, 0.5);
+    [cell setBackgroundView:[[UIView alloc] init]];
+    [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     cell.user = self.friendRequests[indexPath.row];
     return cell;
 }

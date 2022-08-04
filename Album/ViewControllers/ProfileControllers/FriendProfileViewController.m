@@ -37,12 +37,7 @@
 #pragma mark - UIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Set user profile image view
-    [self fetchProfile];
-    // Set request statuses
-    [self fetchRequestStatus];
-    // Set friend statuses
-    [self fetchFriendStatus];
+    
     
     // Update button UI
     [self updateButton];
@@ -54,6 +49,15 @@
     [self.closeFriendStarView setHidden:YES];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // Set user profile image view
+    [self fetchProfile];
+    // Set request statuses
+    [self fetchRequestStatus];
+    // Set friend statuses
+    [self fetchFriendStatus];
+}
 - (void) setIsPublicLabel {
     if([self.user[@"isPublic"] isEqual:@(YES)]) {
         [self.isPublicLabel setText: @"Public Account"];
@@ -336,19 +340,13 @@
 }
 #pragma mark - FriendMapViewControllerDelegate
 
-- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)imageFiles {
+- (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)images {
     self.pin = pin;
     // Set Images array
     NSMutableArray *pinImages = [[NSMutableArray alloc] init];
     // For each image object, get the image file and convert to UIImage
-    for (PFObject *imageObj in imageFiles) {
-        PFFileObject *file = imageObj[@"imageFile"];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [pinImages addObject:image];
-            }
-        }];
+    for (PFObject *image in images) {
+        [pinImages addObject:image];
     }
     self.imagesToDetail = pinImages;
     [self performSegueWithIdentifier:@"friendProfileDetailsSegue" sender:nil];

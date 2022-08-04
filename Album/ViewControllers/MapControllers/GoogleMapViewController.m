@@ -95,6 +95,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.mapView clear];
     [self setButton];
     CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
                                                                   _mapView.camera.target.longitude);
@@ -134,6 +135,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
+    [self.navigationItem.leftBarButtonItem setTintColor:[UIColor blackColor]];
 } /* setButton */
 
 - (UIAction *)createRadiusAction:(int)radius {
