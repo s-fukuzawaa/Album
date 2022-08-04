@@ -31,12 +31,16 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic, strong) NSMutableDictionary *pinIdToUsername;
 @property (nonatomic, strong) ParseAPIHelper *apiHelper;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
+@property (nonatomic, strong) NSMutableSet *closeFriendsIdSet; // User IDs of current user's close friends
+
 @property (nonatomic, weak) PFUser *currentUser;
 @property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @property (nonatomic, strong) GMSAutocompleteFilter *filter;
 @property (nonatomic) int radius;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
-
+@property (nonatomic) BOOL fetchedPersonal;
+@property (nonatomic) BOOL fetchedFriend;
+@property (nonatomic) BOOL fetchedGlobal;
 @end
 
 @implementation GoogleMapViewController
@@ -81,6 +85,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
     self.friendsIdSet = [[NSMutableSet alloc] init];
+    self.closeFriendsIdSet = [[NSMutableSet alloc] init];
     self.pinIdToUsername = [[NSMutableDictionary alloc] init];
     
     // Add animation when change segmentedControl
@@ -90,7 +95,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.coordinate = self.locationManager.location.coordinate;
     [self setButton];
     [self setMarkerCircle:mapCenter];
-    [self fetchMarkers];
 } /* viewDidLoad */
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -170,22 +174,41 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     double dLat = (double)(self.radius) / earthR;
     double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
     double latLowerLimit = self.coordinate.latitude - dLat * 180 / M_PI;
-    double latUpperLimit = self.coordinate.latitude + dLat * 180 / M_PI
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+    double latUpperLimit = self.coordinate.latitude + dLat * 180 / M_PI;
+    double longLowerLimit = self.coordinate.longitude - dLon * 180 / M_PI;
+    double longUpperLimit = self.coordinate.longitude + dLon * 180 / M_PI;
     for (Pin *pin in self.markerArr) {
-        if(pin.)
-        GMSMarker *marker = [[GMSMarker alloc] init];
-        marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
-        PFUser *author = pin.author;
-        PFUser *friend = [self fetchUser:author.objectId][0];
-        marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:friend[@"colorHexString"]]];
-        marker.title = pin.placeName;
-        marker.snippet = pin.placeID;
-        marker.map = self.mapView;
+        if(pin.longitude <= longUpperLimit && pin.longitude >= longLowerLimit
+           && pin.latitude <= latUpperLimit && pin.latitude >= latLowerLimit) {
+            PFUser *author = pin.author;
+            PFUser *user = [self fetchUser:author.objectId][0];
+            if([self segmentControlStatusCheck:user pin:pin]) {
+                [self createMarker:pin color:user[@"colorHexString"]];
+            }
+        }
     }
+}
+- (BOOL) segmentControlStatusCheck: (PFUser *) user pin:(Pin*) pin{
+    if([user.objectId isEqualToString:self.currentUser.objectId]) {
+        return YES;
+    }
+    if (self.segmentedControl.selectedSegmentIndex != 0 && !pin.isCloseFriendPin || [self.closeFriendsIdSet containsObject:user.objectId]){
+        return YES;
+    }else if(self.segmentedControl.selectedSegmentIndex == 1 && [self.friendsIdSet containsObject:user.objectId]) {
+        return YES;
+    }else if(self.segmentedControl.selectedSegmentIndex == 2
+             && [user[@"isPublic"] isEqual:@(YES)]) {
+        return YES;
+    }
+    return NO;
+}
+- (void) createMarker: (Pin*) pin color: (NSString*) color {
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
+    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:color]];
+    marker.title = pin.placeName;
+    marker.snippet = pin.placeID;
+    marker.map = self.mapView;
 }
 
 // Used for switch control animation
@@ -221,37 +244,11 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 #pragma mark - Parse API
 
 - (void)fetchMarkers {
-    NSInteger index = self.segmentedControl.selectedSegmentIndex;
     // Fetch current user's pins
-    [self fetchPersonal];
-    if (index == 1) {
-        // Fetch friends pins
-        [self fetchFriends];
-    } else if (index == 2) {
-        // Fetches pins of all public users
-        [self fetchFriends];
-        [self fetchGlobal];
-    }
+    [self fetchFriends];
+    [self fetchGlobal];
 }
 
-- (void)fetchPersonal {
-    // Query to find markers that belong to current user
-    PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-    [query orderByDescending:(@"traveledOn")];
-    [query whereKey:@"author" equalTo:self.currentUser];
-    [self constructQuery:query];
-    [query includeKey:@"objectId"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
-        if (pins != nil) {
-            // Store the posts, update count
-            NSLog(@"Successfully fetched markers!");
-            self.markerArr = (NSMutableArray *)pins;
-            [self loadMarkers];
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-}
 - (NSArray *)fetchUser:(NSString *)userId {
     PFQuery *userQuery = [PFUser query];
     [userQuery whereKey:@"objectId" equalTo:userId];
@@ -267,32 +264,10 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             // For each friend, find their pins
             for (Friendship *friendship in friendships) {
                 NSString *friendId = friendship[@"recipientId"];
-                PFUser *friend = [self fetchUser:friendId][0];
                 [self.friendsIdSet addObject:friendId];
-                PFQuery *query = [PFQuery queryWithClassName:classNamePin];
-                [query whereKey:@"author"
-                       equalTo:friend];
-                [query orderByDescending:(@"traveledOn")];
-                [query includeKey:@"objectId"];
-                [self constructQuery:query];
-                [query findObjectsInBackgroundWithBlock :^(NSArray *pins, NSError *error) {
-                    if (pins != nil) {
-                        // Store the pins, update count
-                        NSLog(@"Successfully fetched pins!");
-                        // Add pins to the marker array
-                        for (PFObject *pin in pins) {
-                            Pin *tempPin = (Pin *)pin;
-                            if (!tempPin.isCloseFriendPin || friendship.isClose) {
-                                [self.markerArr addObject:pin];
-                                [self.pinIdToUsername setObject:friend.username forKey:pin.objectId];
-                            }
-                        }
-                        // Reload markers
-                        [self loadMarkers];
-                    } else {
-                        NSLog(@"%@", error.localizedDescription);
-                    }
-                }];
+                if(friendship.isClose){
+                    [self.closeFriendsIdSet addObject:friendId];
+                }
             }
         } else {
             NSLog(@"%@",
@@ -304,8 +279,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void)constructQuery:(PFQuery *)query {
     [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
-    double dLat = (double)(self.radius) / earthR;
-    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    double dLat = (double)(10000) / earthR;
+    double dLon = (double)(10000) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
     [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
     [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
     [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
@@ -326,12 +301,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             for (PFObject *pin in pins) {
                 PFUser *author = pin[@"author"];
                 PFUser *user = [self fetchUser:author.objectId][0];
-                if (([user[@"isPublic"] isEqual:@(YES)] || [user isEqual:self.currentUser]) &&
-                    ![self.friendsIdSet containsObject:author.objectId])
-                {
-                    [self.markerArr addObject:pin];
-                    [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
-                }
+                [self.markerArr addObject:pin];
+                [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
             }
             [self loadMarkers];
         } else {
