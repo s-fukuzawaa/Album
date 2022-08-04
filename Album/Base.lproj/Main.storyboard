@@ -196,11 +196,19 @@
                                     <constraint firstAttribute="height" constant="432" id="5fo-jS-nZK"/>
                                     <constraint firstAttribute="width" constant="416" id="Q2A-tR-zxU"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Uht-gi-Hlf">
-                                    <size key="itemSize" width="300" height="300"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Uht-gi-Hlf" customClass="UPCarouselFlowLayout" customModule="UPCarouselFlowLayout">
+                                    <size key="itemSize" width="416" height="432"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="sideItemAlpha">
+                                            <real key="value" value="0.40000000000000002"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="sideItemScale">
+                                            <real key="value" value="0.59999999999999998"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailCell" id="vtF-kL-jH6" customClass="PhotoCollectionCell">
@@ -212,22 +220,15 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="1EN-8Y-9kp">
                                                     <rect key="frame" x="0.0" y="0.0" width="416" height="432"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="416" id="FgE-ep-IeJ"/>
-                                                        <constraint firstAttribute="height" constant="416" id="hed-27-hoL"/>
-                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="1EN-8Y-9kp" secondAttribute="trailing" id="Ax2-w9-ddw"/>
                                                 <constraint firstItem="1EN-8Y-9kp" firstAttribute="leading" secondItem="jeO-6a-kqb" secondAttribute="leading" id="DOY-Na-jLs"/>
-                                                <constraint firstItem="1EN-8Y-9kp" firstAttribute="centerY" secondItem="jeO-6a-kqb" secondAttribute="centerY" id="HVX-wf-hr8"/>
-                                                <constraint firstItem="1EN-8Y-9kp" firstAttribute="centerX" secondItem="jeO-6a-kqb" secondAttribute="centerX" id="Rx2-yW-f4z"/>
                                                 <constraint firstAttribute="bottom" secondItem="1EN-8Y-9kp" secondAttribute="bottom" id="aVH-ms-6eW"/>
                                                 <constraint firstItem="1EN-8Y-9kp" firstAttribute="top" secondItem="jeO-6a-kqb" secondAttribute="top" id="zlE-dI-hhJ"/>
                                             </constraints>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="416" height="432"/>
                                         <connections>
                                             <outlet property="photoImageView" destination="1EN-8Y-9kp" id="hyN-iL-0Tb"/>
                                         </connections>
@@ -818,51 +819,6 @@
             </objects>
             <point key="canvasLocation" x="4934.7826086956529" y="2479.6875"/>
         </scene>
-        <!--Album View Controller-->
-        <scene sceneID="I7S-sM-kil">
-            <objects>
-                <viewController id="PQn-Cm-FLX" customClass="AlbumViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="gfN-Bl-5Dr">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="3cv-d9-hxa">
-                                <rect key="frame" x="0.0" y="171" width="414" height="606"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="idE-BW-4e5">
-                                    <size key="itemSize" width="414" height="578"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="MJh-J9-GxZ">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="578"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="cem-Yi-8qY">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="578"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </collectionViewCellContentView>
-                                        <size key="customSize" width="414" height="578"/>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="miw-py-gNZ">
-                                <rect key="frame" x="149" y="751" width="116" height="26"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="labelColor"/>
-                            </pageControl>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="4Im-p9-ggw"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="obP-1C-T4v"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Xq8-Q9-zd5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3600.0000000000005" y="161.38392857142856"/>
-        </scene>
         <!--Google Map View Controller-->
         <scene sceneID="9Td-c7-Cru">
             <objects>
@@ -975,7 +931,6 @@
                     <connections>
                         <segue destination="wp4-x0-zqP" kind="relationship" relationship="viewControllers" id="XYh-ff-07Y"/>
                         <segue destination="WM1-Lv-cOr" kind="relationship" relationship="viewControllers" id="0aM-8W-hyM"/>
-                        <segue destination="Gpg-vH-D5Z" kind="relationship" relationship="viewControllers" id="UjN-Vw-hxW"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="crV-at-EmG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1161,19 +1116,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-ZC-55u" customClass="PFImageView">
-                                <rect key="frame" x="130" y="119" width="153" height="151"/>
+                                <rect key="frame" x="130" y="119" width="154" height="151"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="151" id="qej-h8-IYi"/>
                                 </constraints>
                             </imageView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
-                                <rect key="frame" x="0.0" y="451" width="413" height="445"/>
+                                <rect key="frame" x="0.0" y="451" width="414" height="445"/>
                                 <connections>
                                     <segue destination="v8b-bp-BxU" kind="embed" identifier="friendGridSegue" id="sPz-9s-BLv"/>
                                 </connections>
                             </containerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8Jm-G3-bax">
-                                <rect key="frame" x="0.0" y="413" width="413" height="32"/>
+                                <rect key="frame" x="0.0" y="413" width="414" height="32"/>
                                 <segments>
                                     <segment title="Friends"/>
                                     <segment title="Map"/>
@@ -1183,13 +1138,13 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
-                                <rect key="frame" x="0.0" y="452" width="413" height="444"/>
+                                <rect key="frame" x="0.0" y="452" width="414" height="444"/>
                                 <connections>
                                     <segue destination="Wk6-GE-gYZ" kind="embed" identifier="friendMapSegue" id="9uL-R6-ZQy"/>
                                 </connections>
                             </containerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
-                                <rect key="frame" x="130" y="310" width="153" height="31"/>
+                                <rect key="frame" x="130" y="310" width="154" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Friend"/>
                                 <connections>
@@ -1197,7 +1152,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUT-wS-jsS">
-                                <rect key="frame" x="149.5" y="369" width="114" height="21"/>
+                                <rect key="frame" x="150" y="369" width="114" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1215,6 +1170,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" systemColor="labelColor"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TL9-XE-Wn3">
+                                <rect key="frame" x="161.5" y="281" width="91" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ofq-Iq-PSZ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1225,9 +1186,10 @@
                             <constraint firstItem="RUT-wS-jsS" firstAttribute="centerX" secondItem="VyU-ZC-55u" secondAttribute="centerX" id="7j1-V3-rAc"/>
                             <constraint firstItem="4hh-dS-94o" firstAttribute="bottom" secondItem="oqS-7G-ghx" secondAttribute="bottom" id="86d-l1-3gy"/>
                             <constraint firstItem="oqS-7G-ghx" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="8" symbolic="YES" id="EVL-vq-yBx"/>
-                            <constraint firstItem="aFm-sW-y2H" firstAttribute="leading" secondItem="Ofq-Iq-PSZ" secondAttribute="leading" constant="333" id="EdH-fH-41B"/>
                             <constraint firstItem="VyU-ZC-55u" firstAttribute="leading" secondItem="9cN-q4-ZWy" secondAttribute="leading" id="Elt-Bb-DMO"/>
+                            <constraint firstItem="TL9-XE-Wn3" firstAttribute="centerX" secondItem="VyU-ZC-55u" secondAttribute="centerX" id="FEp-n4-B8R"/>
                             <constraint firstItem="8Jm-G3-bax" firstAttribute="top" secondItem="3pN-hL-cC4" secondAttribute="top" constant="413" id="Gjm-0S-B1W"/>
+                            <constraint firstItem="9cN-q4-ZWy" firstAttribute="top" secondItem="TL9-XE-Wn3" secondAttribute="bottom" constant="8" symbolic="YES" id="IiM-mn-D4c"/>
                             <constraint firstItem="oqS-7G-ghx" firstAttribute="trailing" secondItem="Ofq-Iq-PSZ" secondAttribute="trailing" id="J2F-7I-SwU"/>
                             <constraint firstItem="4hh-dS-94o" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="7" id="P4D-aZ-3aY"/>
                             <constraint firstItem="VyU-ZC-55u" firstAttribute="top" secondItem="Ofq-Iq-PSZ" secondAttribute="top" constant="31" id="SkQ-nE-4fZ"/>
@@ -1253,6 +1215,7 @@
                         <outlet property="lockImageView" destination="gT4-rY-0Uy" id="rPZ-UE-DUb"/>
                         <outlet property="segmentedControl" destination="8Jm-G3-bax" id="hLp-q8-Byq"/>
                         <outlet property="userImageView" destination="VyU-ZC-55u" id="rHr-RS-wsy"/>
+                        <outlet property="usernameLabel" destination="TL9-XE-Wn3" id="yk6-fh-hVo"/>
                         <segue destination="ZfE-dK-8F4" kind="presentation" identifier="friendProfileDetailsSegue" id="nli-5v-IW8"/>
                     </connections>
                 </viewController>
@@ -1345,11 +1308,11 @@
             <objects>
                 <viewController id="v8b-bp-BxU" customClass="FriendGridViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NgE-ou-ek6">
-                        <rect key="frame" x="0.0" y="0.0" width="413" height="445"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="445"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="l3Z-u2-WvE">
-                                <rect key="frame" x="8" y="8" width="397" height="429"/>
+                                <rect key="frame" x="8" y="8" width="398" height="429"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LYn-4P-fL0">
                                     <size key="itemSize" width="128" height="128"/>
@@ -1401,7 +1364,7 @@
             <objects>
                 <viewController id="Wk6-GE-gYZ" customClass="FriendMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="paT-Fk-Ubi">
-                        <rect key="frame" x="0.0" y="0.0" width="413" height="444"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="oPZ-mX-8zT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1410,25 +1373,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PRc-co-V9v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="8487" y="1621"/>
-        </scene>
-        <!--Album-->
-        <scene sceneID="sCc-JR-hbm">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Gpg-vH-D5Z" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Album" selectedImage="book.closed" catalog="system" id="fQo-bi-1IC"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Xgd-lq-pXR">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="PQn-Cm-FLX" kind="relationship" relationship="rootViewController" id="CJ2-Xk-1RX"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="G7v-8t-6D5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2689.8550724637685" y="161.38392857142856"/>
         </scene>
         <!--Close Friend View Controller-->
         <scene sceneID="LKw-jQ-vbE">
@@ -1502,6 +1446,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
+                        <outlet property="closeSearchBar" destination="oU2-Hs-Aol" id="1p9-6m-oPg"/>
                         <outlet property="tableView" destination="pOh-t1-X2I" id="a0k-X0-KAg"/>
                         <segue destination="M2k-nZ-AUg" kind="show" identifier="closeProfileSegue" id="Zx5-Kd-Olm"/>
                     </connections>
@@ -1519,7 +1464,6 @@
         <image name="arrow.backward" catalog="system" width="128" height="98"/>
         <image name="arrow.left" catalog="system" width="128" height="98"/>
         <image name="arrow.right" catalog="system" width="128" height="98"/>
-        <image name="book.closed" catalog="system" width="115" height="128"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
         <image name="globe.asia.australia.fill" catalog="system" width="128" height="121"/>
         <image name="heart" catalog="system" width="128" height="109"/>

@@ -10,6 +10,7 @@
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
+#import <UPCarouselFlowLayout/UPCarouselFlowLayout-Swift.h>
 
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
@@ -21,6 +22,7 @@
 @property (nonatomic) int currentIndex;
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) UserPin *likeStatus;
+@property (nonatomic) CGSize pageSize;
 @end
 
 @implementation DetailsViewController
@@ -66,6 +68,12 @@
     }else{
         [self.closeFriendPost setHidden:YES];
     }
+    UPCarouselFlowLayout* layout = [[UPCarouselFlowLayout alloc]init];
+    layout.itemSize = CGSizeMake(416,432);
+    self.pageSize = layout.itemSize;
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.imageCarouselView.collectionViewLayout = layout;
+    
 } /* viewDidLoad */
 
 - (void)setLikeStatus {
@@ -126,8 +134,9 @@
     }
 } /* tapLiked */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    int pageSide = self.pageSize.width;
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
+    self.pageIndicator.currentPage = (int)(floorf((scrollView.contentOffset.x - pageSide / 2) / pageSide) + 1);
 }
 
 #pragma mark - UICollectionViewDataSource

@@ -21,7 +21,6 @@ NSString *const segueCompose = @"composeSegue";
 NSString *const segueDetails = @"detailsSegue";
 NSString *const segueFriendMap = @"friendMapSegue";
 double const earthR = 6378137;
-
 // Constants for friendship status
 int const PENDING = 1;
 int const FRIENDED = 2;

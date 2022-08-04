@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *isPublicLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *closeFriendStarView;
 @property (weak, nonatomic) IBOutlet UIImageView *lockImageView;
+@property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -47,6 +48,8 @@
     [self updateButton];
     // Update isPublic status
     [self setIsPublicLabel];
+    // Set username
+    [self setUsernameLabel];
     // Set close friend star to be invisible in general
     [self.closeFriendStarView setHidden:YES];
 }
@@ -57,6 +60,9 @@
     }else{
         [self.isPublicLabel setText: @"Private Account"];
     }
+}
+- (void) setUsernameLabel {
+    [self.usernameLabel setText: [self.usernameLabel.text stringByAppendingString:self.user.username]];
 }
 - (void)fetchProfile {
     PFUser *user = self.user;
@@ -171,7 +177,7 @@
                 // Update button UI
                 [self updateButton];
                 // If private account and not friend, do not display anything
-                if ([self.friendStatus intValue] == NOT_FRIEND && [self.user[@"isPublic"] isEqual:@(NO)]) {
+                if ([self.friendStatus intValue] != FRIENDED && [self.user[@"isPublic"] isEqual:@(NO)]) {
                     // Initial view to lock view
                     self.friendMapContainer.alpha = 0.0;
                     self.friendsGridContainer.alpha = 0.0;
@@ -182,6 +188,7 @@
                     self.friendMapContainer.alpha = 0.0;
                     self.friendsGridContainer.alpha = 1.0;
                     [self.lockImageView setHidden:YES];
+                    self.lockImageView.alpha = 0.0;
                 }
             }
         } else {
@@ -324,6 +331,7 @@
         DetailsViewController *detailsVC = [segue destinationViewController];
         detailsVC.pin = self.pin;
         detailsVC.imagesFromPin = self.imagesToDetail;
+        detailsVC.username = self.user.username;
     }
 }
 #pragma mark - FriendMapViewControllerDelegate

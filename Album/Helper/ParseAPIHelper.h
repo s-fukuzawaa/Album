@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ParseAPIHelper : NSObject
+- (NSArray *)fetchUser:(NSString *)userId;
 - (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block;
 - (NSDateFormatter *) dateFormatter;
 - (void)constructQuery:(PFQuery *)query radius:(int) radius coordinate:(CLLocationCoordinate2D) coordinate;

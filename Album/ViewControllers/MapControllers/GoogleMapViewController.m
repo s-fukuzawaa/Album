@@ -221,13 +221,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query orderByDescending:(@"traveledOn")];
     [query whereKey:@"author" equalTo:self.currentUser];
-    double earthR = 6378137;
-    double dLat = (double)(self.radius) / earthR;
-    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+    [self constructQuery:query];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
@@ -262,12 +256,11 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                        equalTo:friend];
                 [query orderByDescending:(@"traveledOn")];
                 [query includeKey:@"objectId"];
-                // [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+                [self constructQuery:query];
                 [query findObjectsInBackgroundWithBlock :^(NSArray *pins, NSError *error) {
                     if (pins != nil) {
                         // Store the pins, update count
-                        NSLog(
-                              @"Successfully fetched pins!");
+                        NSLog(@"Successfully fetched pins!");
                         // Add pins to the marker array
                         for (PFObject *pin in pins) {
                             Pin *tempPin = (Pin *)pin;
@@ -290,19 +283,23 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }];
 } /* fetchFriends */
 
-
-// Used to find all markers in database
-- (void)fetchGlobal {
-    PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+- (void)constructQuery:(PFQuery *)query {
     [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
-    double earthR = 6378137;
     double dLat = (double)(self.radius) / earthR;
     double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
     [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
     [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
     [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
     [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
+}
+
+// Used to find all markers in database
+- (void)fetchGlobal {
+    PFQuery *query = [PFQuery queryWithClassName:classNamePin];
+    [query orderByDescending:(@"traveledOn")];
+    [query includeKey:@"objectId"];
+    [self constructQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
@@ -347,7 +344,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
     return pins;
 }
-
 
 - (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
     // Fetch images related to specific pin
@@ -468,7 +464,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [markerView.placeNameLabel setText:firstPin[@"placeName"]];
                 // Set date
                 NSString *date = [[self.apiHelper dateFormatter] stringFromDate:firstPin[@"traveledOn"]];
-
                 [markerView.dateLabel setText:date];
                 [indicator stopAnimating];
                 [markerView.pinImageView setHidden:NO];
