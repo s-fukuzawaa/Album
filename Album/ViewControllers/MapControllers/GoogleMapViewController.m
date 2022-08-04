@@ -68,6 +68,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         [self.locationManager startUpdatingLocation];
     }
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -76,7 +77,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Set user
     self.currentUser = [PFUser currentUser];
-    
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
@@ -221,7 +221,13 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query orderByDescending:(@"traveledOn")];
     [query whereKey:@"author" equalTo:self.currentUser];
-    [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+    double earthR = 6378137;
+    double dLat = (double)(self.radius) / earthR;
+    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
     [query includeKey:@"objectId"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
@@ -256,11 +262,12 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                        equalTo:friend];
                 [query orderByDescending:(@"traveledOn")];
                 [query includeKey:@"objectId"];
-                [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+                // [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
                 [query findObjectsInBackgroundWithBlock :^(NSArray *pins, NSError *error) {
                     if (pins != nil) {
                         // Store the pins, update count
-                        NSLog(@"Successfully fetched pins!");
+                        NSLog(
+                              @"Successfully fetched pins!");
                         // Add pins to the marker array
                         for (PFObject *pin in pins) {
                             Pin *tempPin = (Pin *)pin;
@@ -283,23 +290,19 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }];
 } /* fetchFriends */
 
-//- (void)constructQuery:(PFQuery *)query {
-//    [query orderByDescending:(@"traveledOn")];
-//    [query includeKey:@"objectId"];
-//    double dLat = (double)(self.radius) / earthR;
-//    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
-//    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
-//    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
-//    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
-//    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
-//}
 
 // Used to find all markers in database
 - (void)fetchGlobal {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     [query orderByDescending:(@"traveledOn")];
     [query includeKey:@"objectId"];
-    [self.apiHelper constructQuery:query radius:self.radius coordinate:self.coordinate];
+    double earthR = 6378137;
+    double dLat = (double)(self.radius) / earthR;
+    double dLon = (double)(self.radius) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
+    [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
+    [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
+    [query whereKey:@"longitude" greaterThanOrEqualTo:@(self.coordinate.longitude - dLon * 180 / M_PI)];
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
@@ -345,11 +348,13 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     return pins;
 }
 
+
 - (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
     // Fetch images related to specific pin
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
     [query orderByAscending:(@"traveledOn")];
+
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
         NSMutableArray *images = [[NSMutableArray alloc] init];
         if (imageObjs != nil) {
@@ -377,8 +382,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }
     return NO;
 }
-
-
 - (void)         mapView:(GMSMapView *)mapView
     didTapPOIWithPlaceID:(NSString *)placeID
                     name:(NSString *)name
@@ -465,6 +468,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [markerView.placeNameLabel setText:firstPin[@"placeName"]];
                 // Set date
                 NSString *date = [[self.apiHelper dateFormatter] stringFromDate:firstPin[@"traveledOn"]];
+
                 [markerView.dateLabel setText:date];
                 [indicator stopAnimating];
                 [markerView.pinImageView setHidden:NO];
@@ -474,7 +478,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 NSLog(@"%@", error.localizedDescription);
             }
         }];
-        
         return markerView;
     }
     // If there are no pins existing at this coordinate, present info window that leads to compose view

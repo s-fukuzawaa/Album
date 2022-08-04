@@ -107,13 +107,6 @@
     return [query findObjects];
 }
 
-- (NSArray *)imagesFromPin:(NSString *)pinId {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    return [query findObjects];
-}
-
 #pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
     self.circ.map = nil;
@@ -198,6 +191,23 @@
     infoWindow.placeName.text = marker.title;
     return infoWindow;
 } /* mapView */
+
+- (NSArray *)imagesFromPin:(NSString *)pinId {
+    // Fetch images related to specific pin
+    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
+    [query whereKey:@"pinId" equalTo:pinId];
+    NSArray *imageObjs = [query findObjects];
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    for (Image *imageObject in imageObjs) {
+        [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (!error) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                [images addObject:image];
+            }
+        }];
+    }
+    return (NSArray *)images;
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {

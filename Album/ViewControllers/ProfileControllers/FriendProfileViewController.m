@@ -74,7 +74,6 @@
     }
 }
 #pragma mark - UIView
-
 - (void)updateButton {
     UIColor *friendshipButtonBackgroundColor;
     NSString *friendshipButtonText;
@@ -327,7 +326,6 @@
         detailsVC.imagesFromPin = self.imagesToDetail;
     }
 }
-
 #pragma mark - FriendMapViewControllerDelegate
 
 - (void)didTapWindow:(Pin *)pin imagesFromPin:(NSArray *)imageFiles {

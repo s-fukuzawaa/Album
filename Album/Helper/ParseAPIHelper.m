@@ -14,20 +14,20 @@
 @end
 @implementation ParseAPIHelper
 // Used to find specfic user
-- (void)constructQuery:(PFQuery *)query radius:(int) radius coordinate:(CLLocationCoordinate2D) coordinate{
-    [query orderByDescending:(@"traveledOn")];
-    [query includeKey:@"objectId"];
-    double dLat = (double)(radius) / earthR;
-    double dLon = (double)(radius) / (earthR * cos(M_PI * coordinate.latitude / 180));
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(coordinate.longitude - dLon * 180 / M_PI)];
-}
-- (NSArray *)fetchUser:(NSString *)userId {
+- (void)fetchUser:(NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
     PFQuery *userQuery = [PFUser query];
     [userQuery whereKey:@"objectId" equalTo:userId];
-    return [userQuery findObjects];
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable users, NSError * _Nullable error) {
+        NSArray *usersArr = [[NSArray alloc] init];
+        if (users != nil) {
+            NSLog(@"Successfully fetched users!");
+            // For each friend, find their pins
+            usersArr = users;
+        } else {
+            NSLog(@"%@", error.localizedDescription);
+        }
+        block(usersArr,error);
+    }];
 }
 
 - (NSDateFormatter *)dateFormatter {
@@ -49,13 +49,20 @@
             // For each friend, find their pins
             for (Friendship *friendship in friendships) {
                 NSString *friendId = friendship[@"recipientId"];
-                [friendArr addObject:[self fetchUser:friendId][0]];
+                [self fetchUser:friendId withBlock:^(NSArray * _Nullable friends, NSError * _Nullable error) {
+                    if(friends != nil) {
+                        NSLog(@"Successfully fetched friends!");
+                        [friendArr addObject:friends[0]];
+                    }else {
+                        NSLog(@"%@", error.localizedDescription);
+                    }
+                }];
             }
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
         block(friendArr,error);
     }];
-} /* fetchFriends */
+}
 
 @end
