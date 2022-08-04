@@ -41,6 +41,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic) BOOL fetchedPersonal;
 @property (nonatomic) BOOL fetchedFriend;
 @property (nonatomic) BOOL fetchedGlobal;
+@property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation GoogleMapViewController
@@ -90,21 +91,30 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     // Add animation when change segmentedControl
     [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
-    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
-                                                                  _mapView.camera.target.longitude);
     self.coordinate = self.locationManager.location.coordinate;
-    [self setButton];
-    [self setMarkerCircle:mapCenter];
 } /* viewDidLoad */
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.mapView clear];
-    [self setButton];
-    CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(_mapView.camera.target.latitude,
-                                                                  _mapView.camera.target.longitude);
-    [self setMarkerCircle:mapCenter];
-    [self fetchMarkers];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+        self.overlayView.backgroundColor = [UIColor whiteColor];
+        self.overlayView.alpha = 1;
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+        activityView.center = self.view.center;
+        [self.overlayView addSubview:activityView];
+        [activityView startAnimating];
+        [self.view addSubview:self.overlayView];
+        [self.view bringSubviewToFront:self.overlayView];
+        [self.mapView clear];
+        [self setButton];
+        CLLocationCoordinate2D mapCenter = CLLocationCoordinate2DMake(self.mapView.camera.target.latitude,
+                                                                      self.mapView.camera.target.longitude);
+        [self setMarkerCircle:mapCenter];
+        
+        [self fetchMarkers];
+    });
 }
 
 #pragma mark - CLLocationManagerDelegate
@@ -187,19 +197,27 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             }
         }
     }
+    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
 }
 - (BOOL) segmentControlStatusCheck: (PFUser *) user pin:(Pin*) pin{
     if([user.objectId isEqualToString:self.currentUser.objectId]) {
         return YES;
     }
-    if (self.segmentedControl.selectedSegmentIndex != 0 && !pin.isCloseFriendPin || [self.closeFriendsIdSet containsObject:user.objectId]){
-        return YES;
-    }else if(self.segmentedControl.selectedSegmentIndex == 1 && [self.friendsIdSet containsObject:user.objectId]) {
-        return YES;
-    }else if(self.segmentedControl.selectedSegmentIndex == 2
-             && [user[@"isPublic"] isEqual:@(YES)]) {
-        return YES;
+    if(self.segmentedControl.selectedSegmentIndex != 0) {
+        if(pin.isCloseFriendPin) {
+            if([self.closeFriendsIdSet containsObject:user.objectId]){
+                return YES;
+            }
+        }else{
+            if([self.friendsIdSet containsObject:user.objectId]) {
+                return YES;
+            }else if(self.segmentedControl.selectedSegmentIndex == 2
+                     && [user[@"isPublic"] isEqual:@(YES)]) {
+                return YES;
+            }
+        }
     }
+    
     return NO;
 }
 - (void) createMarker: (Pin*) pin color: (NSString*) color {
@@ -213,15 +231,26 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // Used for switch control animation
 - (void)animate {
-    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 0.0; self.mapView.alpha = 0.0; }];
-    [UIView animateWithDuration:2 animations:^{ self.view.alpha = 1; self.mapView.alpha = 1; }];
+    self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+    self.overlayView.backgroundColor = [UIColor whiteColor];
+    self.overlayView.alpha = 1;
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+    activityView.center = self.view.center;
+    [self.overlayView addSubview:activityView];
+    [activityView startAnimating];
+    [self.view addSubview:self.overlayView];
+    [self.view bringSubviewToFront:self.overlayView];
 }
 
 #pragma mark - IBAction
 
 - (IBAction)switchControl:(id)sender {
-    [self.mapView clear];
-    [self recenterView:self.radius];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mapView clear];
+        [self recenterView:self.radius];
+    });
+    
 }
 
 - (IBAction)searchPlaceButton:(id)sender {
@@ -317,7 +346,10 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                     }
                 }];
             }
+            
             [self loadMarkers];
+
+            
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
@@ -403,20 +435,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.infoMarker.infoWindowAnchor = pos;
     self.infoMarker.map = mapView;
     mapView.selectedMarker = self.infoMarker;
-}
-
-- (InfoMarkerView *) loadingMarkerView:(UIActivityIndicatorView *) indicator{
-    InfoMarkerView * loadingMarkerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
-    indicator.hidesWhenStopped = YES;
-    indicator.frame = CGRectMake(35, 15, 30, 30);
-    indicator.center = loadingMarkerView.center;
-    [indicator startAnimating];
-    [loadingMarkerView addSubview:indicator];
-    [loadingMarkerView.pinImageView setHidden:YES];
-    [loadingMarkerView.usernameLabel setHidden:YES];
-    [loadingMarkerView.placeNameLabel setText:@"Loading..."];
-    [loadingMarkerView.dateLabel setHidden:YES];
-    return loadingMarkerView;
 }
 
 - (InfoMarkerView *) cachedMarkerView: (NSString*) title{
