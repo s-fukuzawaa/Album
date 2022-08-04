@@ -73,6 +73,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         [self.locationManager startUpdatingLocation];
     }
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

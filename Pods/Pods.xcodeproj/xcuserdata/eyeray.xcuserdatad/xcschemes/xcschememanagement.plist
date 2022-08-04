@@ -66,8 +66,6 @@
 		</dict>
 		<key>UPCarouselFlowLayout.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>13</integer>
 		</dict>
