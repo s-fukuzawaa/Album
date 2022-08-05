@@ -42,7 +42,7 @@
         }
     }];
     [self.friendCollectionView reloadData];
-}
+} /* viewDidLoad */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.friendCollectionView reloadData];
@@ -67,19 +67,20 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
         profileCell.photoImageView.layer.masksToBounds = YES;
-        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
-        [profileCell.photoImageView.layer setBorderWidth:1.5];
+        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][
+                                                                                                                                       @"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderWidth:1];
     });
     return profileCell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(
-                                                                                                                                          NSIndexPath *)indexPath {
-                                                                                                                                              int totalwidth = self.friendCollectionView.bounds.size.width;
-                                                                                                                                              int numberOfCellsPerRow = 3;
-                                                                                                                                              int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
-                                                                                                                                              return CGSizeMake(dimensions, dimensions);
-                                                                                                                                          }
+        NSIndexPath *)indexPath {
+    int totalwidth = self.friendCollectionView.bounds.size.width;
+    int numberOfCellsPerRow = 3;
+    int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow) - 10;
+    return CGSizeMake(dimensions, dimensions);
+}
 
 #pragma mark - Navigation
 

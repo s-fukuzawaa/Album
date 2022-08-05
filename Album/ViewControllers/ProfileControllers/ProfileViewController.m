@@ -145,7 +145,7 @@
         profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
         profileCell.photoImageView.layer.masksToBounds = YES;
         [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
-        [profileCell.photoImageView.layer setBorderWidth:3];
+        [profileCell.photoImageView.layer setBorderWidth:1];
     });
     return profileCell;
 }
