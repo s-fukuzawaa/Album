@@ -17,15 +17,20 @@
                     <rect key="frame" x="0.0" y="0.0" width="218" height="216"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Place Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RPg-LH-iaJ">
-                    <rect key="frame" x="61" y="75" width="96" height="19"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RPg-LH-iaJ">
+                    <rect key="frame" x="60" y="76" width="98" height="20"/>
+                    <fontDescription key="fontDescription" name="Palatino-Roman" family="Palatino" pointSize="16"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="RPg-LH-iaJ" secondAttribute="trailing" constant="60" id="HaP-ss-NfX"/>
+                <constraint firstItem="RPg-LH-iaJ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="60" id="kE3-uD-6J3"/>
+                <constraint firstItem="RPg-LH-iaJ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="32" id="xKI-Sn-sBQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="RPg-LH-iaJ" secondAttribute="bottom" constant="120" id="xe8-I3-0jR"/>
+            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="placeName" destination="RPg-LH-iaJ" id="tZ9-oG-GW2"/>

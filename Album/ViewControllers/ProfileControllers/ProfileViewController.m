@@ -27,6 +27,7 @@
 @property (strong, nonatomic) ParseAPIHelper *apiHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
 @property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
+@property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation ProfileViewController
@@ -43,44 +44,49 @@
     // Assign collection view delegate and dataSource
     self.friendsCollectionView.delegate = self;
     self.friendsCollectionView.dataSource = self;
-    // Fetch friends
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-        if (friendArr != nil) {
-            self.friendsArray = friendArr;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.friendsCollectionView reloadData];
-            });
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-    // Load profile image
-    [self setProfile];
+    
 } /* viewDidLoad */
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.currentUser = [PFUser currentUser];
-    // Fetch friends
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-        if (friendArr != nil) {
-            self.friendsArray = friendArr;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.friendsCollectionView.layer setCornerRadius:15];
-                [self.friendsCollectionView.layer setShadowRadius:5];
-                [self.friendsCollectionView.layer setShadowColor:[[UIColor grayColor] CGColor]];
-                [self.friendsCollectionView.layer setShadowOpacity:1];
-                [self.friendsCollectionView.layer setShadowOffset:CGSizeMake(0,0)];
-                self.friendsCollectionView.layer.masksToBounds = NO;
-                self.friendsCollectionView.clipsToBounds = NO;
-                [self.friendsCollectionView reloadData];
-            });
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-    [self.friendsCollectionView reloadData];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+        self.overlayView.backgroundColor = [UIColor whiteColor];
+        self.overlayView.alpha = 1;
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+        activityView.center = self.view.center;
+        [self.overlayView addSubview:activityView];
+        [activityView startAnimating];
+        [self.view addSubview:self.overlayView];
+        [self.view bringSubviewToFront:self.overlayView];
+        // Fetch friends
+        [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+            if (friendArr != nil) {
+                self.friendsArray = friendArr;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.friendsCollectionView.layer setCornerRadius:15];
+                    [self.friendsCollectionView.layer setShadowRadius:5];
+                    [self.friendsCollectionView.layer setShadowColor:[[UIColor grayColor] CGColor]];
+                    [self.friendsCollectionView.layer setShadowOpacity:1];
+                    [self.friendsCollectionView.layer setShadowOffset:CGSizeMake(0,0)];
+                    self.friendsCollectionView.layer.masksToBounds = NO;
+                    self.friendsCollectionView.clipsToBounds = NO;
+                    [self.friendsCollectionView reloadData];
+                    // Load profile image
+                    [self setProfile];
+                    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
+                });
+            } else {
+                NSLog(@"%@", error.localizedDescription);
+            }
+        }];
+    });
+    
 }
+
 
 #pragma mark - Parse API
 - (void)setProfile {
@@ -96,8 +102,6 @@
                 [self.profileImageView setImage:image];
                 self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
                 self.profileImageView.layer.masksToBounds = NO;
-//                [self.profileImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
-//                [self.profileImageView.layer setBorderWidth:5];
                 [self.profileImageView.layer setShadowRadius:5];
                 [self.profileImageView.layer setShadowColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
                 [self.profileImageView.layer setShadowOpacity:1];

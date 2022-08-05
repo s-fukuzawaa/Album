@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *searchFriendField;
 @property (strong, nonatomic) NSMutableArray *friendsArr;
 @property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
+@property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation AddFriendViewController
@@ -28,23 +29,37 @@
 #pragma mark - IBAction
 
 - (IBAction)searchButton:(id)sender {
-    // Search user by username
-    PFQuery *query = [PFUser query];
-    PFUser *currentUser = [PFUser currentUser];
-    [query whereKey:@"objectId" notEqualTo:currentUser.objectId];
-    [query whereKey:@"username" equalTo:self.searchFriendField.text];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
-        if (users != nil) {
-            self.friendsArr = (NSMutableArray *)users;
-            // Set up table view
-            self.tableView.dataSource = self;
-            self.tableView.delegate = self;
-            [self.tableView reloadData];
-            self.tableView.rowHeight = UITableViewAutomaticDimension;
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+//        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+//
+//        self.overlayView.backgroundColor = [UIColor whiteColor];
+//        self.overlayView.alpha = 1;
+//        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+//        activityView.center = self.view.center;
+//        [self.overlayView addSubview:activityView];
+//        [activityView startAnimating];
+//        [self.view addSubview:self.overlayView];
+//        [self.view bringSubviewToFront:self.overlayView];
+        // Search user by username
+        PFQuery *query = [PFUser query];
+        PFUser *currentUser = [PFUser currentUser];
+        [query whereKey:@"objectId" notEqualTo:currentUser.objectId];
+        [query whereKey:@"username" equalTo:self.searchFriendField.text];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
+            if (users != nil) {
+                self.friendsArr = (NSMutableArray *)users;
+                // Set up table view
+                self.tableView.dataSource = self;
+                self.tableView.delegate = self;
+                [self.tableView reloadData];
+                self.tableView.rowHeight = UITableViewAutomaticDimension;
+            } else {
+                NSLog(@"%@", error.localizedDescription);
+            }
+//            [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
+        }];
+    });
+    
 }
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];

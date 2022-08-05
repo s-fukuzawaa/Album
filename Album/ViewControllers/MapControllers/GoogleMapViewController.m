@@ -135,10 +135,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 #pragma mark - UIView
 
 - (void)setMarkerCircle:(CLLocationCoordinate2D)mapCenter {
-    GMSMarker *marker = [GMSMarker markerWithPosition:mapCenter];
-    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
-    marker.map = self.mapView;
-    self.circ = [GMSCircle circleWithPosition:marker.position radius:self.radius];
+    self.circ = [GMSCircle circleWithPosition:mapCenter radius:self.radius];
     self.circ.fillColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:0.5];
     self.circ.map = self.mapView;
 }
@@ -157,6 +154,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                                       radius] image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
         dispatch_async(
                        dispatch_get_main_queue(), ^{
+                           [self animate];
                            [self recenterView:radius];
                        });
     }];
@@ -356,7 +354,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     }];
 }
 
-- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {// Fetch pins with specific coordinate
+- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate placeName:(NSString*) placeName {// Fetch pins with specific coordinate
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     NSInteger segmentControlIndex = self.segmentedControl.selectedSegmentIndex;
     if (segmentControlIndex == 0) {
@@ -367,24 +365,26 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [query includeKey:@"objectId"];
     [query orderByDescending:(@"traveledOn")];
     NSMutableArray *pins = (NSMutableArray *)[query findObjects];
-    if (segmentControlIndex == 1) {
-        for(Pin *pin in pins) {
-            if ([self.friendsIdSet containsObject:pin.author.objectId] == NO &&
-                [pin.author.objectId isEqual:self.currentUser.objectId] == NO)
-            {
-                [pins removeObject:pin];
-            }else{
-                [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
-                    if (images != nil) {
-                        // Set image of the info window to first in the array
-                        [self.pinImages setObject:images forKey:pin.objectId];
-                    } else {
-                        NSLog(@"%@", error.localizedDescription);
-                    }
-                }];
+    for(Pin *pin in pins) {
+        PFUser *user = [self fetchUser:pin.author.objectId][0];
+        if (![self segmentControlStatusCheck:user pin:pin]){
+            [pins removeObject:pin];
+        }else{
+            if (!self.placeToPins[placeName]) {
+                [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:placeName];
             }
+            [self.placeToPins[placeName] addObject:pin];
+            [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+                if (images != nil) {
+                    // Set image of the info window to first in the array
+                    [self.pinImages setObject:images forKey:pin.objectId];
+                } else {
+                    NSLog(@"%@", error.localizedDescription);
+                }
+            }];
         }
     }
+    
     return pins;
 }
 
@@ -456,6 +456,24 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     return markerView;
 }
 
+- (InfoMarkerView *) coordMarkerView: (Pin*) pin{
+    InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
+    // Set Image
+    NSArray *imagesFromPin = self.pinImages[pin.objectId];
+    if (imagesFromPin.count != 0) {
+        [markerView.pinImageView setImage:imagesFromPin[0]];
+    }
+    // Set place name
+    [markerView.placeNameLabel setText:pin[@"placeName"]];
+    // Set username
+    NSString *username = ([pin.author.objectId isEqualToString:self.currentUser.objectId])? self.currentUser.username : self.pinIdToUsername[pin.objectId];
+    [markerView.usernameLabel setText:[@"@" stringByAppendingString:username]];
+    // Set date
+    NSString *date = [[self.apiHelper dateFormatter] stringFromDate:pin[@"traveledOn"]];
+    [markerView.dateLabel setText:date];
+    return markerView;
+}
+
 - (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(nonnull GMSMarker *)marker {
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
@@ -464,10 +482,10 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         return [self cachedMarkerView:marker.title];
     }
     // Array of pins from the specific coordinate
-    NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate];
+    NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate placeName:marker.title];
     // Check if exisitng pins exist from this coordinate
     if (pinsFromCoord && pinsFromCoord.count > 0) {
-        return [self cachedMarkerView:marker.title];
+        return [self coordMarkerView:pinsFromCoord[0]];
     }
     // If there are no pins existing at this coordinate, present info window that leads to compose view
     InfoPOIView *infoWindow = [[[NSBundle mainBundle] loadNibNamed:@"InfoWindow" owner:self options:nil] objectAtIndex:0];
@@ -478,6 +496,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker
 {
     // If there are pins exist at this coordinate, lead to details otherwise compose view
+    NSLog(@"%@", marker.title);
     if (self.placeToPins[marker.title]) {
         [self performSegueWithIdentifier:segueDetails sender:marker];
     } else {

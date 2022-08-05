@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *closeFriendStarView;
 @property (weak, nonatomic) IBOutlet UIImageView *lockImageView;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *closeFriendStatusLabel;
 @property (nonatomic) NSNumber *friendStatus; // Friend status from current user's point of view
 @property (nonatomic) NSNumber *requestStatus; // Friend status from requester's pov
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
@@ -31,7 +32,7 @@
 @property (strong, nonatomic) NSArray *imagesToDetail;
 @property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @property (strong, nonatomic) Pin *pin;
-
+@property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation FriendProfileViewController
@@ -39,8 +40,6 @@
 #pragma mark - UIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
     // Update button UI
     [self updateButton];
     // Update isPublic status
@@ -54,12 +53,25 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // Set user profile image view
-    [self fetchProfile];
-    // Set request statuses
-    [self fetchRequestStatus];
-    // Set friend statuses
-    [self fetchFriendStatus];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+        self.overlayView.backgroundColor = [UIColor whiteColor];
+        self.overlayView.alpha = 1;
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+        activityView.center = self.view.center;
+        [self.overlayView addSubview:activityView];
+        [activityView startAnimating];
+        [self.view addSubview:self.overlayView];
+        [self.view bringSubviewToFront:self.overlayView];
+        // Set user profile image view
+        [self fetchProfile];
+        // Set request statuses
+        [self fetchRequestStatus];
+        // Set friend statuses
+        [self fetchFriendStatus];
+    });
+    
 }
 - (void) setIsPublicLabel {
     if([self.user[@"isPublic"] isEqual:@(YES)]) {
@@ -81,9 +93,12 @@
                 UIImage *image = [UIImage imageWithData:imageData];
                 [self.userImageView setImage:image];
                 self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
-                self.userImageView.layer.masksToBounds = YES;
-                [self.userImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
-                [self.userImageView.layer setBorderWidth:5];
+                self.userImageView.layer.masksToBounds = NO;
+                [self.userImageView.layer setShadowRadius:5];
+                [self.userImageView.layer setShadowColor:[[self.colorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
+                [self.userImageView.layer setShadowOpacity:1];
+                [self.userImageView.layer setShadowOffset:CGSizeMake(0,0)];
+                self.userImageView.clipsToBounds = NO;
             }
         }];
     }
@@ -98,11 +113,13 @@
         friendshipButtonText = @"Received Request";
         friendshipButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
         [self.closeFriendStarView setHidden:YES];
+        [self.closeFriendStatusLabel setHidden:YES];
     } else if ([self.friendStatus intValue] == FRIENDED) {
         friendshipButtonBackgroundColor = [UIColor blackColor];
         friendshipButtonText = @"Friended";
         friendshipButtonTitleColor = [UIColor whiteColor];
         [self.closeFriendStarView setHidden:NO];
+        [self.closeFriendStatusLabel setHidden:NO];
         if(self.friendship.isClose) {
             [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star.fill"]];
         }else{
@@ -113,11 +130,13 @@
         friendshipButtonText = @"Pending";
         friendshipButtonTitleColor = [UIColor blackColor];
         [self.closeFriendStarView setHidden:YES];
+        [self.closeFriendStatusLabel setHidden:YES];
     } else {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Request Friend?";
         friendshipButtonTitleColor = [UIColor blackColor];
         [self.closeFriendStarView setHidden:YES];
+        [self.closeFriendStatusLabel setHidden:YES];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];
@@ -211,6 +230,7 @@
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
+        [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
     }];
 } /* fetchFriendStatus */
 
