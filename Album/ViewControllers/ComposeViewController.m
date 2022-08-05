@@ -180,6 +180,7 @@ PHPickerViewControllerDelegate>
     return newImage;
 }
 
+
 #pragma mark - IBAction
 
 - (IBAction)crossButton:(id)sender {
