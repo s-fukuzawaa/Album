@@ -15,31 +15,26 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchFriendField;
 @property (strong, nonatomic) NSMutableArray *friendsArr;
-@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation AddFriendViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
-}
 
 #pragma mark - IBAction
 
 - (IBAction)searchButton:(id)sender {
     dispatch_async(dispatch_get_main_queue(), ^{
-//        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-//
-//        self.overlayView.backgroundColor = [UIColor whiteColor];
-//        self.overlayView.alpha = 1;
-//        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
-//        activityView.center = self.view.center;
-//        [self.overlayView addSubview:activityView];
-//        [activityView startAnimating];
-//        [self.view addSubview:self.overlayView];
-//        [self.view bringSubviewToFront:self.overlayView];
+        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+        self.overlayView.backgroundColor = [UIColor whiteColor];
+        self.overlayView.alpha = 1;
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+        activityView.center = self.view.center;
+        [self.overlayView addSubview:activityView];
+        [activityView startAnimating];
+        [self.view addSubview:self.overlayView];
+        [self.view bringSubviewToFront:self.overlayView];
         // Search user by username
         PFQuery *query = [PFUser query];
         PFUser *currentUser = [PFUser currentUser];
@@ -56,7 +51,7 @@
             } else {
                 NSLog(@"%@", error.localizedDescription);
             }
-//            [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
+            [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
         }];
     });
     
@@ -79,8 +74,8 @@
 
     CAGradientLayer *grad = [CAGradientLayer layer];
     grad.frame = cell.bounds;
-    UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"8EC5FC"];
-    UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"E0C3FC"];
+    UIColor* firstColor = [ColorConvertHelper colorFromHexString:@"8EC5FC"];
+    UIColor* secondColor = [ColorConvertHelper colorFromHexString:@"E0C3FC"];
     grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
     grad.startPoint = CGPointMake(0.0, 0.5);
     grad.endPoint = CGPointMake(1.0, 0.5);

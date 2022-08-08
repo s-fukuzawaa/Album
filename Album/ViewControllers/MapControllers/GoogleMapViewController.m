@@ -29,12 +29,10 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
 @property (nonatomic, strong) NSMutableDictionary *pinIdToUsername;
-@property (nonatomic, strong) ParseAPIHelper *apiHelper;
 @property (nonatomic, strong) NSMutableSet *friendsIdSet; // User IDs of current user's friends
 @property (nonatomic, strong) NSMutableSet *closeFriendsIdSet; // User IDs of current user's close friends
 
 @property (nonatomic, weak) PFUser *currentUser;
-@property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @property (nonatomic, strong) GMSAutocompleteFilter *filter;
 @property (nonatomic) int radius;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
@@ -42,6 +40,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @property (nonatomic) BOOL fetchedFriend;
 @property (nonatomic) BOOL fetchedGlobal;
 @property (nonatomic, strong) UIView* overlayView;
+@property (nonatomic, strong) Pin* pinToDetail;
 @end
 
 @implementation GoogleMapViewController
@@ -78,10 +77,6 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [super viewDidLoad];
     // Set inital radius
     self.radius = 5000;
-    // Set color helper class
-    self.colorHelper = [[ColorConvertHelper alloc] init];
-    // Set api helper
-    self.apiHelper = [[ParseAPIHelper alloc] init];
     // Set user
     self.currentUser = [PFUser currentUser];
     // Initialize data structures to cache retrieved data
@@ -92,7 +87,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.pinIdToUsername = [[NSMutableDictionary alloc] init];
     
     // Add animation when change segmentedControl
-    [self.segmentedControl addTarget:self action:@selector(animate) forControlEvents:UIControlEventValueChanged];
+    [self.segmentedControl addTarget:self action:@selector(animateLoadingScreen) forControlEvents:UIControlEventValueChanged];
     self.coordinate = self.locationManager.location.coordinate;
 }
 
@@ -189,7 +184,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         if(pin.longitude <= longUpperLimit && pin.longitude >= longLowerLimit
            && pin.latitude <= latUpperLimit && pin.latitude >= latLowerLimit) {
             PFUser *author = pin.author;
-            PFUser *user = [self.apiHelper fetchUser:author.objectId][0];
+            PFUser *user = [ParseAPIHelper fetchUser:author.objectId][0];
             // Check if the pin satisfies the current switch control
             if([self segmentControlStatusCheck:user pin:pin]) {
                 [self createMarker:pin color:user[@"colorHexString"]];
@@ -229,7 +224,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void) createMarker: (Pin*) pin color: (NSString*) color {
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
-    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:color]];
+    marker.icon = [GMSMarker markerImageWithColor:[ColorConvertHelper colorFromHexString:color]];
     marker.title = pin.placeName;
     marker.snippet = pin.placeID;
     marker.map = self.mapView;
@@ -287,25 +282,14 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // Get friendships from database
 - (void)fetchFriends {
-    // Query to find markers that belong to current user and current user's friend
-    PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
-    [friendQuery whereKey:@"requesterId" equalTo:self.currentUser.objectId];
-    [friendQuery whereKey:@"hasFriended" equalTo:@(2)];
-    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *friendships, NSError *error) {
-        if (friendships != nil) {
-            // For each friend, add id to friendId set
-            for (Friendship *friendship in friendships) {
-                NSString *friendId = friendship[@"recipientId"];
-                [self.friendsIdSet addObject:friendId];
-                if(friendship.isClose){
-                    [self.closeFriendsIdSet addObject:friendId];
-                }
-            }
-        } else {
-            NSLog(@"%@",
-                  error.localizedDescription);
+    NSArray *friendships = [ParseAPIHelper fetchFriendships:self.currentUser.objectId];
+    for (Friendship *friendship in friendships) {
+        NSString *friendId = friendship[@"recipientId"];
+        [self.friendsIdSet addObject:friendId];
+        if(friendship.isClose){
+            [self.closeFriendsIdSet addObject:friendId];
         }
-    }];
+    }
 }
 
 // Helper method for query construction
@@ -334,7 +318,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             self.markerArr = [[NSMutableArray alloc] init];
             for (PFObject *pin in pins) {
                 PFUser *author = pin[@"author"];
-                PFUser *user = [self.apiHelper fetchUser:author.objectId][0];
+                PFUser *user = [ParseAPIHelper fetchUser:author.objectId][0];
                 [self.markerArr addObject:pin];
                 [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
                 if (!self.placeToPins[pin[@"placeName"]]) {
@@ -342,7 +326,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 }
                 [self.placeToPins[pin[@"placeName"]] addObject:pin];
                 // Save images of the specific pin to the cache data structure
-                [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+                [ParseAPIHelper imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
                     if (images != nil) {
                         // Set image of the info window to first in the array
                         [self.pinImages setObject:images forKey:pin.objectId];
@@ -362,7 +346,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 }
 
 // Fetch pins from specific coordinate
-- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate placeName:(NSString*) placeName {// Fetch pins with specific coordinate
+- (NSMutableArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate placeName:(NSString*) placeName {
     PFQuery *query = [PFQuery queryWithClassName:classNamePin];
     query.limit = 1;
     NSInteger segmentControlIndex = self.segmentedControl.selectedSegmentIndex;
@@ -375,7 +359,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [query orderByDescending:(@"traveledOn")];
     NSMutableArray *pins = (NSMutableArray *)[query findObjects];
     for(Pin *pin in pins) {
-        PFUser *user = [self.apiHelper fetchUser:pin.author.objectId][0];
+        PFUser *user = [ParseAPIHelper fetchUser:pin.author.objectId][0];
         if (![self segmentControlStatusCheck:user pin:pin]){
             [pins removeObject:pin];
         }else{
@@ -383,7 +367,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                 [self.placeToPins setObject:[[NSMutableArray alloc]init] forKey:placeName];
             }
             [self.placeToPins[placeName] addObject:pin];
-            [self imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
+            [ParseAPIHelper imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
                 if (images != nil) {
                     // Set image of the info window to first in the array
                     [self.pinImages setObject:images forKey:pin.objectId];
@@ -396,35 +380,11 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     
     return pins;
 }
-
-// Fetch images from a pin
-- (void)imagesFromPin:(NSString *)pinId withBlock:(PFQueryArrayResultBlock)block {
-    // Fetch images related to specific pin
-    PFQuery *query = [PFQuery queryWithClassName:classNameImage];
-    [query whereKey:@"pinId" equalTo:pinId];
-    [query orderByAscending:(@"traveledOn")];
-
-    [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
-        NSMutableArray *images = [[NSMutableArray alloc] init];
-        if (imageObjs != nil) {
-            for (Image *imageObject in imageObjs) {
-                [imageObject[@"imageFile"] getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-                    if (!error) {
-                        UIImage *image = [UIImage imageWithData:imageData];
-                        [images addObject:image];
-                    }
-                }];
-            }
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-        block(images, error);
-    }];
-}
-
 #pragma mark - GMSMapViewDelegate
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
+    // Reset to be detailed pin
+    self.pinToDetail = nil;
     if ([marker.userData conformsToProtocol:@protocol(GMUCluster)]) {
         [self.mapView animateToZoom:self.mapView.camera.zoom + 1];
         return YES;
@@ -439,7 +399,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     self.infoMarker.snippet = placeID;
     self.infoMarker.title = name;
     self.infoMarker.opacity = 0;
-    self.infoMarker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+    self.infoMarker.icon = [GMSMarker markerImageWithColor:[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     CGPoint pos = self.infoMarker.infoWindowAnchor;
     pos.y = 1;
     self.infoMarker.infoWindowAnchor = pos;
@@ -449,6 +409,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 // Return an info window from a pin
 - (InfoMarkerView *) coordMarkerView: (Pin*) pin{
+    // Set the detail Pin
+    self.pinToDetail = pin;
     InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];
     // Set Image
     NSArray *imagesFromPin = self.pinImages[pin.objectId];
@@ -461,7 +423,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     NSString *username = ([pin.author.objectId isEqualToString:self.currentUser.objectId])? self.currentUser.username : self.pinIdToUsername[pin.objectId];
     [markerView.usernameLabel setText:[@"@" stringByAppendingString:username]];
     // Set date
-    NSString *date = [[self.apiHelper dateFormatter] stringFromDate:pin[@"traveledOn"]];
+    NSString *date = [[ParseAPIHelper dateFormatter] stringFromDate:pin[@"traveledOn"]];
     [markerView.dateLabel setText:date];
     return markerView;
 }
@@ -470,8 +432,14 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     // Fetch if there's existing posts related to this coordinate
     CLLocationCoordinate2D coordinate = marker.position;
     // If cached data exists (if this coordinate has existing pins)
-    if (self.placeToPins[marker.title]) {
-        return [self coordMarkerView:[self.placeToPins[marker.title] lastObject]];
+    NSArray *pins = self.placeToPins[marker.title];
+    if (pins != nil) {
+        for (Pin *pin in pins) {
+            PFUser *user = [ParseAPIHelper fetchUser:pin.author.objectId][0];
+            if([self segmentControlStatusCheck:user pin:pin]) {
+                return [self coordMarkerView:pin];
+            }
+        }
     }
     // Array of pins from the specific coordinate
     NSArray *pinsFromCoord = [self fetchPinsFromCoord:coordinate placeName:marker.title];
@@ -487,8 +455,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker{
     // If there are pins exist at this coordinate, lead to details otherwise compose view
-    if (self.placeToPins[marker.title]) {
-        [self performSegueWithIdentifier:segueDetails sender:marker];
+    if (self.pinToDetail != nil) {
+        [self performSegueWithIdentifier:segueDetails sender:self.pinToDetail];
     } else {
         [self performSegueWithIdentifier:segueCompose sender:self];
     }
@@ -503,7 +471,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     marker.title = self.infoMarker.title;
     marker.snippet = self.infoMarker.snippet;
     marker.map = self.mapView;
-    marker.icon = [GMSMarker markerImageWithColor:[self.colorHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+    marker.icon = [GMSMarker markerImageWithColor:[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -546,15 +514,14 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         composeVC.delegate = self;
     } else if ([segue.identifier isEqual:segueDetails]) {
         DetailsViewController *detailsVC = [segue destinationViewController];
-        GMSMarker *marker = sender;
-        PFObject *firstPin = [self.placeToPins[marker.title] lastObject];
+        Pin *pin = sender;
         // Set Images array
-        NSMutableArray *pinImages = self.pinImages[firstPin.objectId];
+        NSMutableArray *pinImages = self.pinImages[pin.objectId];
         // Save pin
-        detailsVC.pin = (Pin *)firstPin;
+        detailsVC.pin = (Pin *)pin;
         detailsVC.imagesFromPin = pinImages;
         // Save username
-        detailsVC.username = [self.apiHelper fetchUser:detailsVC.pin.author.objectId][0][@"username"];
+        detailsVC.username = [ParseAPIHelper fetchUser:detailsVC.pin.author.objectId][0][@"username"];
     }
 }
 @end

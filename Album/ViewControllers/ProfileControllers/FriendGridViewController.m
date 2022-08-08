@@ -13,7 +13,6 @@
 
 @interface FriendGridViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendCollectionView;
-@property (strong, nonatomic) ParseAPIHelper *apiHelper;
 @property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
 @end
@@ -24,14 +23,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Set API helper
-    self.apiHelper = [[ParseAPIHelper alloc] init];
     self.colorConvertHelper = [[ColorConvertHelper alloc]init];
     // Assign collection view delegate and dataSource
     self.friendCollectionView.delegate = self;
     self.friendCollectionView.dataSource = self;
     // Fetch friends
-    [self.apiHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+    [ParseAPIHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
         if (friendArr != nil) {
             self.friendsArray = friendArr;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -67,8 +64,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
         profileCell.photoImageView.layer.masksToBounds = YES;
-        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][
-                                                                                                                                       @"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderColor:[[ColorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
         [profileCell.photoImageView.layer setBorderWidth:1];
     });
     return profileCell;

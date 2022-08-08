@@ -18,7 +18,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
-@property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @property (nonatomic) BOOL isPublic;
 @property (nonatomic, strong) NSMutableArray *overlayViews;
 @end
@@ -34,8 +33,7 @@
     [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
-    // Add color converting helper object
-    self.colorHelper = [[ColorConvertHelper alloc] init];
+    // Initialize confetti animation structure
     self.overlayViews = [[NSMutableArray alloc] init];
 }
 - (void) signUpAlert: (BOOL) success{
@@ -149,7 +147,7 @@
     newUser.email = self.emailField.text;
     newUser.password = self.pwField.text;
     newUser[@"profileImage"] = [self getPFFileFromImage:self.profileImageView.image];
-    newUser[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
+    newUser[@"colorHexString"] = [ColorConvertHelper hexStringForColor:self.color];
     newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
@@ -270,7 +268,7 @@
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     // Save color and display in color box
     self.color = color;
-    [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+    [self.colorView setImage:[ColorConvertHelper createImageWithColor:color]];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

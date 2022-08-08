@@ -63,7 +63,7 @@
         [self.view addSubview:self.overlayView];
         [self.view bringSubviewToFront:self.overlayView];
         // Fetch friends
-        [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+        [ParseAPIHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
             if (friendArr != nil) {
                 self.friendsArray = friendArr;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -103,7 +103,7 @@
                 self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
                 self.profileImageView.layer.masksToBounds = NO;
                 [self.profileImageView.layer setShadowRadius:5];
-                [self.profileImageView.layer setShadowColor:[[self.colorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+                [self.profileImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
                 [self.profileImageView.layer setShadowOpacity:1];
                 [self.profileImageView.layer setShadowOffset:CGSizeMake(0,0)];
                 self.profileImageView.clipsToBounds = NO;
@@ -144,7 +144,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
         profileCell.photoImageView.layer.masksToBounds = YES;
-        [profileCell.photoImageView.layer setBorderColor:[[self.colorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderColor:[[ColorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
         [profileCell.photoImageView.layer setBorderWidth:1];
     });
     return profileCell;

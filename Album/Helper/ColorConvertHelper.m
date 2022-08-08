@@ -13,7 +13,7 @@
 @end
 @implementation ColorConvertHelper
 
-- (UIImage *)createImageWithColor:(UIColor *)color {
++ (UIImage *)createImageWithColor:(UIColor *)color {
     const CGRect rect = CGRectMake(0.0f, 0.0f, 57, 57);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -25,7 +25,7 @@
     return rectangleFilledImage;
 }
 
-- (UIColor *)colorFromHexString:(NSString *)hexString {
++ (UIColor *)colorFromHexString:(NSString *)hexString {
     unsigned int rgbValue = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     [scanner scanHexInt:&rgbValue];
@@ -33,7 +33,7 @@
                                   16) / 255.0 green:((rgbValue & 0xFF00) >> 8) / 255.0 blue:(rgbValue & 0xFF) / 255.0 alpha:1.0];
 }
 
-- (NSString *)hexStringForColor:(UIColor *)color {
++ (NSString *)hexStringForColor:(UIColor *)color {
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     int r = (int)(components[0] * 255.0);
     int g = (int)(components[1] * 255.0);

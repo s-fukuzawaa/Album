@@ -114,8 +114,8 @@
         [cell setClipsToBounds:YES];
         CAGradientLayer *grad = [CAGradientLayer layer];
         grad.frame = cell.bounds;
-        UIColor* firstColor = [self.colorConvertHelper colorFromHexString:@"8BC6EC"];
-        UIColor* secondColor = [self.colorConvertHelper colorFromHexString:@"9599E2"];
+        UIColor* firstColor = [ColorConvertHelper colorFromHexString:@"8BC6EC"];
+        UIColor* secondColor = [ColorConvertHelper colorFromHexString:@"9599E2"];
         grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], nil];
         grad.startPoint = CGPointMake(0.0, 0.5);
         grad.endPoint = CGPointMake(1.0, 0.5);

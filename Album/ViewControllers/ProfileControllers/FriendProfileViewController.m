@@ -95,7 +95,7 @@
                 self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
                 self.userImageView.layer.masksToBounds = NO;
                 [self.userImageView.layer setShadowRadius:5];
-                [self.userImageView.layer setShadowColor:[[self.colorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
+                [self.userImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
                 [self.userImageView.layer setShadowOpacity:1];
                 [self.userImageView.layer setShadowOffset:CGSizeMake(0,0)];
                 self.userImageView.clipsToBounds = NO;
