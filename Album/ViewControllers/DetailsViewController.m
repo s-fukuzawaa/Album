@@ -129,6 +129,7 @@
         [self.likeStatus saveInBackground];
     }
 } /* tapLiked */
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     int pageSide = self.pageSize.width;
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;

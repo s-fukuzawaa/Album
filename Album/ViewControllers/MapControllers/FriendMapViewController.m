@@ -170,7 +170,7 @@
                 // Set image of the info window to first in the array
                 [self.pinImages setObject:images forKey:pin.objectId];
             } else {
-                NSLog(@"%@", error.localizedDescription);
+                [self errorAlert:error.localizedDescription];
             }
         }];
     }
@@ -250,5 +250,20 @@
     if (pin != nil) {
         [self.delegate didTapWindow:pin imagesFromPin:self.pinImages[pin.objectId]];
     }
+}
+
+#pragma mark - UIAlert
+
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end
