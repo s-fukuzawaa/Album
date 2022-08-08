@@ -35,6 +35,8 @@
     [super loadView];
     // Initialize color converting helper class
     self.colorHelper = [[ColorConvertHelper alloc] init];
+    // Initalize api helper
+    self.apiHelper = [[ParseAPIHelper alloc] init];
     // Initialize the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy =
@@ -54,10 +56,6 @@
     self.view = self.mapView;
     self.mapView.myLocationEnabled = true;
     self.mapView.delegate = self;
-    // Set the date formatter
-    self.formatter = [[NSDateFormatter alloc] init];
-    [self.formatter setDateFormat:@"MMM dd, YYYY"];
-    [self.formatter setDateStyle:NSDateFormatterMediumStyle];
     // Initialize data structures to cache retrieved data
     self.placeToPins = [[NSMutableDictionary alloc] init];
     self.pinImages = [[NSMutableDictionary alloc] init];
