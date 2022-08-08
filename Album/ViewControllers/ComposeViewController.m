@@ -142,7 +142,7 @@ PHPickerViewControllerDelegate>
     self.pageControl.numberOfPages = 0;
     for (PHPickerResult *result in results) {
         // Get UIImage
-        if([result.itemProvider canLoadObjectOfClass:[UIImage class]]) {
+        if ([result.itemProvider canLoadObjectOfClass:[UIImage class]]) {
             [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object,
                                                                                        NSError *_Nullable error)
              {
@@ -155,9 +155,9 @@ PHPickerViewControllerDelegate>
                     });
                 }
             }];
-        }        
+        }
     }
-}
+} /* picker */
 
 #pragma mark - UIImagePickerControllerDelegate
 
@@ -188,11 +188,11 @@ PHPickerViewControllerDelegate>
 }
 - (IBAction)makeCloseFriendPin:(id)sender {
     self.isClosePost = !self.isClosePost;
-    if(self.isClosePost) {
+    if (self.isClosePost) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.closeFriendPinButton setImage:[UIImage systemImageNamed:@"star.fill"] forState:UIControlStateNormal];
         });
-    }else{
+    } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.closeFriendPinButton setImage:[UIImage systemImageNamed:@"star"] forState:UIControlStateNormal];
         });
@@ -231,7 +231,7 @@ PHPickerViewControllerDelegate>
         }
     }];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
+} /* postButton */
 
 - (IBAction)tapped:(id)sender {
     [self.view endEditing:YES];

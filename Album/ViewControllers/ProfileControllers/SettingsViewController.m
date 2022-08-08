@@ -248,7 +248,7 @@
     }
     [self.delegate didUpdate];
     [self dismissViewControllerAnimated:YES completion:nil];
-} /* updateButton */
+}
 
 - (IBAction)isPublicSwitch:(id)sender {
     UISwitch *mySwitch = (UISwitch *)sender;

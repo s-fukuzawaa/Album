@@ -14,17 +14,7 @@
 @interface ParseAPIHelper ()
 @end
 @implementation ParseAPIHelper
-// Used to find specfic user
-+ (void)constructQuery:(PFQuery *)query radius:(int) radius coordinate:(CLLocationCoordinate2D) coordinate{
-    [query orderByDescending:(@"traveledOn")];
-    [query includeKey:@"objectId"];
-    double dLat = (double)(radius) / earthR;
-    double dLon = (double)(radius) / (earthR * cos(M_PI * coordinate.latitude / 180));
-    [query whereKey:@"latitude" lessThanOrEqualTo:@(coordinate.latitude + dLat * 180 / M_PI)];
-    [query whereKey:@"latitude" greaterThanOrEqualTo:@(coordinate.latitude - dLat * 180 / M_PI)];
-    [query whereKey:@"longitude" lessThanOrEqualTo:@(coordinate.longitude + dLon * 180 / M_PI)];
-    [query whereKey:@"longitude" greaterThanOrEqualTo:@(coordinate.longitude - dLon * 180 / M_PI)];
-}
+
 + (NSArray *)fetchUser:(NSString *)userId {
     PFQuery *userQuery = [PFUser query];
     [userQuery whereKey:@"objectId" equalTo:userId];
@@ -38,7 +28,7 @@
     return dateFormatter;
 }
 
-+ (void)fetchFriends: (NSString *)userId withBlock: (PFQueryArrayResultBlock) block{
++ (void)fetchFriends:(NSString *)userId withBlock:(PFQueryArrayResultBlock)block {
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
     [friendQuery whereKey:@"requesterId" equalTo:userId];
@@ -55,7 +45,7 @@
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
-        block(friendArr,error);
+        block(friendArr, error);
     }];
 }
 
@@ -65,7 +55,7 @@
     PFQuery *query = [PFQuery queryWithClassName:classNameImage];
     [query whereKey:@"pinId" equalTo:pinId];
     [query orderByAscending:(@"createdAt")];
-
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *_Nullable imageObjs, NSError *_Nullable error) {
         NSMutableArray *images = [[NSMutableArray alloc] init];
         if (imageObjs != nil) {
@@ -80,11 +70,11 @@
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
-        block(images,error);
+        block(images, error);
     }];
 }
 
-+ (NSArray *)fetchFriendships: (NSString *)userId {
++ (NSArray *)fetchFriendships:(NSString *)userId {
     // Query to find markers that belong to current user and current user's friend
     PFQuery *friendQuery = [PFQuery queryWithClassName:classNameFriendship];
     [friendQuery whereKey:@"requesterId" equalTo:userId];
@@ -92,5 +82,9 @@
     return [friendQuery findObjects];
 }
 
++ (UIImage *)fetchProfile:(PFUser *)user {
+    PFFileObject *file = user[@"profileImage"];
+    return [UIImage imageWithData:[file getData]];
+}
 
 @end

@@ -7,6 +7,7 @@
 
 #import "DetailsViewController.h"
 #import "AlbumConstants.h"
+#import "ParseAPIHelper.h"
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
@@ -45,14 +46,10 @@
     // Set location
     self.placeNameLabel.text = self.pin.placeName;
     // Set date
-    // Set the date formatter
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM dd, YYYY"];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    NSString *date = [formatter stringFromDate:self.pin.traveledOn];
+    NSString *date = [[ParseAPIHelper dateFormatter] stringFromDate:self.pin.traveledOn];
     self.dateLabel.text = date;
     // Set caption
-    NSString* captionBegin =[@"@" stringByAppendingString:self.username];
+    NSString *captionBegin = [@"@" stringByAppendingString:self.username];
     captionBegin = [captionBegin stringByAppendingString:@": "];
     self.captionTextView.text = [captionBegin stringByAppendingString:self.pin.captionText];
     // Set up page control
@@ -63,17 +60,16 @@
     tapGesture.numberOfTapsRequired = 2;
     [self.likeButton addGestureRecognizer:tapGesture];
     // Set close friend status
-    if(self.pin.isCloseFriendPin) {
+    if (self.pin.isCloseFriendPin) {
         [self.closeFriendPost setImage:[UIImage systemImageNamed:@"star.fill"]];
-    }else{
+    } else {
         [self.closeFriendPost setHidden:YES];
     }
-    UPCarouselFlowLayout* layout = [[UPCarouselFlowLayout alloc]init];
-    layout.itemSize = CGSizeMake(416,432);
+    UPCarouselFlowLayout *layout = [[UPCarouselFlowLayout alloc]init];
+    layout.itemSize = CGSizeMake(416, 432);
     self.pageSize = layout.itemSize;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.imageCarouselView.collectionViewLayout = layout;
-    
 } /* viewDidLoad */
 
 - (void)setLikeStatus {

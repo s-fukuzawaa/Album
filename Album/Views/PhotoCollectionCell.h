@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PhotoCollectionCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
-
 @end
 
 NS_ASSUME_NONNULL_END

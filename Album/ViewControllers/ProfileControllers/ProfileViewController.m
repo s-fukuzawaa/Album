@@ -45,7 +45,7 @@
     self.friendsCollectionView.delegate = self;
     self.friendsCollectionView.dataSource = self;
     
-} /* viewDidLoad */
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

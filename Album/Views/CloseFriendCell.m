@@ -7,6 +7,7 @@
 
 #import "CloseFriendCell.h"
 #import "AlbumConstants.h"
+#import "ParseAPIHelper.h"
 
 @implementation CloseFriendCell
 
@@ -27,17 +28,13 @@
 - (void) fetchProfile {
     PFUser *user = self.user;
     if(user[@"profileImage"]){
-        PFFileObject *file = user[@"profileImage"];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+        UIImage *image = [ParseAPIHelper fetchProfile:user];
+        [self.profileImageView setImage:image];
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
+        self.profileImageView.layer.masksToBounds = YES;
     }
 }
+
 - (IBAction)closeFriendButton:(id)sender {
     UIColor *closeFriendButtonBackgroundColor;
     NSString *closeFriendButtonText;
@@ -77,7 +74,6 @@
 }
 
 - (void) didTapUserProfile:(UITapGestureRecognizer *)sender{
-    //TODO: Call method delegate
     [self.delegate closeFriendCell:self didTap:self.user];
 }
 @end

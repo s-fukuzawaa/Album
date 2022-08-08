@@ -12,6 +12,7 @@
 #import "Friendship.h"
 #import "AlbumConstants.h"
 #import "ColorConvertHelper.h"
+#import "ParseAPIHelper.h"
 #import "Pin.h"
 #import <PFImageView.h>
 #import <Parse/Parse.h>
@@ -85,22 +86,15 @@
 }
 - (void)fetchProfile {
     PFUser *user = self.user;
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.userImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.userImageView setImage:image];
-                self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
-                self.userImageView.layer.masksToBounds = NO;
-                [self.userImageView.layer setShadowRadius:5];
-                [self.userImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
-                [self.userImageView.layer setShadowOpacity:1];
-                [self.userImageView.layer setShadowOffset:CGSizeMake(0,0)];
-                self.userImageView.clipsToBounds = NO;
-            }
-        }];
+    if(user[@"profileImage"]){
+        [self.userImageView setImage:[ParseAPIHelper fetchProfile:user]];
+        self.userImageView.layer.cornerRadius = self.userImageView.frame.size.height / 2;
+        self.userImageView.layer.masksToBounds = NO;
+        [self.userImageView.layer setShadowRadius:5];
+        [self.userImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:user[@"colorHexString"]] CGColor]];
+        [self.userImageView.layer setShadowOpacity:1];
+        [self.userImageView.layer setShadowOffset:CGSizeMake(0,0)];
+        self.userImageView.clipsToBounds = NO;
     }
 }
 #pragma mark - UIView
@@ -151,7 +145,7 @@
         self.friendButton.layer.masksToBounds = NO;
         self.friendButton.clipsToBounds = NO;
     });
-} /* updateButton */
+}
 
 - (void)requestAlert {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"FRIEND REQUEST" message:@"Choose"
@@ -190,7 +184,7 @@
                                                    handler:nil];
     [alert addAction:cancel];
     [self presentViewController:alert animated:YES completion:nil];
-} /* requestAlert */
+}
 
 #pragma mark - Parse API
 
@@ -232,7 +226,7 @@
         }
         [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
     }];
-} /* fetchFriendStatus */
+}
 
 - (void)fetchRequestStatus {
     // Query to find markers that belong to current user
@@ -254,7 +248,7 @@
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-} /* fetchRequestStatus */
+}
 
 - (void)updateFriendship {
     // If friendship doesn't exist
@@ -286,7 +280,7 @@
             NSLog(@"Successfully saved friendship!");
         }
     }];
-} /* updateFriendship */
+}
 
 - (void)updateRequest {
     // If there's request from tapped user

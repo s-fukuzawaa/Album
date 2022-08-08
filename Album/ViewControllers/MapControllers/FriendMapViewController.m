@@ -21,10 +21,9 @@
 @property (nonatomic, strong) NSMutableArray *markerArr;
 @property (nonatomic, strong) NSMutableDictionary *placeToPins;
 @property (nonatomic, strong) NSMutableDictionary *pinImages;
-@property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
-@property (nonatomic, strong) UIView* overlayView;
-@property (nonatomic, strong) Pin* pinToDetail;
+@property (nonatomic, strong) UIView *overlayView;
+@property (nonatomic, strong) Pin *pinToDetail;
 @end
 
 @implementation FriendMapViewController
@@ -66,8 +65,9 @@
 // Used for switch control animation
 - (void)animateLoadingScreen {
     // Add loading screen
-    self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-
+    self.overlayView =
+    [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    
     self.overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView.alpha = 1;
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
@@ -107,7 +107,7 @@
 
 - (void)loadMarkers {
     // Place markers on initial map view
-    for(Pin *pin in self.markerArr) {
+    for (Pin *pin in self.markerArr) {
         GMSMarker *marker = [[GMSMarker alloc] init];
         marker.position = CLLocationCoordinate2DMake(pin.latitude, pin.longitude);
         marker.title = pin.placeName;
@@ -116,7 +116,10 @@
         marker.map = self.mapView;
     }
     // Fade out the loading screen
-    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
+    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void) { self.overlayView.alpha
+        = 0.0f;
+    } completion:^(BOOL finished) { [self.
+                                     overlayView  removeFromSuperview]; }];
 }
 
 #pragma mark - Parse API
@@ -149,7 +152,7 @@
             NSLog(@"%@", error.localizedDescription);
         }
     }];
-}
+} /* fetchMarkers */
 
 - (NSArray *)fetchPinsFromCoord:(CLLocationCoordinate2D)coordinate {
     // Fetch pins with specific coordinate
@@ -161,18 +164,18 @@
     [query includeKey:@"objectId"];
     [query orderByDescending:(@"traveledOn")];
     NSMutableArray *pins = (NSMutableArray *)[query findObjects];
-    for(Pin *pin in pins) {
+    for (Pin *pin in pins) {
         [ParseAPIHelper imagesFromPin:pin.objectId withBlock:^(NSArray *_Nullable images, NSError *_Nullable error) {
-                if (images != nil) {
-                    // Set image of the info window to first in the array
-                    [self.pinImages setObject:images forKey:pin.objectId];
-                } else {
-                    NSLog(@"%@", error.localizedDescription);
-                }
-            }];
+            if (images != nil) {
+                // Set image of the info window to first in the array
+                [self.pinImages setObject:images forKey:pin.objectId];
+            } else {
+                NSLog(@"%@", error.localizedDescription);
+            }
+        }];
     }
     return pins;
-}
+} /* fetchPinsFromCoord */
 
 #pragma mark - GMSMapViewDelegate
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
@@ -202,7 +205,7 @@
 }
 
 // Return an info window from a pin
-- (InfoMarkerView *) coordMarkerView: (Pin*) pin{
+- (InfoMarkerView *)coordMarkerView:(Pin *)pin {
     // Set the detail Pin
     self.pinToDetail = pin;
     InfoMarkerView *markerView = [[[NSBundle mainBundle] loadNibNamed:@"InfoExistWindow" owner:self options:nil] objectAtIndex:0];

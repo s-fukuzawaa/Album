@@ -39,7 +39,8 @@
         }
     }];
     [self.friendCollectionView reloadData];
-} /* viewDidLoad */
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.friendCollectionView reloadData];

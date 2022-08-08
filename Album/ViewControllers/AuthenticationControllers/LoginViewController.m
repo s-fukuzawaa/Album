@@ -54,7 +54,7 @@
             [self performSegueWithIdentifier:@"loginSegue" sender:nil];
         }
     }];
-}
+} /* loginButton */
 
 - (IBAction)signUpButton:(id)sender {
     [self performSegueWithIdentifier:@"signupSegue" sender:nil];

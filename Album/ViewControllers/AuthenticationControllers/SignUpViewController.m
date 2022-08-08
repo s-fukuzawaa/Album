@@ -36,9 +36,9 @@
     // Initialize confetti animation structure
     self.overlayViews = [[NSMutableArray alloc] init];
 }
-- (void) signUpAlert: (BOOL) success{
+- (void)signUpAlert:(BOOL)success {
     NSString *message = @"Sign Up Failed!";
-    if(success) {
+    if (success) {
         message = @"Sign Up Success!";
     }
     
@@ -46,29 +46,32 @@
                                                             preferredStyle:(UIAlertControllerStyleAlert)];
     //Ok
     UIAlertAction *okay = [UIAlertAction actionWithTitle:@"OK"
-                                                     style:UIAlertActionStyleDefault
-                                                 handler:^(UIAlertAction * _Nonnull action) {
-        [UIView transitionWithView:self.view duration:1 options:UIViewAnimationOptionTransitionNone animations:^(void){
-            for(UIView *view in self.overlayViews) {
-                view.alpha=0.0f;
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction *_Nonnull action) {
+        [UIView                      transitionWithView:self.view duration:1 options:
+         UIViewAnimationOptionTransitionNone animations:^(void) {
+            for (
+                 UIView *view in self.overlayViews)
+            {
+                view
+                    .alpha = 0.0f;
             }
-        } completion:^(BOOL finished){
-            for(UIView *view in self.overlayViews) {
+        } completion:^(BOOL finished) {
+            for (UIView *view in self.overlayViews) {
                 [view removeFromSuperview];
             }
         }];
     }];
     // Add the cancel action to the alert controller
     [alert addAction:okay];
-   
+    
     [self presentViewController:alert animated:YES completion:nil];
-}
+} /* signUpAlert */
 #pragma mark - IBAction
 
 - (IBAction)signUpButton:(id)sender {
     // Sign up user to Parse backend
     [self registerUser];
-    
 }
 
 - (IBAction)didTap:(id)sender {
@@ -96,7 +99,7 @@
     }
 }
 
-- (void) animateConfetti {
+- (void)animateConfetti {
     // How many pieces to generate
     int confettiCount = 200;
     
@@ -115,7 +118,7 @@
     int randomFallTime;
     int randomRotation;
     
-    for (int i = 0; i < confettiCount; i++){
+    for (int i = 0; i < confettiCount; i++) {
         randomStartPoint = arc4random_uniform(screenWidth);
         randomEndPoint = arc4random_uniform(screenWidth);
         randomDelayTime = arc4random_uniform(100);
@@ -125,17 +128,27 @@
         randomEndConfettiLength = arc4random_uniform(15);
         NSUInteger randomColor = arc4random() % [confettiColors count];
         
-        UIView *confetti=[[UIView alloc]initWithFrame:CGRectMake(randomStartPoint, -10, randomStartConfettiLength, 8)];
+        UIView *confetti = [[UIView alloc]initWithFrame:CGRectMake(randomStartPoint, -10, randomStartConfettiLength, 8)];
         [confetti setBackgroundColor:confettiColors[randomColor]];
         confetti.alpha = .4;
         [self.view addSubview:confetti];
         [self.overlayViews addObject:confetti];
-        [UIView animateWithDuration:randomFallTime+1 delay:randomDelayTime*.02 options:UIViewAnimationOptionRepeat animations:^{
-                [confetti setFrame:CGRectMake(randomEndPoint, screenHeight+30, randomEndConfettiLength, 8)];
-                confetti.transform = CGAffineTransformMakeRotation(randomRotation);
+        [UIView animateWithDuration:randomFallTime + 1 delay:randomDelayTime * .02 options:UIViewAnimationOptionRepeat animations:^{
+            [confetti
+             setFrame:
+                 CGRectMake(
+                            randomEndPoint,
+                            screenHeight +
+                            30,
+                            randomEndConfettiLength,
+                            8)];
+            confetti.
+            transform =
+            CGAffineTransformMakeRotation(
+                                          randomRotation);
         } completion:nil];
     }
-}
+} /* animateConfetti */
 
 #pragma mark - Parse API
 
@@ -180,7 +193,7 @@
             [self signUpAlert:YES];
         }
     }];
-}
+} /* registerUser */
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -225,8 +238,7 @@
         imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
-
-}
+} /* didTapUserProfile */
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
