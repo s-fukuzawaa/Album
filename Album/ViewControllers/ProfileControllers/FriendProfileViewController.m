@@ -31,7 +31,6 @@
 @property (strong, nonatomic) Friendship *friendship; // Friendship where requester = current user
 @property (strong, nonatomic) Friendship *request; // Friendship where requester = tapped user
 @property (strong, nonatomic) NSArray *imagesToDetail;
-@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @property (strong, nonatomic) Pin *pin;
 @property (nonatomic, strong) UIView* overlayView;
 @end
@@ -39,32 +38,22 @@
 @implementation FriendProfileViewController
 
 #pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Update button UI
-    [self updateButton];
-    // Update isPublic status
-    [self setIsPublicLabel];
-    // Set username
-    [self setUsernameLabel];
-    // Set close friend star to be invisible in general
-    [self.closeFriendStarView setHidden:YES];
-    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-
-        self.overlayView.backgroundColor = [UIColor whiteColor];
-        self.overlayView.alpha = 1;
-        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
-        activityView.center = self.view.center;
-        [self.overlayView addSubview:activityView];
-        [activityView startAnimating];
-        [self.view addSubview:self.overlayView];
-        [self.view bringSubviewToFront:self.overlayView];
+        // Add loading screen
+        [self animateLoadingScreen];
+        // Update button UI
+        [self updateButton];
+        // Update isPublic status and set username
+        [self setLabelView];
+        // Set close friend star to be invisible in general
+        [self.closeFriendStarView setHidden:YES];
         // Set user profile image view
         [self fetchProfile];
         // Set request statuses
@@ -72,16 +61,11 @@
         // Set friend statuses
         [self fetchFriendStatus];
     });
-    
+
 }
-- (void) setIsPublicLabel {
-    if([self.user[@"isPublic"] isEqual:@(YES)]) {
-        [self.isPublicLabel setText: @"Public Account"];
-    }else{
-        [self.isPublicLabel setText: @"Private Account"];
-    }
-}
-- (void) setUsernameLabel {
+- (void) setLabelView {
+    NSString *publicLabelText = ([self.user[@"isPublic"] isEqual:@(YES)]) ? @"Public" :@"Private";
+    [self.isPublicLabel setText: publicLabelText];
     [self.usernameLabel setText: [self.usernameLabel.text stringByAppendingString:self.user.username]];
 }
 - (void)fetchProfile {
@@ -97,6 +81,20 @@
         self.userImageView.clipsToBounds = NO;
     }
 }
+
+- (void)animateLoadingScreen {
+    // Add loading screen
+    self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    self.overlayView.backgroundColor = [UIColor whiteColor];
+    self.overlayView.alpha = 1;
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+    activityView.center = self.view.center;
+    [self.overlayView addSubview:activityView];
+    [activityView startAnimating];
+    [self.view addSubview:self.overlayView];
+    [self.view bringSubviewToFront:self.overlayView];
+}
+
 #pragma mark - UIView
 - (void)updateButton {
     UIColor *friendshipButtonBackgroundColor;
@@ -119,6 +117,15 @@
         }else{
             [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star"]];
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate didChageFriendStatus];
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 1.0;
+            [self.lockImageView setHidden:YES];
+            self.lockImageView.alpha = 0.0;
+            [self.segmentedControl setEnabled:YES];
+        });
+        
     } else if ([self.friendStatus intValue] == PENDING) {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
         friendshipButtonText = @"Pending";
@@ -131,6 +138,14 @@
         friendshipButtonTitleColor = [UIColor blackColor];
         [self.closeFriendStarView setHidden:YES];
         [self.closeFriendStatusLabel setHidden:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Enable containers
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 0.0;
+            [self.lockImageView setHidden:NO];
+            self.lockImageView.alpha = 1.0;
+            [self.segmentedControl setEnabled:NO];
+        });
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];
@@ -175,6 +190,14 @@
         [self updateRequest];
         // Update button UI
         [self updateButton];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Enable containers
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 1.0;
+            [self.lockImageView setHidden:YES];
+            self.lockImageView.alpha = 0.0;
+            [self.segmentedControl setEnabled:YES];
+        });
     }];
     [alert addAction:rejectAction];
     // Cancel action
@@ -203,22 +226,19 @@
                 // Otherwise, store
                 self.friendship = friendships[0];
                 self.friendStatus = self.friendship.hasFriended;
-                // Update button UI
-                [self updateButton];
-                // If private account and not friend, do not display anything
-                if ([self.friendStatus intValue] != FRIENDED && [self.user[@"isPublic"] isEqual:@(NO)]) {
-                    // Initial view to lock view
-                    self.friendMapContainer.alpha = 0.0;
-                    self.friendsGridContainer.alpha = 0.0;
-                    [self.lockImageView setHidden:NO];
-                    [self.segmentedControl setEnabled:NO];
-                }else{
-                    // Initial view to friend map view
-                    self.friendMapContainer.alpha = 0.0;
-                    self.friendsGridContainer.alpha = 1.0;
-                    [self.lockImageView setHidden:YES];
-                    self.lockImageView.alpha = 0.0;
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Update button UI
+                    [self updateButton];
+                    // If private account and not friend, do not display anything
+                    if ([self.friendStatus intValue] == FRIENDED || [self.user[@"isPublic"] isEqual:@(YES)]) {
+                        // Initial view to friend map view
+                        self.friendMapContainer.alpha = 0.0;
+                        self.friendsGridContainer.alpha = 1.0;
+                        [self.lockImageView setHidden:YES];
+                        self.lockImageView.alpha = 0.0;
+                        [self.segmentedControl setEnabled:YES];
+                    }
+                });
             }
         } else {
             NSLog(@"%@", error.localizedDescription);

@@ -81,7 +81,6 @@
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [self cameraAlert];
     } else {
-        NSLog(@"Camera 🚫 available so we will use photo library instead");
         UIImagePickerController *imagePickerVC = [UIImagePickerController new];
         imagePickerVC.delegate = self;
         imagePickerVC.allowsEditing = YES;
@@ -89,42 +88,6 @@
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
 } /* didTapUserProfile */
-
-- (void) cameraAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
-                                                            preferredStyle:(UIAlertControllerStyleAlert)];
-    // Take photo action
-    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:^(UIAlertAction *_Nonnull action) {
-        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-        imagePickerVC.delegate = self;
-        imagePickerVC.allowsEditing = YES;
-        imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-        [self presentViewController:imagePickerVC animated:YES completion:nil];
-    }];
-    // Add the take photo action to the alertController
-    [alert addAction:photoAction];
-    // Create an upload from library action
-    UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *_Nonnull action) {
-        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-        imagePickerVC.delegate = self;
-        imagePickerVC.allowsEditing = YES;
-        imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:imagePickerVC animated:YES completion:nil];
-    }];
-    // Add the upload from library action to the alert controller
-    [alert addAction:uploadAction];
-    //Cancel
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:nil];
-    // Add the cancel action to the alert controller
-    [alert addAction:cancel];
-    [self presentViewController:alert animated:YES completion:nil];
-}
 
 #pragma mark - UIImagePickerControllerDelegate
 
@@ -195,22 +158,7 @@
 - (IBAction)updateButton:(id)sender {
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
-        UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
-         @"Username or Password or Email is empty!"
-                                     preferredStyle:(UIAlertControllerStyleAlert)];
-        // Create a cancel action
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:nil];
-        [alert addAction:cancelAction];
-        
-        // Create an OK action
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:nil];
-        [alert addAction:okAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self emptyFieldsAlert];
         return;
     }
     PFUser *user = [PFUser currentUser];
@@ -238,25 +186,14 @@
     }
     // Update user properties when necessary
     if(diff == YES) {
-        [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *_Nullable error) {
-                  if (error != nil) {
-                  NSLog(@"Error: %@", error.localizedDescription);
-                  } else {
-                  NSLog(@"User updated successfully");
-                  }
-              }];
+        [user saveInBackground];
     }
     [self.delegate didUpdate];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)isPublicSwitch:(id)sender {
-    UISwitch *mySwitch = (UISwitch *)sender;
-    if ([mySwitch isOn]) {
-        self.isPublic = NO;
-    } else {
-        self.isPublic = YES;
-    }
+    self.isPublic = ([(UISwitch *)sender isOn]) ? NO :YES;
 }
 
 #pragma mark - FCColorPickerViewControllerDelegate
@@ -268,5 +205,61 @@
 
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIAlert
+- (void) cameraAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Take photo action
+    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the take photo action to the alertController
+    [alert addAction:photoAction];
+    // Create an upload from library action
+    UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the upload from library action to the alert controller
+    [alert addAction:uploadAction];
+    //Cancel
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    // Add the cancel action to the alert controller
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void) emptyFieldsAlert {
+    UIAlertController *alert =
+    [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
+     @"Username or Password or Email is empty!"
+                                 preferredStyle:(UIAlertControllerStyleAlert)];
+    // Create a cancel action
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    [alert addAction:cancelAction];
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

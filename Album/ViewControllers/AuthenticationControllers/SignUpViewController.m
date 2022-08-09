@@ -36,37 +36,7 @@
     // Initialize confetti animation structure
     self.overlayViews = [[NSMutableArray alloc] init];
 }
-- (void)signUpAlert:(BOOL)success {
-    NSString *message = @"Sign Up Failed!";
-    if (success) {
-        message = @"Sign Up Success!";
-    }
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign Up" message:message
-                                                            preferredStyle:(UIAlertControllerStyleAlert)];
-    //Ok
-    UIAlertAction *okay = [UIAlertAction actionWithTitle:@"OK"
-                                                   style:UIAlertActionStyleDefault
-                                                 handler:^(UIAlertAction *_Nonnull action) {
-        [UIView                      transitionWithView:self.view duration:1 options:
-         UIViewAnimationOptionTransitionNone animations:^(void) {
-            for (
-                 UIView *view in self.overlayViews)
-            {
-                view
-                    .alpha = 0.0f;
-            }
-        } completion:^(BOOL finished) {
-            for (UIView *view in self.overlayViews) {
-                [view removeFromSuperview];
-            }
-        }];
-    }];
-    // Add the cancel action to the alert controller
-    [alert addAction:okay];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-} /* signUpAlert */
+
 #pragma mark - IBAction
 
 - (IBAction)signUpButton:(id)sender {
@@ -100,7 +70,6 @@
     
     // What colors should the pieces be?
     NSArray *confettiColors = @[[UIColor redColor], [UIColor greenColor], [UIColor yellowColor], [UIColor blueColor]];
-    
     
     // Everything else that you can configure
     int screenWidth = self.view.frame.size.width;
@@ -159,31 +128,14 @@
     newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
-        UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:@"Empty Fields" message:
-         @"Username or Password or Email is empty!"
-                                     preferredStyle:(UIAlertControllerStyleAlert)];
-        // Create a cancel action
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:nil];
-        [alert addAction:cancelAction];
-        
-        // Create an OK action
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:nil];
-        [alert addAction:okAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self emptyFieldAlert];
         return;
     }
     // Call sign up function on the object
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
-            NSLog(@"Error: %@", error.localizedDescription);
             [self signUpAlert:NO];
         } else {
-            NSLog(@"User registered successfully");
             [self animateConfetti];
             [self signUpAlert:YES];
         }
@@ -192,48 +144,15 @@
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
-                                                                preferredStyle:(UIAlertControllerStyleAlert)];
-        // Take photo action
-        UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
-                                                              style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
-        // Add the take photo action to the alertController
-        [alert addAction:photoAction];
-        // Create an upload from library action
-        UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *_Nonnull action) {
-            UIImagePickerController *imagePickerVC = [UIImagePickerController new];
-            imagePickerVC.delegate = self;
-            imagePickerVC.allowsEditing = YES;
-            imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentViewController:imagePickerVC animated:YES completion:nil];
-        }];
-        // Add the upload from library action to the alert controller
-        [alert addAction:uploadAction];
-        //Cancel
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:nil];
-        // Add the cancel action to the alert controller
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self cameraAlert];
     } else {
-        NSLog(@"Camera 🚫 available so we will use photo library instead");
         UIImagePickerController *imagePickerVC = [UIImagePickerController new];
         imagePickerVC.delegate = self;
         imagePickerVC.allowsEditing = YES;
         imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
-} /* didTapUserProfile */
+}
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
@@ -281,5 +200,93 @@
 
 - (void)colorPickerViewControllerDidCancel:(FCColorPickerViewController *)colorPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIAlert
+
+- (void)signUpAlert:(BOOL)success {
+    NSString *message = @"Sign Up Failed!";
+    if (success) {
+        message = @"Sign Up Success!";
+    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign Up" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    //Ok
+    UIAlertAction *okay = [UIAlertAction actionWithTitle:@"OK"
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction *_Nonnull action) {
+        [UIView                      transitionWithView:self.view duration:1 options:
+         UIViewAnimationOptionTransitionNone animations:^(void) {
+            for (
+                 UIView *view in self.overlayViews)
+            {
+                view
+                    .alpha = 0.0f;
+            }
+        } completion:^(BOOL finished) {
+            for (UIView *view in self.overlayViews) {
+                [view removeFromSuperview];
+            }
+        }];
+    }];
+    // Add the cancel action to the alert controller
+    [alert addAction:okay];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+} /* signUpAlert */
+
+- (void)cameraAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Take photo action
+    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the take photo action to the alertController
+    [alert addAction:photoAction];
+    // Create an upload from library action
+    UIAlertAction *uploadAction = [UIAlertAction actionWithTitle:@"Upload from Library"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *_Nonnull action) {
+        UIImagePickerController *imagePickerVC = [UIImagePickerController new];
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePickerVC animated:YES completion:nil];
+    }];
+    // Add the upload from library action to the alert controller
+    [alert addAction:uploadAction];
+    //Cancel
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    // Add the cancel action to the alert controller
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void) emptyFieldAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Empty Fields"
+                                                                   message:@"Username or Password or Email is empty!"
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    // Create a cancel action
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    [alert addAction:cancelAction];
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

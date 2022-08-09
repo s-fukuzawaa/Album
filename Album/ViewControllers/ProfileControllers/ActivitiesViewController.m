@@ -42,8 +42,6 @@
 
 #pragma mark - Parse API
 - (void)fetchActivities {
-    [self fetchFriendRequests];
-}
 
 - (void)fetchFriendRequests {
     // Query to find pending friend requests for this user
@@ -63,7 +61,7 @@
             }
             [self.tableView reloadData];
         } else {
-            NSLog(@"%@", error.localizedDescription);
+            [self errorAlert:error.localizedDescription];
         }
     }];
 }
@@ -95,7 +93,7 @@
 #pragma mark - ActivityCellDelegate
 
 - (void)activityCell:(ActivityCell *)activityCell didTap:(PFUser *)user {
-    [self fetchActivities];
+    [self fetchFriendRequests];
 }
 
 #pragma mark - Navigation
@@ -104,5 +102,20 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(ActivityCell *)sender];
     FriendProfileViewController *friendProfVC = [segue destinationViewController];
     friendProfVC.user = self.friendRequests[indexPath.row];
+}
+
+#pragma mark - UIAlert
+
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

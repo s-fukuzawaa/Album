@@ -20,21 +20,26 @@
 
 @implementation AddFriendViewController
 
+#pragma mark - UIViewController
+- (void)animateLoadingScreen {
+    // Add loading screen
+    self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    self.overlayView.backgroundColor = [UIColor whiteColor];
+    self.overlayView.alpha = 1;
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+    activityView.center = self.view.center;
+    [self.overlayView addSubview:activityView];
+    [activityView startAnimating];
+    [self.view addSubview:self.overlayView];
+    [self.view bringSubviewToFront:self.overlayView];
+}
 
 #pragma mark - IBAction
 
 - (IBAction)searchButton:(id)sender {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-
-        self.overlayView.backgroundColor = [UIColor whiteColor];
-        self.overlayView.alpha = 1;
-        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
-        activityView.center = self.view.center;
-        [self.overlayView addSubview:activityView];
-        [activityView startAnimating];
-        [self.view addSubview:self.overlayView];
-        [self.view bringSubviewToFront:self.overlayView];
+        // Add loading screen
+        [self animateLoadingScreen];
         // Search user by username
         PFQuery *query = [PFUser query];
         PFUser *currentUser = [PFUser currentUser];
@@ -57,6 +62,7 @@
     });
     
 }
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -11,7 +11,7 @@
 #import "ColorConvertHelper.h"
 #import "PhotoCollectionCell.h"
 
-@interface FriendGridViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface FriendGridViewController () <UICollectionViewDataSource, UICollectionViewDelegate, FriendProfileViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *friendCollectionView;
 @property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
@@ -88,5 +88,8 @@
     friendVC.user = self.friendsArray[indexPath.row];
 }
 
-
+#pragma mark - FriendProfileViewControllerDelegate
+- (void)didChageFriendStatus {
+    [self.friendCollectionView reloadData];
+}
 @end

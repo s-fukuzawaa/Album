@@ -176,7 +176,7 @@
             <objects>
                 <viewController id="ZfE-dK-8F4" customClass="DetailsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mDr-3p-BGh">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="722"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2E-XT-Vgr">
@@ -253,7 +253,7 @@
                                 <color key="tintColor" systemColor="labelColor"/>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Caption" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Fq-dM-P9x">
-                                <rect key="frame" x="12" y="572" width="390" height="118"/>
+                                <rect key="frame" x="12" y="572" width="390" height="238"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
@@ -735,9 +735,6 @@
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZq-fw-v3X">
                                                     <rect key="frame" x="193" y="88" width="71" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="71" id="9vh-v5-7JT"/>
-                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="17"/>
                                                     <color key="textColor" systemColor="systemBackgroundColor"/>
                                                     <nil key="highlightedColor"/>
@@ -746,6 +743,8 @@
                                                     <rect key="frame" x="20" y="36" width="125" height="125"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="Aai-HZ-1fK" secondAttribute="height" multiplier="1:1" id="bCX-aM-a5O"/>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="125" id="tnF-aR-ms0"/>
+                                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="125" id="xHX-Iu-YOQ"/>
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
@@ -757,9 +756,9 @@
                                                 <constraint firstAttribute="bottom" secondItem="Aai-HZ-1fK" secondAttribute="bottom" constant="36" id="MGF-Bh-rD7"/>
                                                 <constraint firstItem="jSg-Xm-rtR" firstAttribute="baseline" secondItem="eZq-fw-v3X" secondAttribute="firstBaseline" id="P1O-C8-hG2"/>
                                                 <constraint firstItem="Aai-HZ-1fK" firstAttribute="leading" secondItem="yg4-M5-XQs" secondAttribute="leading" constant="20" id="cGV-26-ugs"/>
-                                                <constraint firstItem="jSg-Xm-rtR" firstAttribute="leading" secondItem="eZq-fw-v3X" secondAttribute="trailing" constant="44" id="ka4-0g-tYF"/>
                                                 <constraint firstItem="eZq-fw-v3X" firstAttribute="leading" secondItem="Aai-HZ-1fK" secondAttribute="trailing" constant="48" id="mj0-8m-HCP"/>
-                                                <constraint firstItem="jSg-Xm-rtR" firstAttribute="leading" secondItem="eZq-fw-v3X" secondAttribute="trailing" constant="44" id="p6A-QX-Bki"/>
+                                                <constraint firstItem="jSg-Xm-rtR" firstAttribute="leading" relation="lessThanOrEqual" secondItem="eZq-fw-v3X" secondAttribute="trailing" constant="44" id="p6A-QX-Bki"/>
+                                                <constraint firstItem="jSg-Xm-rtR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eZq-fw-v3X" secondAttribute="trailing" constant="8" id="qEp-gc-ffT"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -1190,22 +1189,22 @@
             <objects>
                 <viewController id="M2k-nZ-AUg" customClass="FriendProfileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3pN-hL-cC4">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="722"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-ZC-55u" customClass="PFImageView">
-                                <rect key="frame" x="130" y="75" width="154" height="151"/>
+                                <rect key="frame" x="130" y="119" width="154" height="151"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="151" id="qej-h8-IYi"/>
                                 </constraints>
                             </imageView>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
-                                <rect key="frame" x="0.0" y="451" width="414" height="271"/>
+                            <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-dS-94o">
+                                <rect key="frame" x="0.0" y="451" width="414" height="445"/>
                                 <connections>
                                     <segue destination="v8b-bp-BxU" kind="embed" identifier="friendGridSegue" id="sPz-9s-BLv"/>
                                 </connections>
                             </containerView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8Jm-G3-bax">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8Jm-G3-bax">
                                 <rect key="frame" x="0.0" y="413" width="414" height="32"/>
                                 <segments>
                                     <segment title="" image="person.2.circle.fill" catalog="system"/>
@@ -1216,22 +1215,12 @@
                                     <action selector="viewSwitchControl:" destination="M2k-nZ-AUg" eventType="valueChanged" id="9TJ-2D-Q6y"/>
                                 </connections>
                             </segmentedControl>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
-                                <rect key="frame" x="0.0" y="452" width="414" height="270"/>
+                            <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqS-7G-ghx">
+                                <rect key="frame" x="0.0" y="452" width="414" height="444"/>
                                 <connections>
                                     <segue destination="Wk6-GE-gYZ" kind="embed" identifier="friendMapSegue" id="9uL-R6-ZQy"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
-                                <rect key="frame" x="130" y="310" width="154" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Friend">
-                                    <color key="baseForegroundColor" systemColor="labelColor"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="GiJ-DT-hGq"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUT-wS-jsS">
                                 <rect key="frame" x="150" y="371" width="114.5" height="19"/>
                                 <fontDescription key="fontDescription" name="Palatino-Roman" family="Palatino" pointSize="17"/>
@@ -1253,7 +1242,7 @@
                                 <color key="tintColor" systemColor="labelColor"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TL9-XE-Wn3">
-                                <rect key="frame" x="200.5" y="283" width="13" height="19"/>
+                                <rect key="frame" x="200.5" y="282" width="13" height="19"/>
                                 <fontDescription key="fontDescription" name="Palatino-Roman" family="Palatino" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1264,6 +1253,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9cN-q4-ZWy">
+                                <rect key="frame" x="174.5" y="321" width="65" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Friend">
+                                    <color key="baseForegroundColor" systemColor="labelColor"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="friendButton:" destination="M2k-nZ-AUg" eventType="touchUpInside" id="GiJ-DT-hGq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ofq-Iq-PSZ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1274,10 +1273,9 @@
                             <constraint firstItem="RUT-wS-jsS" firstAttribute="centerX" secondItem="VyU-ZC-55u" secondAttribute="centerX" id="7j1-V3-rAc"/>
                             <constraint firstItem="4hh-dS-94o" firstAttribute="bottom" secondItem="oqS-7G-ghx" secondAttribute="bottom" id="86d-l1-3gy"/>
                             <constraint firstItem="oqS-7G-ghx" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="8" symbolic="YES" id="EVL-vq-yBx"/>
-                            <constraint firstItem="VyU-ZC-55u" firstAttribute="leading" secondItem="9cN-q4-ZWy" secondAttribute="leading" id="Elt-Bb-DMO"/>
+                            <constraint firstItem="TL9-XE-Wn3" firstAttribute="top" secondItem="VyU-ZC-55u" secondAttribute="bottom" constant="12" id="EnY-sc-au9"/>
                             <constraint firstItem="TL9-XE-Wn3" firstAttribute="centerX" secondItem="VyU-ZC-55u" secondAttribute="centerX" id="FEp-n4-B8R"/>
                             <constraint firstItem="8Jm-G3-bax" firstAttribute="top" secondItem="3pN-hL-cC4" secondAttribute="top" constant="413" id="Gjm-0S-B1W"/>
-                            <constraint firstItem="9cN-q4-ZWy" firstAttribute="top" secondItem="TL9-XE-Wn3" secondAttribute="bottom" constant="8" symbolic="YES" id="IiM-mn-D4c"/>
                             <constraint firstItem="oqS-7G-ghx" firstAttribute="trailing" secondItem="Ofq-Iq-PSZ" secondAttribute="trailing" id="J2F-7I-SwU"/>
                             <constraint firstItem="4hh-dS-94o" firstAttribute="top" secondItem="8Jm-G3-bax" secondAttribute="bottom" constant="7" id="P4D-aZ-3aY"/>
                             <constraint firstItem="VyU-ZC-55u" firstAttribute="top" secondItem="Ofq-Iq-PSZ" secondAttribute="top" constant="31" id="SkQ-nE-4fZ"/>
@@ -1291,8 +1289,8 @@
                             <constraint firstAttribute="bottom" secondItem="oqS-7G-ghx" secondAttribute="bottom" id="lrN-4V-brF"/>
                             <constraint firstItem="Ofq-Iq-PSZ" firstAttribute="trailing" secondItem="y1M-SZ-Di7" secondAttribute="trailing" constant="40" id="nb4-bn-bkY"/>
                             <constraint firstItem="8Jm-G3-bax" firstAttribute="trailing" secondItem="4hh-dS-94o" secondAttribute="trailing" id="t6Z-VL-GDW"/>
-                            <constraint firstItem="8Jm-G3-bax" firstAttribute="top" secondItem="9cN-q4-ZWy" secondAttribute="bottom" constant="72" id="uhg-HL-aWk"/>
                             <constraint firstItem="VyU-ZC-55u" firstAttribute="leading" secondItem="Ofq-Iq-PSZ" secondAttribute="leading" constant="130" id="v9Y-YT-xhY"/>
+                            <constraint firstItem="9cN-q4-ZWy" firstAttribute="top" secondItem="TL9-XE-Wn3" secondAttribute="bottom" constant="20" id="vx4-b7-D0x"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Friend Profile" id="waZ-sw-m0h"/>
@@ -1401,11 +1399,11 @@
             <objects>
                 <viewController id="v8b-bp-BxU" customClass="FriendGridViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NgE-ou-ek6">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="271"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="445"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="l3Z-u2-WvE">
-                                <rect key="frame" x="8" y="8" width="398" height="255"/>
+                                <rect key="frame" x="8" y="8" width="398" height="429"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LYn-4P-fL0">
                                     <size key="itemSize" width="128" height="128"/>
@@ -1466,7 +1464,7 @@
             <objects>
                 <viewController id="Wk6-GE-gYZ" customClass="FriendMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="paT-Fk-Ubi">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="oPZ-mX-8zT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1561,7 +1559,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Zx5-Kd-Olm"/>
+        <segue reference="3iu-cH-Rgq"/>
         <segue reference="nli-5v-IW8"/>
     </inferredMetricsTieBreakers>
     <resources>

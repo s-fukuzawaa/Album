@@ -216,8 +216,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
             if ([self.friendsIdSet containsObject:user.objectId]) {
                 return YES;
             } else if (self.segmentedControl.selectedSegmentIndex == 2
-                       && [user[@"isPublic"] isEqual:@(YES)])
-            {
+                       && [user[@"isPublic"] isEqual:@(YES)]) {
                 return YES;
             }
         }
@@ -316,11 +315,9 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
-            NSLog(@"Successfully fetched markers!");
             self.markerArr = [[NSMutableArray alloc] init];
             for (PFObject *pin in pins) {
-                PFUser *author = pin[@"author"];
-                PFUser *user = [ParseAPIHelper fetchUser:author.objectId][0];
+                PFUser *user = [ParseAPIHelper fetchUser:((PFUser *)pin[@"author"]).objectId][0];
                 [self.markerArr addObject:pin];
                 [self.pinIdToUsername setObject:user.username forKey:pin.objectId];
                 if (!self.placeToPins[pin[@"placeName"]]) {
@@ -332,15 +329,12 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                     if (images != nil) {
                         // Set image of the info window to first in the array
                         [self.pinImages setObject:images forKey:pin.objectId];
-                    } else {
-                        NSLog(@"%@", error.localizedDescription);
                     }
                 }];
             }
-            
             [self loadMarkers];
         } else {
-            NSLog(@"%@", error.localizedDescription);
+            [self errorAlert:error.localizedDescription];
         }
     }];
 } /* fetchGlobal */
@@ -372,7 +366,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
                     // Set image of the info window to first in the array
                     [self.pinImages setObject:images forKey:pin.objectId];
                 } else {
-                    NSLog(@"%@", error.localizedDescription);
+                    [self errorAlert:error.localizedDescription];
                 }
             }];
         }
@@ -525,5 +519,20 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         // Save username
         detailsVC.username = [ParseAPIHelper fetchUser:detailsVC.pin.author.objectId][0][@"username"];
     }
+}
+
+#pragma mark - UIAlert
+
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

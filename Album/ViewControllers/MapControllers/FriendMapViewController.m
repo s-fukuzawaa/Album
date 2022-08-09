@@ -62,12 +62,9 @@
     });
 }
 
-// Used for switch control animation
 - (void)animateLoadingScreen {
     // Add loading screen
-    self.overlayView =
-    [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-    
+    self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     self.overlayView.backgroundColor = [UIColor whiteColor];
     self.overlayView.alpha = 1;
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
@@ -133,7 +130,6 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *pins, NSError *error) {
         if (pins != nil) {
             // Store the posts, update count
-            NSLog(@"Successfully fetched markers!");
             self.markerArr = (NSMutableArray *)pins;
             for (PFObject *pin in pins) {
                 [self.placeToPins setObject:pin forKey:pin[@"placeName"]];
@@ -149,7 +145,7 @@
             }
             [self loadMarkers];
         } else {
-            NSLog(@"%@", error.localizedDescription);
+            [self errorAlert:error.localizedDescription];
         }
     }];
 } /* fetchMarkers */

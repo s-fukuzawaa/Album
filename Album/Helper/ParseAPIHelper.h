@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Fetch profile picture
 + (UIImage *) fetchProfile: (PFUser *) user;
-
 @end
 
 NS_ASSUME_NONNULL_END
