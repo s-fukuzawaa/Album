@@ -91,24 +91,26 @@
 #pragma mark - Parse API
 - (void)setProfile {
     PFUser *user = [PFUser currentUser];
-    [self.usernameLabel setText:@"@"];
-    [self.usernameLabel setText:[self.usernameLabel.text stringByAppendingString:user.username]];
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.profileImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = NO;
-                [self.profileImageView.layer setShadowRadius:5];
-                [self.profileImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
-                [self.profileImageView.layer setShadowOpacity:1];
-                [self.profileImageView.layer setShadowOffset:CGSizeMake(0,0)];
-                self.profileImageView.clipsToBounds = NO;
-            }
-        }];
+    if(user != nil) {
+        [self.usernameLabel setText:@"@"];
+        [self.usernameLabel setText:[self.usernameLabel.text stringByAppendingString:user.username]];
+        if (user[@"profileImage"]) {
+            PFFileObject *file = user[@"profileImage"];
+            [self.profileImageView setFile:file];
+            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [self.profileImageView setImage:image];
+                    self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                    self.profileImageView.layer.masksToBounds = NO;
+                    [self.profileImageView.layer setShadowRadius:5];
+                    [self.profileImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+                    [self.profileImageView.layer setShadowOpacity:1];
+                    [self.profileImageView.layer setShadowOffset:CGSizeMake(0,0)];
+                    self.profileImageView.clipsToBounds = NO;
+                }
+            }];
+        }
     }
 }
 
