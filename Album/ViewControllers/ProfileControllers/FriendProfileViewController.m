@@ -137,7 +137,6 @@
         [self.friendButton setTitle:friendshipButtonText forState:UIControlStateNormal];
         [self.friendButton setBackgroundColor:friendshipButtonBackgroundColor];
         [self.friendButton.layer setCornerRadius:15];
-        [self.friendButton.layer setCornerRadius:15];
         [self.friendButton.layer setShadowRadius:3];
         [self.friendButton.layer setShadowColor:[[UIColor grayColor] CGColor]];
         [self.friendButton.layer setShadowOpacity:1];

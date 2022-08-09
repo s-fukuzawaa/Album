@@ -49,7 +49,7 @@
     NSString *date = [[ParseAPIHelper dateFormatter] stringFromDate:self.pin.traveledOn];
     self.dateLabel.text = date;
     // Set caption
-    NSString *captionBegin = [@"@" stringByAppendingString:self.username];
+    NSString const *captionBegin = [@"@" stringByAppendingString:self.username];
     captionBegin = [captionBegin stringByAppendingString:@": "];
     self.captionTextView.text = [captionBegin stringByAppendingString:self.pin.captionText];
     // Set up page control

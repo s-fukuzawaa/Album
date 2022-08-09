@@ -36,9 +36,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Set API helper
-    self.apiHelper = [[ParseAPIHelper alloc] init];
-    self.colorConvertHelper = [[ColorConvertHelper alloc] init];
     // Store current user
     self.currentUser = [PFUser currentUser];
     // Assign collection view delegate and dataSource
@@ -80,7 +77,7 @@
                     [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
                 });
             } else {
-                NSLog(@"%@", error.localizedDescription);
+                [self errorAlert:error.localizedDescription];
             }
         }];
     });
@@ -180,5 +177,20 @@
         FriendProfileViewController *friendVC = [segue destinationViewController];
         friendVC.user = self.friendsArray[indexPath.row];
     }
+}
+
+#pragma mark - UIAlert
+
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

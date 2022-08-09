@@ -143,7 +143,7 @@
                         // Set image of the info window to first in the array
                         [self.pinImages setObject:images forKey:pin.objectId];
                     } else {
-                        NSLog(@"%@", error.localizedDescription);
+                        [self errorAlert:error.localizedDescription];
                     }
                 }];
             }

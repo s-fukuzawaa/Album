@@ -91,12 +91,7 @@
 }
 
 - (IBAction)isPublicSwitch:(id)sender {
-    UISwitch *mySwitch = (UISwitch *)sender;
-    if ([mySwitch isOn]) {
-        self.isPublic = NO;
-    } else {
-        self.isPublic = YES;
-    }
+    self.isPublic = ![(UISwitch *)sender isOn];
 }
 
 - (void)animateConfetti {

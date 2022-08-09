@@ -49,7 +49,8 @@
                 [self.tableView reloadData];
                 self.tableView.rowHeight = UITableViewAutomaticDimension;
             } else {
-                NSLog(@"%@", error.localizedDescription);
+                [self errorAlert: @"Error occurred. Reloading..."];
+                [self.tableView reloadData];
             }
             [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
         }];
@@ -98,5 +99,18 @@
     friendProfVC.user = self.friendsArr[indexPath.row];
 }
 
+#pragma mark - UIAlert
 
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 @end

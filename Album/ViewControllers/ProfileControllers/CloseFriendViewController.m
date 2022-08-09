@@ -20,9 +20,6 @@
 @property (strong, nonatomic) NSArray *friendsArr;
 @property (strong, nonatomic) NSArray *friendshipArr;
 @property (strong, nonatomic) NSArray *otherFriendshipArr;
-@property (strong, nonatomic) NSArray *filterFriendsArr;
-@property (strong, nonatomic) NSArray *filterFriendshipArr;
-@property (strong, nonatomic) NSArray *filterOtherFriendshipArr;
 @end
 
 @implementation CloseFriendViewController
@@ -40,7 +37,6 @@
     // Fetch friends
     NSArray *friendships = [ParseAPIHelper fetchFriendships:self.user.objectId];
     self.friendshipArr = friendships;
-    self.filterFriendshipArr = friendships;
     NSMutableArray *friendArr = [[NSMutableArray alloc] init];
     NSMutableArray *otherFriendships = [[NSMutableArray alloc] init];
     if (friendships != nil) {
@@ -58,9 +54,7 @@
             [otherFriendships addObject:[query findObjects][0]];
         }
         self.friendsArr = friendArr;
-        self.filterFriendsArr = friendArr;
         self.otherFriendshipArr = otherFriendships;
-        self.filterOtherFriendshipArr = otherFriendships;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -71,15 +65,15 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filterFriendsArr.count;
+    return self.friendsArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CloseFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CloseFriendCell"];
-    cell.user = self.filterFriendsArr[indexPath.row];
+    cell.user = self.friendsArr[indexPath.row];
     cell.delegate = self;
-    cell.friendship = self.filterFriendshipArr[indexPath.row];
-    cell.otherFriendship = self.filterOtherFriendshipArr[indexPath.row];
+    cell.friendship = self.friendshipArr[indexPath.row];
+    cell.otherFriendship = self.otherFriendshipArr[indexPath.row];
     //set close friend button
     UIColor *closeFriendButtonBackgroundColor;
     NSString *closeFriendButtonText;
@@ -113,29 +107,6 @@
     return cell;
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    if (searchText.length != 0) {
-        NSPredicate *predicateFriend = [NSPredicate predicateWithBlock:^BOOL (NSDictionary *evaluatedObject, NSDictionary *bindings) {
-            return [evaluatedObject[@"username"] containsString:searchText];
-        }];
-        self.filterFriendsArr = [self.filterFriendsArr filteredArrayUsingPredicate:predicateFriend];
-        NSPredicate *predicateFriendship = [NSPredicate predicateWithBlock:^BOOL (NSDictionary *evaluatedObject, NSDictionary *bindings) {
-            return [evaluatedObject[@"recipientId"] containsString:searchText];
-        }];
-        self.filterFriendshipArr = [self.filterFriendshipArr filteredArrayUsingPredicate:predicateFriendship];
-        NSPredicate *predicateOtherFriendship =
-            [NSPredicate predicateWithBlock:^BOOL (NSDictionary *evaluatedObject, NSDictionary *bindings) {
-            return [evaluatedObject[@"requesterId"] containsString:searchText];
-        }];
-        self.filterOtherFriendshipArr = [self.filterOtherFriendshipArr filteredArrayUsingPredicate:predicateOtherFriendship];
-    } else {
-        self.filterFriendsArr = self.friendsArr;
-        self.filterFriendshipArr = self.friendshipArr;
-        self.filterOtherFriendshipArr = self.filterOtherFriendshipArr;
-    }
-
-    [self.tableView reloadData];
-}
 
 #pragma mark - CloseFriendCellDelegate
 - (void)closeFriendCell:(CloseFriendCell *)closeFriendCell didTap:(PFUser *)user {

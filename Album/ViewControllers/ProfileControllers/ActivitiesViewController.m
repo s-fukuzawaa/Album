@@ -78,16 +78,16 @@
     ActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActivityCell"];
     [cell.layer setCornerRadius:20];
     [cell setClipsToBounds:YES];
-    CAGradientLayer *grad = [CAGradientLayer layer];
-    grad.frame = cell.bounds;
-    UIColor* firstColor = [ColorConvertHelper colorFromHexString:@"FF9A8B"];
-    UIColor* secondColor = [ColorConvertHelper colorFromHexString:@"FF6A88"];
-    UIColor* thirdColor = [ColorConvertHelper colorFromHexString:@"FF99AC"];
-    grad.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], (id)[thirdColor CGColor], nil];
-    grad.startPoint = CGPointMake(0.0, 0.5);
-    grad.endPoint = CGPointMake(1.0, 0.5);
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = cell.bounds;
+    UIColor* firstColor = [ColorConvertHelper colorFromHexString:pinkColor1];
+    UIColor* secondColor = [ColorConvertHelper colorFromHexString:pinkColor2];
+    UIColor* thirdColor = [ColorConvertHelper colorFromHexString:pinkColor3];
+    gradientLayer.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], (id)[thirdColor CGColor], nil];
+    gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+    gradientLayer.endPoint = CGPointMake(1.0, 0.5);
     [cell setBackgroundView:[[UIView alloc] init]];
-    [cell.backgroundView.layer insertSublayer:grad atIndex:0];
+    [cell.backgroundView.layer insertSublayer:gradientLayer atIndex:0];
     cell.user = self.friendRequests[indexPath.row];
     return cell;
 }
