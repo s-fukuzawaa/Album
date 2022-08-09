@@ -20,8 +20,12 @@ NSString *const segueSettings = @"settingsSegue";
 NSString *const segueCompose = @"composeSegue";
 NSString *const segueDetails = @"detailsSegue";
 NSString *const segueFriendMap = @"friendMapSegue";
-double const earthR = 6378137;
+// Color codes
+NSString *const pinkColor1 = @"FF9A8B";
+NSString *const pinkColor2 = @"FF6A8B";
+NSString *const pinkColor3 = @"FF99AC";
 
+double const earthR = 6378137;
 // Constants for friendship status
 int const PENDING = 1;
 int const FRIENDED = 2;

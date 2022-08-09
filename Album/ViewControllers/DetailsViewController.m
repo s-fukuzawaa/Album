@@ -7,9 +7,11 @@
 
 #import "DetailsViewController.h"
 #import "AlbumConstants.h"
+#import "ParseAPIHelper.h"
 #import "UserPin.h"
 #import <Parse/PFImageView.h>
 #import "PhotoCollectionCell.h"
+#import <UPCarouselFlowLayout/UPCarouselFlowLayout-Swift.h>
 
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *placeNameLabel;
@@ -21,6 +23,7 @@
 @property (nonatomic) int currentIndex;
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) UserPin *likeStatus;
+@property (nonatomic) CGSize pageSize;
 @end
 
 @implementation DetailsViewController
@@ -43,14 +46,10 @@
     // Set location
     self.placeNameLabel.text = self.pin.placeName;
     // Set date
-    // Set the date formatter
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM dd, YYYY"];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    NSString *date = [formatter stringFromDate:self.pin.traveledOn];
+    NSString *date = [[ParseAPIHelper dateFormatter] stringFromDate:self.pin.traveledOn];
     self.dateLabel.text = date;
     // Set caption
-    NSString* captionBegin =[@"@" stringByAppendingString:self.username];
+    NSString const *captionBegin = [@"@" stringByAppendingString:self.username];
     captionBegin = [captionBegin stringByAppendingString:@": "];
     self.captionTextView.text = [captionBegin stringByAppendingString:self.pin.captionText];
     // Set up page control
@@ -61,11 +60,16 @@
     tapGesture.numberOfTapsRequired = 2;
     [self.likeButton addGestureRecognizer:tapGesture];
     // Set close friend status
-    if(self.pin.isCloseFriendPin) {
+    if (self.pin.isCloseFriendPin) {
         [self.closeFriendPost setImage:[UIImage systemImageNamed:@"star.fill"]];
-    }else{
+    } else {
         [self.closeFriendPost setHidden:YES];
     }
+    UPCarouselFlowLayout *layout = [[UPCarouselFlowLayout alloc]init];
+    layout.itemSize = CGSizeMake(416, 432);
+    self.pageSize = layout.itemSize;
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.imageCarouselView.collectionViewLayout = layout;
 } /* viewDidLoad */
 
 - (void)setLikeStatus {
@@ -125,9 +129,11 @@
         [self.likeStatus saveInBackground];
     }
 } /* tapLiked */
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    int pageSide = self.pageSize.width;
     self.currentIndex = scrollView.contentOffset.x / self.imageCarouselView.frame.size.width;
-    self.pageIndicator.currentPage = self.currentIndex;
+    self.pageIndicator.currentPage = (int)(floorf((scrollView.contentOffset.x - pageSide / 2) / pageSide) + 1);
 }
 
 #pragma mark - UICollectionViewDataSource

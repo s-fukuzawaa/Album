@@ -11,14 +11,25 @@
 #import "Parse/Parse.h"
 
 @interface LoginViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *logoImageView;
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *signUpButton;
 
 @end
 
 @implementation LoginViewController
 
+#pragma mark - UIViewController
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.loginButton setTintColor:[UIColor systemIndigoColor]];
+        [self.signUpButton setTintColor:[UIColor systemIndigoColor]];
+    });
+}
 #pragma mark - IBAction
 
 - (IBAction)loginButton:(id)sender {
@@ -54,7 +65,7 @@
             [self performSegueWithIdentifier:@"loginSegue" sender:nil];
         }
     }];
-}
+} /* loginButton */
 
 - (IBAction)signUpButton:(id)sender {
     [self performSegueWithIdentifier:@"signupSegue" sender:nil];

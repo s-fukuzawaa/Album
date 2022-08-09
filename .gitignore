@@ -1,2 +1,4 @@
-xcuserdata/eyeray.xcuserdatad/
 Keys.plist
+xcuserdata/*
+build/
+Album.xcworkspace/xcuserdata/eyeray.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist

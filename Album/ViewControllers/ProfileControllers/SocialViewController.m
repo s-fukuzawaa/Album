@@ -14,12 +14,16 @@
 
 @implementation SocialViewController
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.searchUserContainer.alpha = 1.0;
     self.searchFriendContainer.alpha = 0.0;
-    // Do any additional setup after loading the view.
 }
+
+#pragma mark - IBAction
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -35,13 +39,10 @@
             self.searchFriendContainer.alpha = 1.0;
         }];
     }
-    
 }
-
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"searchFriendSegue"]) {
         CloseFriendViewController *closeFriendVC = [segue destinationViewController];

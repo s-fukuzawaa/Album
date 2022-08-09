@@ -14,6 +14,7 @@ target 'Album' do
   pod 'iOS-Color-Picker'
   pod 'IQKeyboardManager'
   pod 'GooglePlaces', '7.0.0'
+  pod "UPCarouselFlowLayout"
   target 'AlbumTests' do
     inherit! :search_paths
     # Pods for testing

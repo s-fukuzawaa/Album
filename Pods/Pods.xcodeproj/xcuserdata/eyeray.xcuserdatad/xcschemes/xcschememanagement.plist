@@ -37,7 +37,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Parse-Parse.xcscheme</key>
 		<dict>
@@ -58,7 +58,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>6</integer>
 		</dict>
 		<key>Pods-Album-AlbumUITests.xcscheme</key>
 		<dict>
@@ -87,6 +87,13 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>12</integer>
+		</dict>
+		<key>UPCarouselFlowLayout.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>13</integer>
 		</dict>
 		<key>iOS-Color-Picker.xcscheme</key>
 		<dict>

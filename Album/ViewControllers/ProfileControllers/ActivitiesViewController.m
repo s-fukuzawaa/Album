@@ -7,6 +7,7 @@
 
 #import "ActivitiesViewController.h"
 #import "FriendProfileViewController.h"
+#import "ColorConvertHelper.h"
 #import "ActivityCell.h"
 #import "Parse/Parse.h"
 #import "AlbumConstants.h"
@@ -14,7 +15,6 @@
 @interface ActivitiesViewController ()<UITableViewDataSource, UITableViewDelegate, ActivityCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *friendRequests;
-
 @end
 
 @implementation ActivitiesViewController
@@ -31,7 +31,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.friendRequests = [[NSMutableArray alloc] init];
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;    
 }
 
 #pragma mark - IBAction
@@ -76,6 +76,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActivityCell"];
+    [cell.layer setCornerRadius:20];
+    [cell setClipsToBounds:YES];
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = cell.bounds;
+    UIColor* firstColor = [ColorConvertHelper colorFromHexString:pinkColor1];
+    UIColor* secondColor = [ColorConvertHelper colorFromHexString:pinkColor2];
+    UIColor* thirdColor = [ColorConvertHelper colorFromHexString:pinkColor3];
+    gradientLayer.colors = [NSArray arrayWithObjects:(id)[firstColor CGColor], (id)[secondColor CGColor], (id)[thirdColor CGColor], nil];
+    gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+    gradientLayer.endPoint = CGPointMake(1.0, 0.5);
+    [cell setBackgroundView:[[UIView alloc] init]];
+    [cell.backgroundView.layer insertSublayer:gradientLayer atIndex:0];
     cell.user = self.friendRequests[indexPath.row];
     return cell;
 }

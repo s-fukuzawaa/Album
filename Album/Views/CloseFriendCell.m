@@ -7,6 +7,7 @@
 
 #import "CloseFriendCell.h"
 #import "AlbumConstants.h"
+#import "ParseAPIHelper.h"
 
 @implementation CloseFriendCell
 
@@ -27,17 +28,13 @@
 - (void) fetchProfile {
     PFUser *user = self.user;
     if(user[@"profileImage"]){
-        PFFileObject *file = user[@"profileImage"];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+        UIImage *image = [ParseAPIHelper fetchProfile:user];
+        [self.profileImageView setImage:image];
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2;
+        self.profileImageView.layer.masksToBounds = YES;
     }
 }
+
 - (IBAction)closeFriendButton:(id)sender {
     UIColor *closeFriendButtonBackgroundColor;
     NSString *closeFriendButtonText;
@@ -45,13 +42,13 @@
     self.friendship.isClose = !self.friendship.isClose;
     self.otherFriendship.isClose = !self.otherFriendship.isClose;
     if(self.friendship.isClose) {
-        closeFriendButtonBackgroundColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonBackgroundColor = [UIColor systemIndigoColor];
         closeFriendButtonText = @"Close Friended";
         closeFriendButtonTitleColor = [UIColor whiteColor];
     }else {
         closeFriendButtonBackgroundColor = [UIColor whiteColor];
         closeFriendButtonText = @"Add to Close Friends?";
-        closeFriendButtonTitleColor = [UIColor colorWithRed:0.39 green:0.28 blue:0.22 alpha:1.00];
+        closeFriendButtonTitleColor = [UIColor systemIndigoColor];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.closeFriendButton setTitleColor:closeFriendButtonBackgroundColor forState:UIControlStateNormal];
@@ -77,7 +74,6 @@
 }
 
 - (void) didTapUserProfile:(UITapGestureRecognizer *)sender{
-    //TODO: Call method delegate
     [self.delegate closeFriendCell:self didTap:self.user];
 }
 @end

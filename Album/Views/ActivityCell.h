@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 @protocol ActivityCellDelegate
-// TODO: Add required methods the delegate needs to implement
 - (void)activityCell:(ActivityCell *) activityCell didTap: (PFUser*)user;
-
 @end
 NS_ASSUME_NONNULL_END

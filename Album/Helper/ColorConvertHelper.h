@@ -9,12 +9,12 @@
 @interface ColorConvertHelper : NSObject
 
 // Creates color based on hex string color code
-- (UIColor *)colorFromHexString:(NSString *)hexString;
++ (UIColor *)colorFromHexString:(NSString *)hexString;
 
 // Creates hex string based on color
-- (NSString *)hexStringForColor:(UIColor *)color;
++ (NSString *)hexStringForColor:(UIColor *)color;
 
 // Creates a square that shows which color has been selected
-- (UIImage *)createImageWithColor:(UIColor *)color;
++ (UIImage *)createImageWithColor:(UIColor *)color;
 
 @end

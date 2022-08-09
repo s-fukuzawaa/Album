@@ -18,8 +18,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *pwField;
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (nonatomic, strong) UIColor *color;
-@property (nonatomic, strong) ColorConvertHelper *colorHelper;
 @property (nonatomic) BOOL isPublic;
+@property (nonatomic, strong) NSMutableArray *overlayViews;
 @end
 
 @implementation SignUpViewController
@@ -33,24 +33,45 @@
     [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
     [self.profileImageView addGestureRecognizer:profileTapGestureRecognizer];
     [self.profileImageView setUserInteractionEnabled:YES];
-    // Add color converting helper object
-    self.colorHelper = [[ColorConvertHelper alloc] init];
+    // Initialize confetti animation structure
+    self.overlayViews = [[NSMutableArray alloc] init];
 }
-- (IBAction)isPublicSwitch:(id)sender {
-    UISwitch *mySwitch = (UISwitch *)sender;
-    if ([mySwitch isOn]) {
-        self.isPublic = NO;
-    } else {
-        self.isPublic = YES;
+- (void)signUpAlert:(BOOL)success {
+    NSString *message = @"Sign Up Failed!";
+    if (success) {
+        message = @"Sign Up Success!";
     }
-}
-
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign Up" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+    //Ok
+    UIAlertAction *okay = [UIAlertAction actionWithTitle:@"OK"
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction *_Nonnull action) {
+        [UIView                      transitionWithView:self.view duration:1 options:
+         UIViewAnimationOptionTransitionNone animations:^(void) {
+            for (
+                 UIView *view in self.overlayViews)
+            {
+                view
+                    .alpha = 0.0f;
+            }
+        } completion:^(BOOL finished) {
+            for (UIView *view in self.overlayViews) {
+                [view removeFromSuperview];
+            }
+        }];
+    }];
+    // Add the cancel action to the alert controller
+    [alert addAction:okay];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+} /* signUpAlert */
 #pragma mark - IBAction
 
 - (IBAction)signUpButton:(id)sender {
     // Sign up user to Parse backend
     [self registerUser];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)didTap:(id)sender {
@@ -69,6 +90,61 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)isPublicSwitch:(id)sender {
+    self.isPublic = ![(UISwitch *)sender isOn];
+}
+
+- (void)animateConfetti {
+    // How many pieces to generate
+    int confettiCount = 200;
+    
+    // What colors should the pieces be?
+    NSArray *confettiColors = @[[UIColor redColor], [UIColor greenColor], [UIColor yellowColor], [UIColor blueColor]];
+    
+    
+    // Everything else that you can configure
+    int screenWidth = self.view.frame.size.width;
+    int screenHeight = self.view.frame.size.height;
+    int randomStartPoint;
+    int randomStartConfettiLength;
+    int randomEndConfettiLength;
+    int randomEndPoint;
+    int randomDelayTime;
+    int randomFallTime;
+    int randomRotation;
+    
+    for (int i = 0; i < confettiCount; i++) {
+        randomStartPoint = arc4random_uniform(screenWidth);
+        randomEndPoint = arc4random_uniform(screenWidth);
+        randomDelayTime = arc4random_uniform(100);
+        randomFallTime = arc4random_uniform(3);
+        randomRotation = arc4random_uniform(360);
+        randomStartConfettiLength = arc4random_uniform(15);
+        randomEndConfettiLength = arc4random_uniform(15);
+        NSUInteger randomColor = arc4random() % [confettiColors count];
+        
+        UIView *confetti = [[UIView alloc]initWithFrame:CGRectMake(randomStartPoint, -10, randomStartConfettiLength, 8)];
+        [confetti setBackgroundColor:confettiColors[randomColor]];
+        confetti.alpha = .4;
+        [self.view addSubview:confetti];
+        [self.overlayViews addObject:confetti];
+        [UIView animateWithDuration:randomFallTime + 1 delay:randomDelayTime * .02 options:UIViewAnimationOptionRepeat animations:^{
+            [confetti
+             setFrame:
+                 CGRectMake(
+                            randomEndPoint,
+                            screenHeight +
+                            30,
+                            randomEndConfettiLength,
+                            8)];
+            confetti.
+            transform =
+            CGAffineTransformMakeRotation(
+                                          randomRotation);
+        } completion:nil];
+    }
+} /* animateConfetti */
+
 #pragma mark - Parse API
 
 - (void)registerUser {
@@ -79,7 +155,7 @@
     newUser.email = self.emailField.text;
     newUser.password = self.pwField.text;
     newUser[@"profileImage"] = [self getPFFileFromImage:self.profileImageView.image];
-    newUser[@"colorHexString"] = [self.colorHelper hexStringForColor:self.color];
+    newUser[@"colorHexString"] = [ColorConvertHelper hexStringForColor:self.color];
     newUser[@"isPublic"] = @(self.isPublic);
     // Check for empty fields
     if ([self.usernameField.text isEqual:@""] || [self.pwField.text isEqual:@""] || [self.emailField.text isEqual:@""]) {
@@ -105,21 +181,14 @@
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
-            UIAlertController *alert =
-            [UIAlertController  alertControllerWithTitle:@"Error" message:
-             @"Error signing up! Please try again."
-                                          preferredStyle:(UIAlertControllerStyleAlert)];
-            // Create an OK action
-            UIAlertAction *uploadAction = [UIAlertAction      actionWithTitle:@"OK"
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:nil];
-            [alert addAction:uploadAction];
-            [self presentViewController:alert animated:YES completion:nil];
+            [self signUpAlert:NO];
         } else {
             NSLog(@"User registered successfully");
+            [self animateConfetti];
+            [self signUpAlert:YES];
         }
     }];
-}
+} /* registerUser */
 
 - (void)didTapUserProfile:(UITapGestureRecognizer *)sender {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -164,8 +233,7 @@
         imagePickerVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerVC animated:YES completion:nil];
     }
-
-}
+} /* didTapUserProfile */
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
@@ -207,7 +275,7 @@
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     // Save color and display in color box
     self.color = color;
-    [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+    [self.colorView setImage:[ColorConvertHelper createImageWithColor:color]];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

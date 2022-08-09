@@ -10,6 +10,7 @@
 #import "AddFriendViewController.h"
 #import "SettingsViewController.h"
 #import "FriendProfileViewController.h"
+#import "ColorConvertHelper.h"
 #import "PhotoCollectionCell.h"
 #import "AlbumConstants.h"
 #import "ParseAPIHelper.h"
@@ -25,6 +26,8 @@
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) ParseAPIHelper *apiHelper;
 @property (strong, nonatomic) NSArray *friendsArray;
+@property (strong, nonatomic) ColorConvertHelper *colorConvertHelper;
+@property (nonatomic, strong) UIView* overlayView;
 @end
 
 @implementation ProfileViewController
@@ -33,49 +36,78 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Set API helper
-    self.apiHelper = [[ParseAPIHelper alloc] init];
     // Store current user
     self.currentUser = [PFUser currentUser];
     // Assign collection view delegate and dataSource
     self.friendsCollectionView.delegate = self;
     self.friendsCollectionView.dataSource = self;
-    // Fetch friends
-    [self.apiHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
-        if (friendArr != nil) {
-            self.friendsArray = friendArr;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.friendsCollectionView reloadData];
-            });
-        } else {
-            NSLog(@"%@", error.localizedDescription);
-        }
-    }];
-    // Load profile image
-    [self setProfile];
-} /* viewDidLoad */
+    
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.friendsCollectionView reloadData];
+    self.currentUser = [PFUser currentUser];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+
+        self.overlayView.backgroundColor = [UIColor whiteColor];
+        self.overlayView.alpha = 1;
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] init];
+        activityView.center = self.view.center;
+        [self.overlayView addSubview:activityView];
+        [activityView startAnimating];
+        [self.view addSubview:self.overlayView];
+        [self.view bringSubviewToFront:self.overlayView];
+        // Fetch friends
+        [ParseAPIHelper fetchFriends:self.currentUser.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+            if (friendArr != nil) {
+                self.friendsArray = friendArr;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.friendsCollectionView.layer setCornerRadius:15];
+                    [self.friendsCollectionView.layer setShadowRadius:5];
+                    [self.friendsCollectionView.layer setShadowColor:[[UIColor grayColor] CGColor]];
+                    [self.friendsCollectionView.layer setShadowOpacity:1];
+                    [self.friendsCollectionView.layer setShadowOffset:CGSizeMake(0,0)];
+                    self.friendsCollectionView.layer.masksToBounds = NO;
+                    self.friendsCollectionView.clipsToBounds = NO;
+                    [self.friendsCollectionView reloadData];
+                    // Load profile image
+                    [self setProfile];
+                    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){self.overlayView .alpha=0.0f;} completion:^(BOOL finished){[self.overlayView  removeFromSuperview];}];
+                });
+            } else {
+                [self errorAlert:error.localizedDescription];
+            }
+        }];
+    });
+    
 }
+
 
 #pragma mark - Parse API
 - (void)setProfile {
     PFUser *user = [PFUser currentUser];
-    [self.usernameLabel setText:@"@"];
-    [self.usernameLabel setText:[self.usernameLabel.text stringByAppendingString:user.username]];
-    if (user[@"profileImage"]) {
-        PFFileObject *file = user[@"profileImage"];
-        [self.profileImageView setFile:file];
-        [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:imageData];
-                [self.profileImageView setImage:image];
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                self.profileImageView.layer.masksToBounds = YES;
-            }
-        }];
+    if(user != nil) {
+        [self.usernameLabel setText:@"@"];
+        [self.usernameLabel setText:[self.usernameLabel.text stringByAppendingString:user.username]];
+        if (user[@"profileImage"]) {
+            PFFileObject *file = user[@"profileImage"];
+            [self.profileImageView setFile:file];
+            [file getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [self.profileImageView setImage:image];
+                    self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                    self.profileImageView.layer.masksToBounds = NO;
+                    [self.profileImageView.layer setShadowRadius:5];
+                    [self.profileImageView.layer setShadowColor:[[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]] CGColor]];
+                    [self.profileImageView.layer setShadowOpacity:1];
+                    [self.profileImageView.layer setShadowOffset:CGSizeMake(0,0)];
+                    self.profileImageView.clipsToBounds = NO;
+                }
+            }];
+        }
     }
 }
 
@@ -108,6 +140,12 @@
         PFFileObject *file = self.friendsArray[indexPath.row][@"profileImage"];
         profileCell.photoImageView.image = [UIImage imageWithData:[file getData]];
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        profileCell.photoImageView.layer.cornerRadius = profileCell.photoImageView.frame.size.width / 2;
+        profileCell.photoImageView.layer.masksToBounds = YES;
+        [profileCell.photoImageView.layer setBorderColor:[[ColorConvertHelper colorFromHexString:self.friendsArray[indexPath.row][@"colorHexString"]] CGColor]];
+        [profileCell.photoImageView.layer setBorderWidth:1];
+    });
     return profileCell;
 }
 
@@ -139,5 +177,20 @@
         FriendProfileViewController *friendVC = [segue destinationViewController];
         friendVC.user = self.friendsArray[indexPath.row];
     }
+}
+
+#pragma mark - UIAlert
+
+- (void) errorAlert: (NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message
+                                                            preferredStyle:(UIAlertControllerStyleAlert)];
+
+    
+    // Create an OK action
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

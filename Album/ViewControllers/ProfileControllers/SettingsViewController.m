@@ -61,9 +61,9 @@
     // Display current user marker color
     if (user[@"colorHexString"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIColor *color = [self.colorHelper colorFromHexString:user[@"colorHexString"]];
+            UIColor *color = [ColorConvertHelper colorFromHexString:user[@"colorHexString"]];
             self.color = color;
-            [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+            [self.colorView setImage:[ColorConvertHelper createImageWithColor:color]];
         });
     }
     self.usernameField.text = user.username;
@@ -227,7 +227,7 @@
         user[@"profileImage"] = self.profileImageView.file;
         diff = YES;
     }
-    NSString *colorHexString = [self.colorHelper hexStringForColor:self.color];
+    NSString *colorHexString = [ColorConvertHelper hexStringForColor:self.color];
     if (![colorHexString isEqualToString:user[@"colorHexString"]]) {
         user[@"colorHexString"] = colorHexString;
         diff = YES;
@@ -248,7 +248,7 @@
     }
     [self.delegate didUpdate];
     [self dismissViewControllerAnimated:YES completion:nil];
-} /* updateButton */
+}
 
 - (IBAction)isPublicSwitch:(id)sender {
     UISwitch *mySwitch = (UISwitch *)sender;
@@ -262,7 +262,7 @@
 #pragma mark - FCColorPickerViewControllerDelegate
 - (void)colorPickerViewController:(FCColorPickerViewController *)colorPicker didSelectColor:(UIColor *)color {
     self.color = color;
-    [self.colorView setImage:[self.colorHelper createImageWithColor:color]];
+    [self.colorView setImage:[ColorConvertHelper createImageWithColor:color]];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

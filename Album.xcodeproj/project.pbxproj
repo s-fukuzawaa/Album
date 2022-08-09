@@ -19,7 +19,6 @@
 		AF15583C28774DF600C3FD82 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583B28774DF600C3FD82 /* AddFriendViewController.m */; };
 		AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15583E28774F3300C3FD82 /* ComposeViewController.m */; };
 		AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584128774F4000C3FD82 /* DetailsViewController.m */; };
-		AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF155845287750CB00C3FD82 /* AlbumViewController.m */; };
 		AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */; };
 		AF15585228789C1B00C3FD82 /* ActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585128789C1B00C3FD82 /* ActivityCell.m */; };
 		AF15585528789D1500C3FD82 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF15585428789D1500C3FD82 /* FriendCell.m */; };
@@ -45,7 +44,6 @@
 		AF60C0BB287642880033DCB0 /* GoogleMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0BA287642880033DCB0 /* GoogleMapViewController.m */; };
 		AF60C0BD287644540033DCB0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0BC287644540033DCB0 /* Keys.plist */; };
 		AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */; };
-		AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AF60C0C928764C520033DCB0 /* custom_pin.png */; };
 		AF6574FB2892078000804593 /* SocialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6574FA2892078000804593 /* SocialViewController.m */; };
 		AF6574FE2892F90700804593 /* CloseFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6574FD2892F90700804593 /* CloseFriendCell.m */; };
 		AF6575012892FA4D00804593 /* CloseFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF6575002892FA4D00804593 /* CloseFriendViewController.m */; };
@@ -102,8 +100,6 @@
 		AF15583E28774F3300C3FD82 /* ComposeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComposeViewController.m; sourceTree = "<group>"; };
 		AF15584028774F4000C3FD82 /* DetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
 		AF15584128774F4000C3FD82 /* DetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
-		AF155844287750CB00C3FD82 /* AlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
-		AF155845287750CB00C3FD82 /* AlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
 		AF15584A2877AA5700C3FD82 /* FriendProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
 		AF15584B2877AA5700C3FD82 /* FriendProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
 		AF15585028789C1B00C3FD82 /* ActivityCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityCell.h; sourceTree = "<group>"; };
@@ -149,7 +145,6 @@
 		AF60C0BC287644540033DCB0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		AF60C0C628764B4C0033DCB0 /* LocationGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationGenerator.h; sourceTree = "<group>"; };
 		AF60C0C728764B4C0033DCB0 /* LocationGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationGenerator.m; sourceTree = "<group>"; };
-		AF60C0C928764C520033DCB0 /* custom_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom_pin.png; path = "../../../Downloads/maps-platform-101-objc-master/starter/StarterApp/custom_pin.png"; sourceTree = "<group>"; };
 		AF6574F92892078000804593 /* SocialViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocialViewController.h; sourceTree = "<group>"; };
 		AF6574FA2892078000804593 /* SocialViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocialViewController.m; sourceTree = "<group>"; };
 		AF6574FC2892F90700804593 /* CloseFriendCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CloseFriendCell.h; sourceTree = "<group>"; };
@@ -262,15 +257,6 @@
 			path = AuthenticationControllers;
 			sourceTree = "<group>";
 		};
-		AF1558432877508600C3FD82 /* HomeControllers */ = {
-			isa = PBXGroup;
-			children = (
-				AF155844287750CB00C3FD82 /* AlbumViewController.h */,
-				AF155845287750CB00C3FD82 /* AlbumViewController.m */,
-			);
-			path = HomeControllers;
-			sourceTree = "<group>";
-		};
 		AF1FE7E1288210A900C5E0A5 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -328,7 +314,6 @@
 				AF60C06D287633920033DCB0 /* SceneDelegate.m */,
 				AF60C072287633920033DCB0 /* Main.storyboard */,
 				AF60C075287633930033DCB0 /* Assets.xcassets */,
-				AF60C0C928764C520033DCB0 /* custom_pin.png */,
 				AF60C077287633930033DCB0 /* LaunchScreen.storyboard */,
 				AF60C07A287633930033DCB0 /* Info.plist */,
 				AF60C0BC287644540033DCB0 /* Keys.plist */,
@@ -358,7 +343,6 @@
 			isa = PBXGroup;
 			children = (
 				AFCC30E7287CA6F400521733 /* MapControllers */,
-				AF1558432877508600C3FD82 /* HomeControllers */,
 				AF15583628774C6D00C3FD82 /* AuthenticationControllers */,
 				AF15583528774C4A00C3FD82 /* ProfileControllers */,
 				AF15583D28774F3300C3FD82 /* ComposeViewController.h */,
@@ -540,7 +524,6 @@
 				AF60C0BD287644540033DCB0 /* Keys.plist in Resources */,
 				AF0D2D62287F3A1D000A3870 /* InfoExistWindow.xib in Resources */,
 				AF60C079287633930033DCB0 /* LaunchScreen.storyboard in Resources */,
-				AF60C0CA28764C520033DCB0 /* custom_pin.png in Resources */,
 				AF60C076287633930033DCB0 /* Assets.xcassets in Resources */,
 				AF60C074287633920033DCB0 /* Main.storyboard in Resources */,
 				AFCC30EF287CCFF000521733 /* InfoWindow.xib in Resources */,
@@ -734,7 +717,6 @@
 				AF15583F28774F3300C3FD82 /* ComposeViewController.m in Sources */,
 				AF6574FE2892F90700804593 /* CloseFriendCell.m in Sources */,
 				AF15585528789D1500C3FD82 /* FriendCell.m in Sources */,
-				AF155846287750CB00C3FD82 /* AlbumViewController.m in Sources */,
 				AF15584228774F4000C3FD82 /* DetailsViewController.m in Sources */,
 				AF15584C2877AA5700C3FD82 /* FriendProfileViewController.m in Sources */,
 				AF60C0C828764B4C0033DCB0 /* LocationGenerator.m in Sources */,
