@@ -133,7 +133,7 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 - (void)setButton {
     // Set button: 3 radius limiting options
     NSArray *radiusOptions =
-    [NSArray arrayWithObjects:[self createRadiusAction:1000], [self createRadiusAction:5000], [self createRadiusAction:10000], nil];
+    [NSArray arrayWithObjects:[self createRadiusAction:1000], [self createRadiusAction:5000], [self createRadiusAction:10000], [self createRadiusAction:50000], nil];
     UIMenu *menu = [UIMenu menuWithTitle:@"Options" children:radiusOptions];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" menu:menu];
     [self.navigationItem.leftBarButtonItem setImage:[UIImage systemImageNamed:@"mappin.and.ellipse"]];
@@ -141,8 +141,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 }
 
 - (UIAction *)createRadiusAction:(int)radius {
-    return [UIAction actionWithTitle:[NSString stringWithFormat:@"%d m",
-                                      radius] image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
+    return [UIAction actionWithTitle:[NSString stringWithFormat:@"%d km",
+                                      radius/1000] image:nil identifier:nil handler:^(__kindof UIAction *_Nonnull action) {
         dispatch_async(
                        dispatch_get_main_queue(), ^{
                            [self animateLoadingScreen];
@@ -191,10 +191,11 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
         }
     }
     // Fade out the loading screen
-    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void) { self.overlayView.alpha
-        = 0.0f;
-    } completion:^(BOOL finished) { [self.
-                                     overlayView  removeFromSuperview]; }];
+    [UIView transitionWithView:self.view duration:2 options:UIViewAnimationOptionTransitionNone animations:^(void){
+        self.overlayView.alpha= 0.0f;
+    } completion:^(BOOL finished) {
+        [self.overlayView removeFromSuperview];
+    }];
 } /* loadMarkers */
 
 // Check if the pin should be loaded or not
@@ -298,8 +299,8 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
     [query orderByDescending:(@"traveledOn")];
     query.limit = 50;
     [query includeKey:@"objectId"];
-    double dLat = (double)(10000) / earthR;
-    double dLon = (double)(10000) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
+    double dLat = (double)(50000) / earthR;
+    double dLon = (double)(50000) / (earthR * cos(M_PI * self.coordinate.latitude / 180));
     [query whereKey:@"latitude" lessThanOrEqualTo:@(self.coordinate.latitude + dLat * 180 / M_PI)];
     [query whereKey:@"latitude" greaterThanOrEqualTo:@(self.coordinate.latitude - dLat * 180 / M_PI)];
     [query whereKey:@"longitude" lessThanOrEqualTo:@(self.coordinate.longitude + dLon * 180 / M_PI)];
@@ -460,14 +461,19 @@ ComposeViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 
 #pragma mark - ComposeViewControllerDelegate
 
-- (void)didPost {
+- (void)didPost: (Pin *) pin imageArr: (NSArray*) imageArr {
+//    [self animateLoadingScreen];
     // Place marker after composing pin at the location
+    self.mapView.selectedMarker = nil;
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = CLLocationCoordinate2DMake(self.infoMarker.position.latitude, self.infoMarker.position.longitude);
     marker.title = self.infoMarker.title;
     marker.snippet = self.infoMarker.snippet;
     marker.map = self.mapView;
     marker.icon = [GMSMarker markerImageWithColor:[ColorConvertHelper colorFromHexString:self.currentUser[@"colorHexString"]]];
+    [self.placeToPins[marker.title] insertObject:pin atIndex:0];
+    self.pinImages[pin.objectId] = imageArr;
+    self.pinIdToUsername[pin.objectId] = self.currentUser.username;
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

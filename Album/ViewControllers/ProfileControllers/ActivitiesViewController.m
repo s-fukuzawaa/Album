@@ -22,7 +22,7 @@
 #pragma mark - UIViewController
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self fetchActivities];
+    [self fetchFriendRequests];
     [self.tableView reloadData];
 }
 - (void)viewDidLoad {
@@ -41,7 +41,6 @@
 }
 
 #pragma mark - Parse API
-- (void)fetchActivities {
 
 - (void)fetchFriendRequests {
     // Query to find pending friend requests for this user

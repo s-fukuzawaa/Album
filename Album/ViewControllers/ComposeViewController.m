@@ -90,7 +90,7 @@ PHPickerViewControllerDelegate>
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media" message:@"Choose"
                                                                 preferredStyle:(UIAlertControllerStyleAlert)];
-        // Create a cancel action
+        // Create a take photo action
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"Take Photo"
                                                               style:UIAlertActionStyleCancel
                                                             handler:^(UIAlertAction *_Nonnull action) {
@@ -109,8 +109,7 @@ PHPickerViewControllerDelegate>
             PHPickerViewController *pickerViewController =
             [[PHPickerViewController alloc] initWithConfiguration:self.config];
             pickerViewController.delegate = self;
-            [self presentViewController:pickerViewController animated:YES completion:
-             nil];
+            [self presentViewController:pickerViewController animated:YES completion:nil];
         }];
         // Add the OK action to the alert controller
         [alert addAction:uploadAction];
@@ -150,7 +149,7 @@ PHPickerViewControllerDelegate>
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.pageControl.numberOfPages =
                         self.pageControl.numberOfPages + 1;
-                        [self.photos addObject:(UIImage *)object];
+                        [self.photos addObject:[self resizeImage:object withSize:((UIImage*)object).size]];
                         [self.imageCarouselView reloadData];
                     });
                 }
@@ -164,14 +163,15 @@ PHPickerViewControllerDelegate>
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     // Get the image captured by the UIImagePickerController
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
-    originalImage = [self resizeImage:originalImage withSize:self.pinImageView.image.size];
+    CGSize size = CGSizeMake(300, 300);
+    originalImage = [self resizeImage:originalImage withSize:size];
     [self.photos addObject:originalImage];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UIImage *)resizeImage:(UIImage *)image withSize:(CGSize)size {
     UIImageView *resizeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    resizeImageView.contentMode = UIViewContentModeScaleAspectFill;
+    resizeImageView.contentMode = UIViewContentModeScaleAspectFit;
     resizeImageView.image = image;
     UIGraphicsBeginImageContext(size);
     [resizeImageView.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -217,7 +217,7 @@ PHPickerViewControllerDelegate>
         } else {
             NSLog(@"Pin saved successfully! Object Id:%@", newPin.objectId);
             for (UIImage *image in self.photos) {
-                [Image postImage:image withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError *_Nullable error) {
+                [Image postImage:[self resizeImage:image withSize:CGSizeMake(416,432)] withPin:newPin.objectId withCompletion:^(BOOL succeeded, NSError *_Nullable error) {
                     if (error) {
                         NSLog(@"Error saving image: %@", error.localizedDescription);
                         [self imageAlert:NO];
@@ -227,7 +227,7 @@ PHPickerViewControllerDelegate>
                     }
                 } ];
             }
-            [self.delegate didPost];
+            [self.delegate didPost:newPin imageArr:self.photos];
         }
     }];
     [self dismissViewControllerAnimated:YES completion:nil];

@@ -48,8 +48,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         // Add loading screen
         [self animateLoadingScreen];
-        // Update button UI
-        [self updateButton];
         // Update isPublic status and set username
         [self setLabelView];
         // Set close friend star to be invisible in general
@@ -66,7 +64,7 @@
 - (void) setLabelView {
     NSString *publicLabelText = ([self.user[@"isPublic"] isEqual:@(YES)]) ? @"Public" :@"Private";
     [self.isPublicLabel setText: publicLabelText];
-    [self.usernameLabel setText: [self.usernameLabel.text stringByAppendingString:self.user.username]];
+    [self.usernameLabel setText: [@"@" stringByAppendingString:self.user.username]];
 }
 - (void)fetchProfile {
     PFUser *user = self.user;
@@ -117,14 +115,6 @@
         }else{
             [self.closeFriendStarView setImage:[UIImage systemImageNamed:@"star"]];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate didChageFriendStatus];
-            self.friendMapContainer.alpha = 0.0;
-            self.friendsGridContainer.alpha = 1.0;
-            [self.lockImageView setHidden:YES];
-            self.lockImageView.alpha = 0.0;
-            [self.segmentedControl setEnabled:YES];
-        });
         
     } else if ([self.friendStatus intValue] == PENDING) {
         friendshipButtonBackgroundColor = [UIColor whiteColor];
@@ -138,14 +128,6 @@
         friendshipButtonTitleColor = [UIColor blackColor];
         [self.closeFriendStarView setHidden:YES];
         [self.closeFriendStatusLabel setHidden:YES];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Enable containers
-            self.friendMapContainer.alpha = 0.0;
-            self.friendsGridContainer.alpha = 0.0;
-            [self.lockImageView setHidden:NO];
-            self.lockImageView.alpha = 1.0;
-            [self.segmentedControl setEnabled:NO];
-        });
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.friendButton setTitleColor:friendshipButtonTitleColor forState:UIControlStateNormal];
@@ -158,6 +140,21 @@
         [self.friendButton.layer setShadowOffset:CGSizeMake(0,0)];
         self.friendButton.layer.masksToBounds = NO;
         self.friendButton.clipsToBounds = NO;
+        if ([self.user[@"isPublic"] intValue] == YES || [self.friendStatus intValue] == FRIENDED || [self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            // Enable containers
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 1.0;
+            [self.lockImageView setHidden:YES];
+            self.lockImageView.alpha = 0.0;
+            [self.segmentedControl setEnabled:YES];
+        }else {
+            // Lock containers
+            self.friendMapContainer.alpha = 0.0;
+            self.friendsGridContainer.alpha = 0.0;
+            [self.lockImageView setHidden:NO];
+            self.lockImageView.alpha = 1.0;
+            [self.segmentedControl setEnabled:NO];
+        }
     });
 }
 
@@ -190,14 +187,6 @@
         [self updateRequest];
         // Update button UI
         [self updateButton];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Enable containers
-            self.friendMapContainer.alpha = 0.0;
-            self.friendsGridContainer.alpha = 1.0;
-            [self.lockImageView setHidden:YES];
-            self.lockImageView.alpha = 0.0;
-            [self.segmentedControl setEnabled:YES];
-        });
     }];
     [alert addAction:rejectAction];
     // Cancel action
@@ -229,15 +218,6 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Update button UI
                     [self updateButton];
-                    // If private account and not friend, do not display anything
-                    if ([self.friendStatus intValue] == FRIENDED || [self.user[@"isPublic"] isEqual:@(YES)]) {
-                        // Initial view to friend map view
-                        self.friendMapContainer.alpha = 0.0;
-                        self.friendsGridContainer.alpha = 1.0;
-                        [self.lockImageView setHidden:YES];
-                        self.lockImageView.alpha = 0.0;
-                        [self.segmentedControl setEnabled:YES];
-                    }
                 });
             }
         } else {
@@ -358,6 +338,25 @@
     [self updateButton];
 } /* friendButton */
 
+//- (void) updateLockUI {
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if(self.user[@"isPublic"] || [self.friendStatus intValue] != FRIENDED ){
+//            // Enable containers
+//            self.friendMapContainer.alpha = 0.0;
+//            self.friendsGridContainer.alpha = 0.0;
+//            [self.lockImageView setHidden:NO];
+//            self.lockImageView.alpha = 1.0;
+//            [self.segmentedControl setEnabled:NO];
+//        }else {
+//            // Enable containers
+//            self.friendMapContainer.alpha = 0.0;
+//            self.friendsGridContainer.alpha = 1.0;
+//            [self.lockImageView setHidden:YES];
+//            self.lockImageView.alpha = 0.0;
+//            [self.segmentedControl setEnabled:YES];
+//        }
+//    });
+//}
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

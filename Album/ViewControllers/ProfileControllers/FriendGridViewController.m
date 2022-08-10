@@ -90,6 +90,18 @@
 
 #pragma mark - FriendProfileViewControllerDelegate
 - (void)didChageFriendStatus {
-    [self.friendCollectionView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [ParseAPIHelper fetchFriends:self.user.objectId withBlock:^(NSArray *friendArr, NSError *error) {
+            if (friendArr != nil) {
+                self.friendsArray = friendArr;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.friendCollectionView reloadData];
+                });
+            } else {
+                NSLog(@"%@", error.localizedDescription);
+            }
+        }];
+        [self.friendCollectionView reloadData];
+    });
 }
 @end

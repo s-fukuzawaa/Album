@@ -35,6 +35,8 @@
     [self.profileImageView setUserInteractionEnabled:YES];
     // Initialize confetti animation structure
     self.overlayViews = [[NSMutableArray alloc] init];
+    self.isPublic = YES;
+    self.color = [UIColor blackColor];
 }
 
 #pragma mark - IBAction
@@ -216,19 +218,16 @@
     UIAlertAction *okay = [UIAlertAction actionWithTitle:@"OK"
                                                    style:UIAlertActionStyleDefault
                                                  handler:^(UIAlertAction *_Nonnull action) {
-        [UIView                      transitionWithView:self.view duration:1 options:
-         UIViewAnimationOptionTransitionNone animations:^(void) {
-            for (
-                 UIView *view in self.overlayViews)
-            {
-                view
-                    .alpha = 0.0f;
-            }
-        } completion:^(BOOL finished) {
-            for (UIView *view in self.overlayViews) {
-                [view removeFromSuperview];
-            }
-        }];
+        [UIView transitionWithView:self.view duration:1 options:UIViewAnimationOptionTransitionNone animations:^(void) {
+                for (UIView *view in self.overlayViews){
+                    view.alpha = 0.0f;
+                }
+            } completion:^(BOOL finished) {
+                for (UIView *view in self.overlayViews) {
+                    [view removeFromSuperview];
+                }
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }];
     }];
     // Add the cancel action to the alert controller
     [alert addAction:okay];

@@ -7,11 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "Pin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol ComposeViewControllerDelegate
 
-- (void)didPost;
+- (void)didPost: (Pin *) pin imageArr: (NSArray*) imageArr;
 
 @end
 

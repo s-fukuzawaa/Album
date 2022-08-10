@@ -103,8 +103,8 @@
                                 <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                 <color key="tintColor" systemColor="systemIndigoColor"/>
                             </pageControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bjl-rz-ogl">
-                                <rect key="frame" x="272" y="20" width="122" height="28.5"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bjl-rz-ogl">
+                                <rect key="frame" x="316" y="20" width="78" height="29"/>
                                 <color key="tintColor" systemColor="labelColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="star" catalog="system">
@@ -169,7 +169,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3825" y="940"/>
+            <point key="canvasLocation" x="3824.6376811594205" y="939.50892857142856"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="4hE-ic-eZN">
@@ -808,9 +808,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3af-Pq-fne">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3af-Pq-fne">
                                 <rect key="frame" x="0.0" y="172" width="414" height="724"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivityCell" rowHeight="173" id="KWR-Ef-sBB" customClass="ActivityCell">
@@ -861,9 +860,8 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Friend Requests" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Buo-fx-5XO">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Friend Requests" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Buo-fx-5XO">
                                 <rect key="frame" x="20" y="113" width="172" height="27"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Palatino-Roman" family="Palatino" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -871,6 +869,14 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wrN-X7-5GB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Buo-fx-5XO" firstAttribute="leading" secondItem="SAH-Wi-3JB" secondAttribute="leadingMargin" id="HTN-ZM-qTi"/>
+                            <constraint firstItem="3af-Pq-fne" firstAttribute="leading" secondItem="wrN-X7-5GB" secondAttribute="leading" id="NXk-50-MPk"/>
+                            <constraint firstItem="3af-Pq-fne" firstAttribute="trailing" secondItem="wrN-X7-5GB" secondAttribute="trailing" id="UGr-r4-H32"/>
+                            <constraint firstItem="Buo-fx-5XO" firstAttribute="top" secondItem="wrN-X7-5GB" secondAttribute="top" constant="25" id="g4y-LF-X1E"/>
+                            <constraint firstAttribute="bottom" secondItem="3af-Pq-fne" secondAttribute="bottom" id="pf7-nf-ax3"/>
+                            <constraint firstItem="3af-Pq-fne" firstAttribute="top" secondItem="Buo-fx-5XO" secondAttribute="bottom" constant="32" id="rFN-wC-Hrx"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Jy0-i0-Clc">
                         <barButtonItem key="leftBarButtonItem" title="Item" image="arrow.left" catalog="system" id="Vl8-v7-RR5">
@@ -1559,7 +1565,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3iu-cH-Rgq"/>
+        <segue reference="Ge9-LY-Ved"/>
         <segue reference="nli-5v-IW8"/>
     </inferredMetricsTieBreakers>
     <resources>
