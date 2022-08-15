@@ -215,11 +215,9 @@
                 // Otherwise, store
                 self.friendship = friendships[0];
                 self.friendStatus = self.friendship.hasFriended;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Update button UI
-                    [self updateButton];
-                });
             }
+            // UPdate button UI
+            [self updateButton];
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
@@ -240,9 +238,9 @@
                 // Store properties
                 self.request = requests[0];
                 self.requestStatus = self.request.hasFriended;
-                // UPdate button UI
-                [self updateButton];
             }
+            // UPdate button UI
+            [self updateButton];
         } else {
             NSLog(@"%@", error.localizedDescription);
         }
